@@ -144,6 +144,9 @@ function($scope, $routeParams, $route, pubData, PublicationPersister, Notifier, 
 			if($scope.pubData.isNew()){
 				$location.path(PUB_ROOT + '/' + returnedPubData.id);
 			}
+			else{
+				$scope.pubData.lastModifiedDate = returnedPubData.lastModifiedDate;
+			}
 			Notifier.notify('Publication successfully saved');
 		}, function(reason){
 			if(reason['validation-errors']){

@@ -60,14 +60,22 @@ angular.module('pw.fetcher',[])
 		/**
 		 * Persist the given pub, whether it is new or existing, and resolve the
 		 * deferred as appropriate
-		 * @param {Publication} pub as in the pubData variable kept on the publication controller scope
+		 * @param {Publication} clientPub as in the pubData variable kept on the publication controller scope
 		 * @returns {Promise}
 		 */
-		var persistPub = function(pub){
+		var persistPub = function(clientPub){
 			//we do not want to send validation errors to the server, nor do we
 			//want stale validation errors to continue to be displayed on the 
 			//client
-			delete pub['validation-errors'];
+			delete clientPub['validation-errors'];
+			
+			var pub = _.clone(clientPub);
+			
+			//the server manages the last-modified date, so there's no need to 
+			//send it. However, we do want to keep it on the client until
+			//the server sends us an updated version
+			delete pub.lastModifiedDate;
+			
 			var deferredPubPersistence = $q.defer();
 			//use a different http verb and url depending on whether the pub is new,
 			//but otherwise do the same same thing
