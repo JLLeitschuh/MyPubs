@@ -39,18 +39,24 @@ describe('pw.fetcher module', function() {
 			$httpBackend.verifyNoOutstandingRequest();
 		});
 
-		it('should POST new pubs and it should not include validation errors', function(){
+		it('should POST new pubs and it should not include validation errors or last modified date', function(){
+			var prunedPublication = _.clone(newPublication);
+			delete prunedPublication['validation-errors'];
+			delete prunedPublication.lastModifiedDate;
+			
 			PublicationPersister.persistPub(newPublication);
-			var noValidationErrorsPublication = _.clone(newPublication);
-			delete noValidationErrorsPublication['validation-errors'];
-			$httpBackend.expectPOST(PublicationPersister.CREATE_ENDPOINT, noValidationErrorsPublication);
+			
+			$httpBackend.expectPOST(PublicationPersister.CREATE_ENDPOINT, prunedPublication);
 			$httpBackend.flush();
 		});
-		it('should PUT existing pubs and it should not include validation errors', function(){
+		it('should PUT existing pubs and it should not include validation errorsor last modified date', function(){
+			var prunedPublication = _.clone(existingPublication);
+			delete prunedPublication['validation-errors'];
+			delete prunedPublication.lastModifiedDate;
+			
 			PublicationPersister.persistPub(existingPublication);
-			var noValidationErrorsPublication = _.clone(existingPublication);
-			delete noValidationErrorsPublication['validation-errors'];
-			$httpBackend.expectPUT(PublicationPersister.UPDATE_ENDPOINT + existingPublication.id, noValidationErrorsPublication);
+
+			$httpBackend.expectPUT(PublicationPersister.UPDATE_ENDPOINT + existingPublication.id, prunedPublication);
 			$httpBackend.flush();
 		});
 
