@@ -1,4 +1,5 @@
 <div id="edit-contributor">
+    <pre id="validation-errors" ng-show ="contributor['validation-errors'].length" ng-bind="contributor['validation-errors'] | json"></pre>
     <div class="form-group"ng-if="contributor.isNew()">
 	<label>Contributor Type</label>
 	<select class="form-control" placeholder="Select kind" ui-select2 ng-model="localKind.id" ng-change="changeContribKind()">
@@ -28,7 +29,7 @@
 	</div>
 	<div class="form-group">
 	    <label>Affiliation</label>
-	    <select class="form-control" placeholder="Select affiliation" ui-select2 ng-model="localAffiliationId">
+	    <select class="form-control" placeholder="Select affiliation" ui-select2 ng-model="localAffiliation.id">
 		<option></option>
 		<option ng-repeat="option in affiliations" value="{{option.id}}">{{option.text}}</option>
 	    </select>

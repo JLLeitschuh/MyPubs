@@ -1,5 +1,5 @@
 (function() {
-    angular.module('pw.editContributor', ['ngRoute', 'pw.lookups', 'pw.modal', 'pw.contributorDAO'])
+    angular.module('pw.editContributor', ['ngRoute', 'pw.lookups', 'pw.modal', 'pw.notify', 'pw.contributorDAO'])
 
 	.config(['$routeProvider', function($routeProvider) {
 	    $routeProvider.when('/Contributor', {
@@ -55,6 +55,28 @@
 		},
 		isUSGS : function() {
 		    return this.usgs;
+		},
+		getData : function() {
+		    if (this.isCorporation()) {
+			return {
+			    contributorId : this.contributorId,
+			    organization : this.organization,
+			    corporation : this.corporation,
+			    usgs : this.usgs
+			};
+		    }
+		    else {
+			return {
+			    contributorId : this.contributorId,
+			    family : this.family,
+			    given : this.given,
+			    suffix : this.suffix,
+			    email : this.email,
+			    affiliation : this.affiliation,
+			    corporation : this.corporation,
+			    usgs : this.usgs
+			};
+		    }
 		}
 
 	    };
@@ -82,8 +104,8 @@
 	    return getContributor;
 	}])
 
-	.controller('editContributorCtrl', ['$scope', '$route', 'thisContributor', 'LookupFetcher', 'PubsModal', 'ContributorData',
-		function($scope, $route, thisContributor, LookupFetcher, PubsModal, ContributorData) {
+	.controller('editContributorCtrl', ['$scope', '$route', '$location', 'thisContributor', 'LookupFetcher', 'Notifier', 'ContributorPersister',
+		function($scope, $route, $location, thisContributor, LookupFetcher, Notifier, ContributorPersister) {
 
 	    var retrieveAffiliations = function(isUSGS) {
 		var lookupKind;
@@ -109,9 +131,9 @@
 	    };
 
 	    // Setting up affiliations picker
-	    $scope.localAffiliationId = $scope.contributor.affiliation.id;
-	    $scope.$watch('localAffiliationId', function(value) {
-		$scope.contributor.affiliation = {id : value};
+	    $scope.localAffiliation = $scope.contributor.affiliation;
+	    $scope.$watch('localAffiliation.id', function(value) {
+		$scope.contributor.affiliation = {id : value, text: ''};
 	    });
 
 	    retrieveAffiliations($scope.contributor.isUSGS());
@@ -122,7 +144,27 @@
 
 	    // Controller actions
 	    $scope.saveChanges = function(){
-		PubsModal.alert('Save Status', 'Save is not yet implemented');
+		var persistancePromise = ContributorPersister.persistContributor($scope.contributor.getData());
+		persistancePromise.
+		    then(function(returnedData) {
+			if ($scope.contributor.isNew()) {
+			    $location.path('Contributor/' + returnedData.contributorId);
+			}
+			delete $scope.contributor['validation-errors'];
+			Notifier.notify('Contributor successfully saved');
+		    }, function(reason) {
+			if (reason['validation-errors']) {
+			    $scope.contributor['validation-errors'] = reason['validation-errors'];
+			    Notifier.error('Contributor not saved - validation errors.');
+			}
+			else if (reason.message){
+			    Notifier.error(reason.message);
+			}
+			else{
+			    Notifier.error('Publication not saved; there were unanticipated errors. Consult browser logs');
+			    throw new Error(reason);
+			}
+		    });
 	    };
 
 	    $scope.cancelChanges = function() {
