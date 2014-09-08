@@ -111,6 +111,24 @@ describe('Tests for pw.editContributor', function() {
 	    expect(contrib.isUSGS()).toBe(false);
 	}));
 
+	it('Expects getData to return an object appropriate for persisting the data', inject(function(ContributorData) {
+	   var contrib = new ContributorData();
+	   contrib.corporation = true;
+	   contrib.contributorId = '1';
+	   contrib.organization = 'Org1';
+	   contrib.usgs = false;
+	   expect(contrib.getData()).toEqual({contributorId : '1', organization : 'Org1', corporation : true, usgs : false });
+
+	   contrib.family = 'F1';
+	   contrib.given = 'G1';
+	   contrib.suffix = 'S1';
+	   contrib.email = 'E1';
+	   contrib.affiliation = {id : '1'};
+	   contrib.corporation = false;
+	   expect(contrib.getData()).toEqual({contributorId : '1', family : 'F1', given : 'G1', suffix : 'S1', email : 'E1', affiliation : {id : '1'}, corporation : false, usgs : false});
+	}));
+
+
 	it('Expects the contributor fetcher to be used to create a new contrib if contributorID is specfied', inject(function(ContributorData) {
 	    var contrib;
 	    var contribPromise = new ContributorData(1);
@@ -129,13 +147,13 @@ describe('Tests for pw.editContributor', function() {
 	COST_CENTERS = [{id : 1, text : 'CC1'}, {id : 2, text : 'CC2'}, {id : 3, text : 'CC3'}];
 	OUTSIDE_AFFILIATIONS = [{id : 1, text : 'A1'}, {id : 2, text : 'A2'}, {id : 3, text : 'A3'}];
 
-	var mockPubsModal, mockLookupFetcher, $scope, ContributorData, $q, mockRoute;
+	var mockLocation, mockNotifier, mockLookupFetcher, $scope, ContributorData, mockContributorPersister, $q, mockRoute;
 	var createController;
 
 	beforeEach(function() {
-	    mockPubsModal = jasmine.createSpyObj('mockPubsModal', ['alert']);
-
+	    mockNotifier = jasmine.createSpyObj('mockNotifier', ['notify', 'error']);
 	    mockRoute = jasmine.createSpyObj('mockRoute', ['reload']);
+	    mockLocation = jasmine.createSpyObj('mockLocation', ['path']);
 
 	    mockLookupFetcher = {
 		promise : function(lookup) {
@@ -151,8 +169,27 @@ describe('Tests for pw.editContributor', function() {
 		    return deferred.promise;
 		}
 	    };
-
 	    spyOn(mockLookupFetcher, 'promise').andCallThrough();
+
+	    mockContributorPersistor = {
+		persistContributor : function(data) {
+		    var deferred = $q.defer();
+		    if (data.contributorId === 2) {
+			deferred.reject({'validation-errors' : 'Validation errors'});
+		    }
+		    else if (data.contributorId === 3) {
+			deferred.reject({'message' : 'Internal server error'});
+		    }
+		    else {
+			if (!data.contributorId) {
+			    data.contributorId = 1000;
+			}
+			deferred.resolve(data);
+		    }
+		    return deferred.promise;
+		}
+	    };
+	    spyOn(mockContributorPersistor, 'persistContributor').andCallThrough();
 	});
 
 	beforeEach(inject(function($injector) {
@@ -168,10 +205,11 @@ describe('Tests for pw.editContributor', function() {
 		return $controller('editContributorCtrl', {
 		    '$scope' : $scope,
 		    '$route' : mockRoute,
+		    '$location' : mockLocation,
 		    'thisContributor' : thisContributor,
 		    'LookupFetcher' : mockLookupFetcher,
-		    'PubsModal' : mockPubsModal,
-		    'ContributorData' : ContributorData
+		    'Notifier' : mockNotifier,
+		    'ContributorPersister' : mockContributorPersistor
 		});
 	    };
 	}));
@@ -212,14 +250,69 @@ describe('Tests for pw.editContributor', function() {
 	    var ctrl = createController(ContributorData());
 	    $scope.$digest();
 
-	    $scope.localAffiliationId = 1;
+	    $scope.localAffiliation.id = 1;
 	    $scope.$digest();
 	    expect($scope.contributor.affiliation.id).toEqual(1);
 
-	    $scope.localAffiliationId = 2;
+	    $scope.localAffiliation.id = 2;
 	    $scope.$digest();
 	    expect($scope.contributor.affiliation.id).toEqual(2);
 	});
+
+	it('Expects that a save for a new contributor changes the path to use the returned data\'s contributorId and to clear validation-errors', function() {
+	    var ctrl = createController(ContributorData());
+	    $scope.$digest();
+	    $scope.contributor['validation-errors'] = 'Some error';
+
+	    $scope.saveChanges();
+	    expect(mockContributorPersistor.persistContributor).toHaveBeenCalled();
+	    $scope.$digest();
+	    expect(mockLocation.path).toHaveBeenCalledWith('Contributor/1000');
+	    expect(mockNotifier.notify).toHaveBeenCalled();
+	    expect($scope.contributor['validation-errors']).not.toBeDefined();
+	});
+
+	it('Expects a save for an existing contributor not to change the path and to clear validation errors', function() {
+	    var contrib = ContributorData();
+	    contrib.contributorId = 100;
+	    var ctrl = createController(contrib);
+	    $scope.$digest();
+	    $scope.contributor['validation-errors'] = 'Some error';
+
+
+	    $scope.saveChanges();
+	    expect(mockContributorPersistor.persistContributor).toHaveBeenCalled();
+	    $scope.$digest();
+	    expect(mockLocation.path).not.toHaveBeenCalled();
+	    expect(mockNotifier.notify).toHaveBeenCalled();
+	    expect($scope.contributor['validation-errors']).not.toBeDefined();
+	});
+
+	it('Expects a save which returns validation-errors to add the validation-errors to scope', function() {
+	    var contrib = ContributorData();
+	    contrib.contributorId = 2;
+	    var ctrl = createController(contrib);
+	    $scope.$digest();
+
+	    $scope.saveChanges();
+	    expect(mockContributorPersistor.persistContributor).toHaveBeenCalled();
+	    $scope.$digest();
+	    expect($scope.contributor['validation-errors']).toBeDefined();
+	    expect(mockNotifier.error).toHaveBeenCalled();
+	});
+
+	it('Expects a save which returns an unknown error to call notifier', function() {
+	    var contrib = ContributorData();
+	    contrib.contributorId = 3;
+	    var ctrl = createController(contrib);
+	    $scope.$digest();
+
+	    $scope.saveChanges();
+	    expect(mockContributorPersistor.persistContributor).toHaveBeenCalled();
+	    $scope.$digest();
+	    expect($scope.contributor['validation-errors']).not.toBeDefined();
+	    expect(mockNotifier.error).toHaveBeenCalled();
+	})
 
 	it('Expects that calling cancel reloads the page', function() {
 	    var ctrl = createController(ContributorData());
