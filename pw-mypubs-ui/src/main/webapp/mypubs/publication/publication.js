@@ -90,21 +90,33 @@ angular.module('pw.publication', ['ngRoute', 'pw.notify',
 					self[propertyName] = defaultValue;
 				});
         };
-				/**
-		 * Is this Publication new?
-		 * @returns {Boolean} false if the pub's id is a non-zero-length String or a Number, true otherwise
-		 */
-		SkeletonPublication.prototype.isNew = function(){
-			var isNew = true;
-			var id = this.id;
-			if(angular.isString(id) && id.length > 1){
-				isNew = false;
-			}
-			else if(angular.isNumber(id)){
-				isNew = false;
-			}
-			return isNew;
-		};
+	/**
+	 * Is this Publication new?
+	 * @returns {Boolean} false if the pub's id is a non-zero-length String or a Number, true otherwise
+	 */
+	SkeletonPublication.prototype.isNew = function() {
+	    var isNew = true;
+	    var id = this.id;
+	    if (angular.isString(id) && id.length > 1) {
+		isNew = false;
+	    }
+	    else if (angular.isNumber(id)) {
+		isNew = false;
+	    }
+	    return isNew;
+	};
+
+	/*
+	 * @param newPubData
+	 * Updates the object with fields in newPubData, preserving properties
+	 * that are missing from newPubData
+	 */
+	SkeletonPublication.prototype.update = function(newPubData) {
+	    var that = this;
+	    angular.forEach(that, function(value, key) {
+		that[key] = newPubData[key] || value;
+	    });
+	};
 
         var pubConstructor = function (pubId) {
             var pubToReturn;
@@ -140,12 +152,13 @@ function($scope, $routeParams, $route, pubData, PublicationPersister, Notifier, 
 		var persistencePromise = PublicationPersister.persistPub($scope.pubData);
 		persistencePromise
 		.then(function(returnedPubData){
-			
+
 			if($scope.pubData.isNew()){
 				$location.path(PUB_ROOT + '/' + returnedPubData.id);
 			}
 			else{
-				$scope.pubData.lastModifiedDate = returnedPubData.lastModifiedDate;
+				$scope.pubData.update(returnedPubData);
+				$scope.$broadcast('refreshPubData');
 			}
 			Notifier.notify('Publication successfully saved');
 		}, function(reason){

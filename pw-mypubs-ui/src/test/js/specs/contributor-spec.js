@@ -12,13 +12,15 @@ describe ('Tests for pw.contributors', function() {
 	    given : 'Nancy',
 	    suffix : 'Ms',
 	    email : 'jones@usgs.gov',
-	    affiliation : {id : 1, text : 'Wisconsin Water Science Center'}
+	    affiliation : {id : 1, text : 'Wisconsin Water Science Center'},
+	    corporation : false
 	};
 	var corporationData = {
 	    id : 2,
 	    contributorId : 20,
 	    rank : 1,
-	    organization : 'Colorado Water Science Center'
+	    organization : 'Colorado Water Science Center',
+	    corporation : true
 	};
 
 	beforeEach(module('pw.contributors'));
@@ -45,7 +47,7 @@ describe ('Tests for pw.contributors', function() {
 	    expect(contrib.kind).toEqual('Person');
 	}));
 
-	it('Expects a contributor which is a Corporation to be created with kind equalto Corporation', inject(function(ContributorModel) {
+	it('Expects a contributor which is a Corporation to be created with kind equal to Corporation', inject(function(ContributorModel) {
 	    var contrib = new ContributorModel(corporationData);
 	    expect(contrib.id).toEqual(2);
 	    expect(contrib.contributorId).toEqual(20);
@@ -113,7 +115,8 @@ describe ('Tests for pw.contributors', function() {
 	    expect(contrib.getPubData()).toEqual({
 		id : 1,
 		contributorId : '',
-		rank : 1
+		rank : 1,
+		corporation: false
 	    });
 	}));
     });
@@ -212,16 +215,17 @@ describe ('Tests for pw.contributors', function() {
 
 	it('Expects that if the contrib properties are already defined the data will be preserved but ordered by rank', function() {
 	    scope.pubData = {
-		tab1 : [{family : 'N1', rank : 1}, {organization : 'N2', rank : 2}],
+		tab1 : [{family : 'N1', rank : 1}, {id : 1, contributorId : 1,organization : 'N2', rank : 2}],
 		tab2 : [{family : 'N3', rank : 1}],
 		tab3 : [{family : 'N4', rank : 3}, {family : 'N5', rank : 1}, {organization : 'N6', rank : 2}]
 	    };
 	    myCtrl = createController();
 	    scope.$digest();
 
-	    expect(scope.pubData.tab1).toEqual([{family : 'N1', rank : 1}, {organization : 'N2', rank : 2}]);
-	    expect(scope.pubData.tab2).toEqual([{family : 'N3', rank : 1}]);
-	    expect(scope.pubData.tab3).toEqual([{family : 'N5', rank : 1}, {organization : 'N6', rank : 2}, {family : 'N4', rank : 3}]);
+	    expect(scope.pubData.tab1[0].family).toEqual('N1');
+	    expect(scope.pubData.tab1[0].rank).toEqual(1);
+	    expect(scope.pubData.tab3[0].family).toEqual('N5');
+	    expect(scope.pubData.tab3[0].rank).toEqual(1);
 
 	    expect(scope.contribTabs[2].data[0].family).toEqual('N5');
 	});
@@ -337,6 +341,20 @@ describe ('Tests for pw.contributors', function() {
 	    expect(mockContributorFetcher.fetchContributorById).toHaveBeenCalledWith(2);
 	    scope.$digest();
 	    expect(scope.contribTabs[0].data[1].name).toEqual('New Name');
+	});
+
+	it('Expects the controller to handler the refreshPubData signal', function() {
+	    spyOn(scope, '$on').andCallThrough();
+	    scope.pubData = {
+		tab1 : [{contributorId : 1, family : 'N1', rank : 1, corporation : false}, {contributorId : 2, family : 'N2', rank : 2, corporation : false}],
+		tab2 : [{contributorId : 3, family : 'N3', rank : 1, corporation : false}]
+	    };
+	    myCtrl = createController();
+	    scope.$digest();
+	    scope.pubData.tab1[0].id = 1;
+	    scope.$broadcast('refreshPubData');
+	    expect(scope.$on).toHaveBeenCalled();
+	    expect(scope.contribTabs[0].data[0].id).toEqual(1);
 	});
     });
 });
