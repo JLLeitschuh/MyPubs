@@ -15,10 +15,10 @@ describe("pw.publication module", function(){
 		expect( def ).toBeTruthy();
 	});
 	describe('pubHeaderCtrl', function(){
-		
+
 		var scope, controller, newPub;
-		
-		
+
+
 		beforeEach(function(){
 			//mock pubData
 			angular.module('pw.publication').constant('pubData' , {});
@@ -52,7 +52,7 @@ describe("pw.publication module", function(){
 				controller = $controller('publicationCtrl', {
 					'$scope': scope
 				});
-				
+
 				}]);
 			inject(['Publication', '$httpBackend', 'PublicationPersister', function(Publication, _$httpBackend_, PublicationPersister){
 					newPub = new Publication();
@@ -81,38 +81,41 @@ describe("pw.publication module", function(){
 			scope.pubData = newPub;
 			scope.$digest();
 			var newPubPersistPromise = scope.persistPub();
-			
+
 			newPubPersistPromise.then(function(data){
 				expect(data).toEqual(newPub);
 			}, function(){
 				//this must fail if the function is called
 				expect(true).toBe(false);
 			});
-			
-			//since a template is requested and we cannot have 
+
+			//since a template is requested and we cannot have
 			//outstanding requests post-test, we should send a dummy
 			//response to all GETs
 			$httpBackend.when('GET', /.*/).respond(200, '');
-			
+
 			$httpBackend.flush();
 		});
 		it('should receive the persisted pubs object when it successfully persists an existing pub', function(){
-			scope.pubData = existingPub;
+		    spyOn(scope, '$broadcast');
+
+		    scope.pubData = existingPub;
 			scope.$digest();
-			
+
 			var existingPubPersistPromise = scope.persistPub();
 			existingPubPersistPromise.then(function(data){
 				expect(data).toEqual(existingPub);
+				expect(scope.$broadcast).toHaveBeenCalledWith('refreshPubData');
 			}, function(){
 				//this must fail if the function is called
 				expect(true).toBe(false);
 			});
 			$httpBackend.flush();
 		});
-		
+
 		it('should receive an error message when it unsuccessfully persists a new pub', function(){
 			newPubHandler.respond(404, '');
-			
+
 			scope.pubData = newPub;
 			scope.$digest();
 			var persistPromise = scope.persistPub();
@@ -126,7 +129,7 @@ describe("pw.publication module", function(){
 		});
 		it('should receive an error message when it unsuccessfully persists an existing pub', function(){
 			existingPubHandler.respond(404, '');
-			
+
 			scope.pubData = existingPub;
 			scope.$digest();
 			var persistPromise = scope.persistPub();
@@ -142,10 +145,10 @@ describe("pw.publication module", function(){
 
 	describe("Publication", function(){
 		var pubInstance;
-		
+
 		var $injector = angular.injector(['pw.publication']);
 		var Publication = $injector.get('Publication');
-			
+
 		beforeEach(function(){
 			pubInstance = new Publication();
 		});
@@ -159,6 +162,15 @@ describe("pw.publication module", function(){
 		it('should classify a publication with a number id as "not new"', function(){
 			pubInstance.id = 42;
 			expect(pubInstance.isNew()).toBe(false);
+		});
+
+		it('Expects update to update the publication with the data', function() {
+		    pubInstance = new Publication();
+		    pubInstance.chapter = 'chapter1';
+		    pubInstance.title = 'Title1';
+		    pubInstance.update({chapter : 'chapter2'});
+		    expect(pubInstance.chapter).toEqual('chapter2');
+		    expect(pubInstance.title).toEqual('Title1');
 		});
 	});
 });

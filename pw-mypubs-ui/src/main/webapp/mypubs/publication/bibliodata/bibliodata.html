@@ -17,7 +17,7 @@
     <div id="larger-work-type-div" class="form-group">
         <label class="control-label col-sm-3" for="pub-type-input">Larger Work Type</label>
         <div class="col-sm-9">
-            <select class="form-control" placeholder="Select a larger work type" ng-model="localLargerWorkTypeId" ng-change="changeType()" ui-select2>
+            <select class="form-control" placeholder="Select a larger work type" ng-model="localLargerWorkTypeId" ui-select2>
                 <option></option>
                 <option ng-repeat="option in typeOptions" value="{{option.id}}">{{option.text}}</option>            
             </select>

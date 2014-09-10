@@ -10,16 +10,19 @@ angular.module('pw.contributors', ['pw.contributorDAO', 'pw.dataList', 'pw.fetch
 		id : '',
 		contributorId : '',
 		rank : '',
-		kind : ''
+		kind : '',
+		corporation : false
 	    };
 	};
 
 	function Contributor(data) {
-	    if (data && angular.isDefined(data.family)) {
-		this.kind = 'Person';
-	    }
-	    else if (data && angular.isDefined(data.organization)) {
-		this.kind = 'Corporation';
+	    if (data) {
+		if (data.corporation) {
+		    this.kind = 'Corporation';
+		}
+		else {
+		    this.kind = 'Person';
+		}
 	    }
 	    else {
 		data = getEmptyContributor();
@@ -48,7 +51,7 @@ angular.module('pw.contributors', ['pw.contributorDAO', 'pw.dataList', 'pw.fetch
 			given : '',
 			suffix : '',
 			email : '',
-			affiliation : ''
+			affiliation : {}
 		    });
 		    removeProps(this, CORP_PROPS);
 		}
@@ -57,10 +60,26 @@ angular.module('pw.contributors', ['pw.contributorDAO', 'pw.dataList', 'pw.fetch
 			organization : ''
 		    });
 		    removeProps(this, PERSON_PROPS);
-
 		}
 		else {
 		    removeProps(this, CORP_PROPS.concat(PERSON_PROPS));
+		}
+	    },
+	    update : function(data) {
+		if (data) {
+		    if (data.corporation) {
+			this.kind = 'Corporation';
+		    }
+		    else {
+			this.kind = 'Person';
+		    }
+		    angular.extend(this, data);
+		}
+		else {
+		    this.kind = '';
+		    this.id = '';
+		    this.contributorId = '';
+		    this.corporation = false;
 		}
 	    },
 	    isPerson : function() {
@@ -75,11 +94,12 @@ angular.module('pw.contributors', ['pw.contributorDAO', 'pw.dataList', 'pw.fetch
 			id : this.id,
 			contributorId : this.contributorId,
 			rank : this.rank,
-			family : this.family,
-			given : this.given,
-			suffix : this.suffix,
-			email : this.email,
-			affiliation : this.affiliation
+			corporation : this.corporation,
+			family : this.family || '',
+			given : this.given || '',
+			suffix : this.suffix || '',
+			email : this.email || '',
+			affiliation : this.affiliation || {}
 		    };
 		}
 		else if (this.isCorporation()) {
@@ -87,14 +107,16 @@ angular.module('pw.contributors', ['pw.contributorDAO', 'pw.dataList', 'pw.fetch
 			id : this.id,
 			contributorId : this.contributorId,
 			rank : this.rank,
-			organization : this.organization
+			corporation : this.corporation,
+			organization : this.organization || ''
 		    };
 		}
 		else {
 		    return {
 			id : this.id,
 			contributorId : this.contributorId,
-			rank : this.rank
+			rank : this.rank,
+			corporation : this.corporation
 		    };
 		}
 	    }
@@ -104,7 +126,7 @@ angular.module('pw.contributors', ['pw.contributorDAO', 'pw.dataList', 'pw.fetch
     })
 
     .controller('contributorsCtrl',
-	['$scope', 'ContributorModel', 'ContributorFetcher', 'LookupFetcher', 'ListOrderingService', function ($scope, ContributorModel, ContributorFetcher, LookupFetcher, ListOrderingService) {
+	['$scope', 'Notifier', 'ContributorModel', 'ContributorFetcher', 'LookupFetcher', 'ListOrderingService', function ($scope, Notifier, ContributorModel, ContributorFetcher, LookupFetcher, ListOrderingService) {
 	var selectedIndex;
 
 	var KINDS = ['Person', 'Corporation'];
@@ -149,6 +171,22 @@ angular.module('pw.contributors', ['pw.contributorDAO', 'pw.dataList', 'pw.fetch
 			$scope.pubData[prop].push(contributor.getPubData());
 		    });
 		}, true);
+	    });
+	});
+
+	$scope.$on('refreshPubData', function() {
+	    var i;
+	    angular.forEach($scope.contribTabs, function(value, index) {
+		var prop = value.text.toLowerCase();
+		if ($scope.pubData[prop].length === $scope.contribTabs[index].data.length) {
+		    $scope.pubData[prop] = _.sortBy($scope.pubData[prop], 'rank');
+		    for (i = 0; i < $scope.pubData[prop].length; i++){
+			$scope.contribTabs[index].data[i].update($scope.pubData[prop][i]);
+		    }
+		}
+		else {
+		    Notifier.warn('Mismatch in returned contributor data');
+		}
 	    });
 	});
 
