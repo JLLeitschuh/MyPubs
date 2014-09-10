@@ -74,9 +74,9 @@
 	</pluginRepositories>
 
     <scm>
-		<url>https://github.com/USGS-CIDA/gPublications-Warehouse</url>
-		<connection>scm:git:git@github.com:USGS-CIDA/gPublications-Warehouse.git</connection>
-		<developerConnection>scm:git:git@github.com:USGS-CIDA/gPublications-Warehouse.git</developerConnection>
+		<url>https://github.com/USGS-CIDA/MyPubs</url>
+		<connection>scm:git:git@github.com:USGS-CIDA/MyPubs.git</connection>
+		<developerConnection>scm:git:git@github.com:USGS-CIDA/MyPubs.git</developerConnection>
     </scm>
 
 	<distributionManagement>
