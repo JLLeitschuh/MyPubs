@@ -215,13 +215,13 @@ function($scope, $routeParams, $route, pubData, PublicationPersister, Notifier, 
 		}
 	];
 }])
-    .controller('pubHeaderCtrl', [
-    '$scope', function ($scope) {
-	$scope.localDisplayToPublicDate = $scope.pubData.displayToPublicDate;
-	$scope.$watch('localDisplayToPublicDate', function(newDate) {
-	    $scope.pubData.displayToPublicDate = moment(newDate).format('YYYY-MM-DDTHH:mm:ss');
-	});
+.controller('pubHeaderCtrl', [
+'$scope', function ($scope) {
+    $scope.localDisplayToPublicDate = $scope.pubData.displayToPublicDate;
+    $scope.$watch('localDisplayToPublicDate', function(newDate) {
+	$scope.pubData.displayToPublicDate = moment(newDate).format('YYYY-MM-DDTHH:mm:ss');
+    });
 
-    }]);
+}]);
 
 }) ();
