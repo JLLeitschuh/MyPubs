@@ -128,7 +128,7 @@ describe ('Tests for pw.contributors', function() {
     });
 
     describe('Tests for contributorsCtrl', function() {
-	var mockLookupFetcher, mockListOrderingService, mockPubFetcher, q, rootscope, kind;
+	var mockLookupFetcher, mockListOrderingService, mockContributorFetcher, q, kind, scope, rootScope;
 	var createController, myCtrl;
 	var ContributorModel;
 
