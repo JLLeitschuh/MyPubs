@@ -4,6 +4,8 @@ describe ('Tests for pw.contributors', function() {
     });
 
     describe('Tests for ContributorModel', function() {
+	var kind;
+
 	var personData = {
 	    id : 1,
 	    contributorId : 10,
@@ -24,6 +26,10 @@ describe ('Tests for pw.contributors', function() {
 	};
 
 	beforeEach(module('pw.contributors'));
+
+	beforeEach(inject(function($injector) {
+	    kind = $injector.get('kind');
+	}));
 
 	it('Expects an empty contributor object to be created if no data is provided', inject(function(ContributorModel) {
 	    var contrib = new ContributorModel();
@@ -122,7 +128,7 @@ describe ('Tests for pw.contributors', function() {
     });
 
     describe('Tests for contributorsCtrl', function() {
-	var mockLookupFetcher, mockListOrderingService, mockPubFetcher, q, rootscope;
+	var mockLookupFetcher, mockListOrderingService, mockContributorFetcher, q, kind, scope, rootScope;
 	var createController, myCtrl;
 	var ContributorModel;
 
@@ -168,7 +174,7 @@ describe ('Tests for pw.contributors', function() {
 	    rootScope = $injector.get('$rootScope');
 	    scope = rootScope.$new();
 	    q = $injector.get('$q');
-
+	    kind = $injector.get('kind');
 	    ContributorModel = $injector.get('ContributorModel');
 
 	    $controller = $injector.get('$controller');

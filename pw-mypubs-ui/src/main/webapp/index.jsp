@@ -9,7 +9,7 @@
 	
 	<link rel="stylesheet" type="text/css" href="webjars/ng-grid/2.0.11/ng-grid.min.css" />
 
-        <link rel="stylesheet" type="text/css" href="lib/bootstrap/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="webjars/bootstrap/3.2.0/css/bootstrap.min.css">
         <link rel="stylesheet" type="text/css" href="lib/angular-bootstrap-datetimepicker/css/datetimepicker.css">
         <link rel="stylesheet" type="text/css" href="lib/select2/select2.css">
         <link rel="stylesheet" type="text/css" href="lib/select2/select2-bootstrap.css">
@@ -68,27 +68,27 @@
 
 	<!-- lib dependencies -->
 	
-	<script type="text/javascript" src="lib/jquery/jquery.1.11.0.js"></script>
+	<script type="text/javascript" src="webjars/jquery/1.11.1/jquery.min.js"></script>
 	<script type="text/javascript" src="lib/jquery-ui-1.11.0.custom/jquery-ui.js"></script>
 	<script type="text/javascript" src="lib/underscore/underscore.1.6.0.js"></script>
 	<script type="text/javascript" src="lib/select2/select2.3.4.8.js"></script>
 	<script type="text/javascript" src="lib/tinymce/tinymce.4.1.0.min.js"></script>
 
-	<script type="text/javascript" src="lib/angular/angular.1.2.17.js"></script>
+	<script type="text/javascript" src="webjars/angularjs/1.2.23/angular.min.js"></script>
 	<script type="text/javascript" src="webjars/ng-grid/2.0.11/ng-grid.min.js"></script>
-	<script type="text/javascript" src="lib/angular/angular-route.1.2.17.js"></script>
-	<script type="text/javascript" src="lib/angular/angular-animate.1.2.17.js"></script>
-	<script type="text/javascript" src="lib/angular/angular-cookies.1.2.17.js"></script>
+	<script type="text/javascript" src="webjars/angularjs/1.2.23/angular-route.min.js"></script>
+	<script type="text/javascript" src="webjars/angularjs/1.2.23/angular-animate.min.js"></script>
+	<script type="text/javascript" src="webjars/angularjs/1.2.23/angular-cookies.min.js"></script>
 	<script type="text/javascript" src="lib/angular/ui-select2.js"></script>
 	<script type="text/javascript" src="lib/angular/ui-bootstrap-tpls-0.11.0.js"></script>
 	<script type="text/javascript" src="lib/angular/ui-tinymce.0.5.x.js"></script>
 	<script type="text/javascript" src="lib/ui-sortable-master/src/sortable.js"></script>
-        <script type="text/javascript" src="lib/moment/moment.js"></script>
-        <script type="text/javascript" src="lib/bootstrap/bootstrap.min.js"></script>
+        <script type="text/javascript" src="webjars/momentjs/2.8.1/min/moment.min.js"></script>
+        <script type="text/javascript" src="webjars/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="lib/angular-bootstrap-datetimepicker/js/datetimepicker.js"></script>
 
 	<!-- mypubs application utils -->
-        
-        <script type="text/javascript" src="lib/angular-bootstrap-datetimepicker/js/datetimepicker.js"></script>
+     
 	<script type="text/javascript" src="mypubs/datarow/datarow.js"></script>
 	<script type="text/javascript" src="mypubs/dnd/dragdrop.js"></script>
 	<script type="text/javascript" src="mypubs/list/list.js"></script>

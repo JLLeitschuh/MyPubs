@@ -215,30 +215,13 @@ function($scope, $routeParams, $route, pubData, PublicationPersister, Notifier, 
 		}
 	];
 }])
-    .controller('pubHeaderCtrl', [
-    '$scope', function ($scope) {
+.controller('pubHeaderCtrl', [
+'$scope', function ($scope) {
+    $scope.localDisplayToPublicDate = $scope.pubData.displayToPublicDate;
+    $scope.$watch('localDisplayToPublicDate', function(newDate) {
+	$scope.pubData.displayToPublicDate = moment(newDate).format('YYYY-MM-DDTHH:mm:ss');
+    });
 
-        var pubData = $scope.pubData;
-        console.log(pubData);
-		var dateForScope;
-        if ( angular.isDefined(pubData.displayToPublicDate) && pubData.displayToPublicDate.length !== 0) {
-            //write out new date property as a date object
-            dateForScope = new Date(pubData.displayToPublicDate);
-        }
-		else{
-			dateForScope = new Date();
-		}
-		$scope.date = dateForScope;
-		$scope.$watch('date', function(newDate){
-			/*
-			 While the controller scope can have date objects, we need to put
-			 strings in the model. In this case the server requires a custom
-			 serialization that slightly modifies ISO-8601 by removing the
-			 time zone.
-			*/
-			pubData.displayToPublicDate = newDate.toJSON().replace(/[zZ]/, '');
-		});
-
-    }]);
+}]);
 
 }) ();
