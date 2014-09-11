@@ -19,8 +19,6 @@
     	<timestamp>${maven.build.timestamp}</timestamp>
     	<maven.build.timestamp.format>yyyy-MM-dd HH:mm</maven.build.timestamp.format>
 		<slf4j.version>1.7.5</slf4j.version>
-        <webjars.base>target/webjars</webjars.base>
-        <webjars.libs>${webjars.base}/META-INF/resources/webjars</webjars.libs>
 	</properties>
 
 	<issueManagement>
@@ -114,6 +112,21 @@
 			<groupId>gov.usgs.cida</groupId>
 			<artifactId>dynamicProperties</artifactId>
 			<version>1.0.2</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.webjars</groupId>
+		    <artifactId>jquery</artifactId>
+		    <version>1.11.1</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.webjars</groupId>
+		    <artifactId>angularjs</artifactId>
+		    <version>1.2.23</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.webjars</groupId>
+		    <artifactId>bootstrap</artifactId>
+		    <version>3.2.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.webjars</groupId>
@@ -218,23 +231,23 @@
 	                               </capability>
 	                        </webDriverCapabilities>			        
 				<preloadSources>
-						<source>src/main/webapp/lib/jquery/jquery.1.11.0.js</source>
+						<source>webjars/jquery.js</source>
 						<source>src/main/webapp/lib/jquery-ui-1.11.0.custom/jquery-ui.js</source>
 						<source>src/main/webapp/lib/underscore/underscore.1.6.0.js</source>
 						<source>src/main/webapp/lib/select2/select2.3.4.8.js</source>
 						<source>src/main/webapp/lib/tinymce/tinymce.4.1.0.min.js</source>
 
-						<source>src/main/webapp/lib/angular/angular.1.2.17.js</source>
-                        <source>${webjars.libs}/ng-grid/2.0.11/ng-grid.min.js</source>
-						<source>src/main/webapp/lib/angular/angular-route.1.2.17.js</source>
-						<source>src/main/webapp/lib/angular/angular-animate.1.2.17.js</source>
-						<source>src/main/webapp/lib/angular/angular-cookies.1.2.17.js</source>
+						<source>webjars/angular.js</source>
+						<source>webjars/ng-grid.min.js</source>
+						<source>webjars/angular-route.js</source>
+						<source>webjars/angular-animate.js</source>
+						<source>webjars/angular-cookies.js</source>
 						<source>src/main/webapp/lib/angular/ui-select2.js</source>
 						<source>src/main/webapp/lib/angular/ui-bootstrap-tpls-0.11.0.js</source>
 						<source>src/main/webapp/lib/angular/ui-tinymce.0.5.x.js</source>
 						<source>src/main/webapp/lib/ui-sortable-master/src/sortable.js</source>
                                                 <source>src/main/webapp/lib/angular-bootstrap-datetimepicker/js/datetimepicker.js</source>
-                                                <source>src/main/webapp/lib/moment/moment.js</source>
+                                                <source>webjars/moment.js</source>
             
 						<!-- testing libs -->
 						<source>src/test/js/lib/angular-mocks.1.2.17.js</source>
