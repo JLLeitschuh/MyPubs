@@ -2,8 +2,9 @@
 
 
 angular.module('pw.contributors', ['pw.contributorDAO', 'pw.dataList', 'pw.fetcher', 'pw.lookups'])
+    .value('kind', {person : 'Person', corporation : 'Corporation'})
 
-    .factory('ContributorModel', function() {
+    .factory('ContributorModel', ['kind', function(kind) {
 
 	var getEmptyContributor = function() {
 	    return {
@@ -18,10 +19,10 @@ angular.module('pw.contributors', ['pw.contributorDAO', 'pw.dataList', 'pw.fetch
 	function Contributor(data) {
 	    if (data) {
 		if (data.corporation) {
-		    this.kind = 'Corporation';
+		    this.kind = kind.corporation;
 		}
 		else {
-		    this.kind = 'Person';
+		    this.kind = kind.person;
 		}
 	    }
 	    else {
@@ -68,10 +69,10 @@ angular.module('pw.contributors', ['pw.contributorDAO', 'pw.dataList', 'pw.fetch
 	    update : function(data) {
 		if (data) {
 		    if (data.corporation) {
-			this.kind = 'Corporation';
+			this.kind = kind.corporation;
 		    }
 		    else {
-			this.kind = 'Person';
+			this.kind = kind.person;
 		    }
 		    angular.extend(this, data);
 		}
@@ -83,10 +84,10 @@ angular.module('pw.contributors', ['pw.contributorDAO', 'pw.dataList', 'pw.fetch
 		}
 	    },
 	    isPerson : function() {
-		return this.kind === 'Person';
+		return this.kind === kind.person;
 	    },
 	    isCorporation : function() {
-		return this.kind === 'Corporation';
+		return this.kind === kind.corporation;
 	    },
 	    getPubData : function() {
 		if (this.isPerson()) {
@@ -123,15 +124,13 @@ angular.module('pw.contributors', ['pw.contributorDAO', 'pw.dataList', 'pw.fetch
 	};
 
 	return Contributor;
-    })
+    }])
 
     .controller('contributorsCtrl',
-	['$scope', 'Notifier', 'ContributorModel', 'ContributorFetcher', 'LookupFetcher', 'ListOrderingService', function ($scope, Notifier, ContributorModel, ContributorFetcher, LookupFetcher, ListOrderingService) {
+	['$scope', 'kind', 'Notifier', 'ContributorModel', 'ContributorFetcher', 'LookupFetcher', 'ListOrderingService', function ($scope, kind, Notifier, ContributorModel, ContributorFetcher, LookupFetcher, ListOrderingService) {
 	var selectedIndex;
 
-	var KINDS = ['Person', 'Corporation'];
-
-	$scope.contribKindOptions = KINDS;
+	$scope.contribKindOptions = [kind.person, kind.corporation];
 
 	$scope.isPerson = function(contributor) {
 	    return contributor.isPerson(contributor);
