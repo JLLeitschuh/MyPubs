@@ -11,17 +11,11 @@
 				<option ng-repeat="option in contribKindOptions" value="{{option}}">{{option}}</option>
 			    </select>
 			    <div class="contrib-info-div" ng-if="isPerson(contrib)">
-				<select placeholder="Select Person" ui-select2 ng-model="contrib.contributorId" ng-change="updateContributorInfo($index)">
-				    <option></option>
-				    <option ng-repeat="option in personOptions" value="{{option.id}}">{{option.text}}</option>
-				</select>
+				<input type="hidden" placeholder="Select Person" ui-select2="contrib.select2Options" ng-model="contrib.contributorId" ng-change="updateContributorInfo($index)">
 				<input class="contrib-affiliation" type="text" readonly ng-model="contrib.affiliation.text" />
 			    </div>
 			    <div class="contrib-info-div" ng-if="isCorporation(contrib)">
-				<select placeholder="Select Corporation" ui-select2 ng-model="contrib.contributorId" ng-change="updateContributorInfo($index)">
-				    <option></option>
-				    <option ng-repeat="option in corporationOptions" value="{{option.id}}">{{option.text}}
-				</select>
+				<input type="hidden" placeholder="Select Corporation" ui-select2="contrib.select2Options" ng-model="contrib.contributorId" ng-change="updateContributorInfo($index)">
 			    </div>
 			</pw-data-list-row>
 		    </div>
