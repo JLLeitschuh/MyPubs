@@ -114,7 +114,7 @@ describe("pw.publication module", function(){
 		});
 
 		it('should receive an error message when it unsuccessfully persists a new pub', function(){
-			newPubHandler.respond(404, '');
+			newPubHandler.respond(404, 'Internal Error');
 
 			scope.pubData = newPub;
 			scope.$digest();
@@ -128,7 +128,7 @@ describe("pw.publication module", function(){
 			$httpBackend.flush();
 		});
 		it('should receive an error message when it unsuccessfully persists an existing pub', function(){
-			existingPubHandler.respond(404, '');
+			existingPubHandler.respond(404, 'Internal Error');
 
 			scope.pubData = existingPub;
 			scope.$digest();
