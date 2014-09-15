@@ -11,25 +11,24 @@
 				<option ng-repeat="option in contribKindOptions" value="{{option}}">{{option}}</option>
 			    </select>
 			    <div class="contrib-info-div" ng-if="isPerson(contrib)">
-				<select placeholder="Select Person" ui-select2 ng-model="contrib.contributorId" ng-change="updateContributorInfo($index)">
-				    <option></option>
-				    <option ng-repeat="option in personOptions" value="{{option.id}}">{{option.text}}</option>
-				</select>
+				<input type="hidden" placeholder="Select Person" ui-select2="contrib.select2Options" ng-model="contrib.contributorId" ng-change="updateContributorInfo($index)">
 				<input class="contrib-affiliation" type="text" readonly ng-model="contrib.affiliation.text" />
 			    </div>
 			    <div class="contrib-info-div" ng-if="isCorporation(contrib)">
-				<select placeholder="Select Corporation" ui-select2 ng-model="contrib.contributorId" ng-change="updateContributorInfo($index)">
-				    <option></option>
-				    <option ng-repeat="option in corporationOptions" value="{{option.id}}">{{option.text}}
-				</select>
+				<input type="hidden" placeholder="Select Corporation" ui-select2="contrib.select2Options" ng-model="contrib.contributorId" ng-change="updateContributorInfo($index)">
+			    </div>
+			    <div class="contrib-info-div edit-contrib-div">
+				<a href="#/Contributor/{{contrib.id}}" target="_blank">Edit</a>
 			    </div>
 			</pw-data-list-row>
 		    </div>
 		</div>
 
-		<div>
-		    <button type="button" class="btn btn-default" ng-click="addContributor()">New {{tab.text}}</button>
+		<div >
+		    <button type="button" class="btn btn-default" ng-click="addContributor()">Add {{tab.text}}</button>
 		</div>
+		<div class="pull-right">
+		    <a href="#/Contributor" target="_blank">Create new contributor</a>
 	    </form>
 	</tab>
     </tabset>

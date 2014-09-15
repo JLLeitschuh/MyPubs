@@ -7,5 +7,9 @@
 .contrib-info-div {
     display : inline-block;
 }
+.edit-contrib-div {
+    padding-left : 10px;
+    padding-right : 10px;
+}
 
 

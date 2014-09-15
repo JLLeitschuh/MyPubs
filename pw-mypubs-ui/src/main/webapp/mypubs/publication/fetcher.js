@@ -65,17 +65,17 @@ angular.module('pw.fetcher',[])
 		 */
 		var persistPub = function(clientPub){
 			//we do not want to send validation errors to the server, nor do we
-			//want stale validation errors to continue to be displayed on the 
+			//want stale validation errors to continue to be displayed on the
 			//client
 			delete clientPub['validation-errors'];
-			
+
 			var pub = _.clone(clientPub);
-			
-			//the server manages the last-modified date, so there's no need to 
+
+			//the server manages the last-modified date, so there's no need to
 			//send it. However, we do want to keep it on the client until
 			//the server sends us an updated version
 			delete pub.lastModifiedDate;
-			
+
 			var deferredPubPersistence = $q.defer();
 			//use a different http verb and url depending on whether the pub is new,
 			//but otherwise do the same same thing
@@ -110,7 +110,7 @@ angular.module('pw.fetcher',[])
 						deferredPubPersistence.reject(response);
 					}
 				else{
-					deferredPubPersistence.reject(new Error(errorPersistingPubMessage));
+					deferredPubPersistence.reject(new Error(response));
 				}
 			});
 
