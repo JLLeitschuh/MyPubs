@@ -17,13 +17,18 @@
 			    <div class="contrib-info-div" ng-if="isCorporation(contrib)">
 				<input type="hidden" placeholder="Select Corporation" ui-select2="contrib.select2Options" ng-model="contrib.contributorId" ng-change="updateContributorInfo($index)">
 			    </div>
+			    <div class="contrib-info-div edit-contrib-div">
+				<a href="#/Contributor/{{contrib.id}}" target="_blank">Edit</a>
+			    </div>
 			</pw-data-list-row>
 		    </div>
 		</div>
 
-		<div>
-		    <button type="button" class="btn btn-default" ng-click="addContributor()">New {{tab.text}}</button>
+		<div >
+		    <button type="button" class="btn btn-default" ng-click="addContributor()">Add {{tab.text}}</button>
 		</div>
+		<div class="pull-right">
+		    <a href="#/Contributor" target="_blank">Create new contributor</a>
 	    </form>
 	</tab>
     </tabset>
