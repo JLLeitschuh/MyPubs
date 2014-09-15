@@ -91,7 +91,8 @@ angular.module('pw.bibliodata',['pw.fetcher', 'pw.lookups'])
                 initSelection : function(element, callback) {
                     LookupCascadeSelect2.initSelection('publicationsubtypes', {publicationtypeid : $scope.pubData.publicationType.id}, $scope.pubData.publicationSubtype.id, callback);
                 },
-                placeholder : 'Select a publication subtype'
+                placeholder : 'Select a publication subtype',
+		allowClear : true
             };
 
             $scope.seriesTitleSelect2Options = {
@@ -101,7 +102,8 @@ angular.module('pw.bibliodata',['pw.fetcher', 'pw.lookups'])
                 initSelection : function(element, callback) {
                     LookupCascadeSelect2.initSelection('publicationseries', {publicationsubtypeid : $scope.pubData.publicationSubtype.id}, $scope.pubData.seriesTitle.id, callback);
                 },
-                placeholder : 'Select a series'
+                placeholder : 'Select a series',
+		allowClear : true
             };
 
             $scope.costCenterSelect2Options = {
@@ -111,7 +113,7 @@ angular.module('pw.bibliodata',['pw.fetcher', 'pw.lookups'])
             $scope.abstractEditorOptions = {
                 menubar : false
             };
-            
+
     }]);
 
 }) ();
