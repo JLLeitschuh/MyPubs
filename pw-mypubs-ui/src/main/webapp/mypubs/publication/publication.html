@@ -17,6 +17,13 @@
                 <span class="form-control" ng-bind="pubData.indexId" readonly></span>
             </div>
         </div>
+	
+		<div id="ipds-div" class="form-group">
+			<label class="control-label col-sm-3" >IPDS</label>
+			<div class="col-sm-6">
+				<span id="ipds-input" class="form-control" ng-bind="pubData.ipdsId" readonly></span>
+			</div>
+		</div>    
 
         <div id="pub-display-to-public-div" class="form-group">   
             <label class="control-label col-sm-3" >Display to public date</label>
@@ -24,13 +31,15 @@
             <div class="dropdown col-sm-6">
                 <a class="dropdown-toggle" id="dropdown2" role="button"  data-target="#" href="#">
                     <div class="input-group">
-                        <input type="text" class="form-control" data-ng-model="date">
+                        <input type="text" class="form-control" value="{{ localDisplayToPublicDate | date : 'yyyy-MM-ddTHH:mm:ss' }} ET">
                         <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+			
                     </div>
                 </a>
                 <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                    <datetimepicker data-ng-model="date" data-datetimepicker-config="{ dropdownSelector: '#dropdown2' }"></datetimepicker>
+                    <datetimepicker data-ng-model="localDisplayToPublicDate" data-datetimepicker-config="{ minuteStep : 15, dropdownSelector: '#dropdown2' }"></datetimepicker>
                 </ul>
+		
             </div>
         </div>
     </div>

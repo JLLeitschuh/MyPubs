@@ -16,7 +16,7 @@ describe("pw.publication module", function(){
 	});
 	describe('pubHeaderCtrl', function(){
 
-		var scope, controller, newPub;
+		var scope, controller;
 
 
 		beforeEach(function(){
@@ -34,9 +34,9 @@ describe("pw.publication module", function(){
 		]);
 	});
 		it('when the "date to display to public" in the controller scope changes, a watch should write a custom serialization to the model', function(){
-			scope.date = new Date('2014-08-20T19:23:25.000Z');
+			scope.localDisplayToPublicDate = new Date('Nov 17 2016 06:15:00 GMT-0600');
 			scope.$digest();
-			expect(scope.pubData.displayToPublicDate).toBe('2014-08-20T19:23:25.000');
+			expect(scope.pubData.displayToPublicDate).toBe('2016-11-17T06:15:00');
 		});
 	});
 	describe('publicationCtrl', function(){
@@ -114,7 +114,7 @@ describe("pw.publication module", function(){
 		});
 
 		it('should receive an error message when it unsuccessfully persists a new pub', function(){
-			newPubHandler.respond(404, '');
+			newPubHandler.respond(404, 'Internal Error');
 
 			scope.pubData = newPub;
 			scope.$digest();
@@ -128,7 +128,7 @@ describe("pw.publication module", function(){
 			$httpBackend.flush();
 		});
 		it('should receive an error message when it unsuccessfully persists an existing pub', function(){
-			existingPubHandler.respond(404, '');
+			existingPubHandler.respond(404, 'Internal Error');
 
 			scope.pubData = existingPub;
 			scope.$digest();

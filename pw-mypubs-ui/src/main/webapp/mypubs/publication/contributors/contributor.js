@@ -2,8 +2,9 @@
 
 
 angular.module('pw.contributors', ['pw.contributorDAO', 'pw.dataList', 'pw.fetcher', 'pw.lookups'])
+    .value('KIND', {person : 'Person', corporation : 'Corporation'})
 
-    .factory('ContributorModel', function() {
+    .factory('ContributorModel', ['KIND', 'LookupFetcher', function(KIND, LookupFetcher) {
 
 	var getEmptyContributor = function() {
 	    return {
@@ -11,127 +12,118 @@ angular.module('pw.contributors', ['pw.contributorDAO', 'pw.dataList', 'pw.fetch
 		contributorId : '',
 		rank : '',
 		kind : '',
-		corporation : false
+		corporation : false,
+		affliation : {}
 	    };
+	};
+
+	var getOptions = function(isCorporation, contributorId) {
+	    var lookup;
+	    var result = {minimumInputLength : 2}
+	    if (isCorporation) {
+		lookup = 'corporations';
+	    }
+	    else {
+		lookup = 'people';
+	    }
+	    return angular.extend(result, LookupFetcher.dynamicSelectOptions(lookup, contributorId));
 	};
 
 	function Contributor(data) {
 	    if (data) {
 		if (data.corporation) {
-		    this.kind = 'Corporation';
+		    this.kind = KIND.corporation;
+		    this.affiliation = {};
 		}
 		else {
-		    this.kind = 'Person';
+		    this.kind = KIND.person;
 		}
+		this.id = data.id;
+		this.contributorId = data.contributorId;
+		this.rank = data.rank;
+		this.corporation = data.corporation;
+		this.affiliation = data.affiliation || {};
+		this.select2Options = getOptions(data.corporation, data.contributorId);
 	    }
 	    else {
-		data = getEmptyContributor();
+		angular.extend(this, getEmptyContributor());
 	    }
-	    angular.extend(this, data);
 	}
 
 	Contributor.prototype = {
 	    changeKind : function() {
-		var removeProps = function(obj, propArray) {
-		    var i;
-		    for (i = 0; i < propArray.length; i++) {
-			delete obj[propArray[i]];
-		    }
-		};
-
-		var CORP_PROPS = ['organization'];
-		var PERSON_PROPS = ['family', 'given', 'suffix', 'email', 'affiliation'];
-
-		var i;
-
 		this.contributorId = '';
-		if (this.isPerson()) {
-		    angular.extend(this, {
-			family : '',
-			given : '',
-			suffix : '',
-			email : '',
-			affiliation : {}
-		    });
-		    removeProps(this, CORP_PROPS);
-		}
-		else if (this.isCorporation()) {
-		    angular.extend(this, {
-			organization : ''
-		    });
-		    removeProps(this, PERSON_PROPS);
-		}
-		else {
-		    removeProps(this, CORP_PROPS.concat(PERSON_PROPS));
-		}
+		this.affiliation = {};
+		this.corporation = this.kind === KIND.corporation;
+		this.select2Options = getOptions(this.corporation, this.contributorId);
 	    },
 	    update : function(data) {
 		if (data) {
+		    // Only update the contributorId object if it has changed
+		    if (data.contributorId != this.getContributorId()) {
+			this.contributorId = data.contributorId;
+		    }
+		    this.id = data.id;
+		    this.rank = data.rank;
+		    this.affiliation = data.affiliation || {};
+		    this.corporation = data.corporation;
 		    if (data.corporation) {
-			this.kind = 'Corporation';
+			this.kind = KIND.corporation;
 		    }
 		    else {
-			this.kind = 'Person';
+			this.kind = KIND.person;
 		    }
-		    angular.extend(this, data);
+		    this.select2Options = getOptions(data.corporation, this.contributorId);
+
 		}
 		else {
 		    this.kind = '';
 		    this.id = '';
 		    this.contributorId = '';
 		    this.corporation = false;
+		    this.affiliation = {};
+		}
+	    },
+
+	    updateContributor : function(data) {
+		if (data) {
+		    this.contributorId = data.contributorId;
+		    this.affiliation = data.affiliation || {};
 		}
 	    },
 	    isPerson : function() {
-		return this.kind === 'Person';
+		return this.kind === KIND.person;
 	    },
 	    isCorporation : function() {
-		return this.kind === 'Corporation';
+		return this.kind === KIND.corporation;
 	    },
-	    getPubData : function() {
-		if (this.isPerson()) {
-		    return {
-			id : this.id,
-			contributorId : this.contributorId,
-			rank : this.rank,
-			corporation : this.corporation,
-			family : this.family || '',
-			given : this.given || '',
-			suffix : this.suffix || '',
-			email : this.email || '',
-			affiliation : this.affiliation || {}
-		    };
-		}
-		else if (this.isCorporation()) {
-		    return {
-			id : this.id,
-			contributorId : this.contributorId,
-			rank : this.rank,
-			corporation : this.corporation,
-			organization : this.organization || ''
-		    };
+	    getContributorId : function() {
+		if (angular.isDefined(this.contributorId.id)) {
+		    return this.contributorId.id;
 		}
 		else {
-		    return {
-			id : this.id,
-			contributorId : this.contributorId,
-			rank : this.rank,
-			corporation : this.corporation
-		    };
+		    return this.contributorId;
 		}
+	    },
+	    getPubData : function() {
+		return {
+		    id : this.id,
+		    contributorId : this.getContributorId(),
+		    rank : this.rank,
+		    corporation : this.corporation,
+		    affiliation : this.affiliation || {}
+		};
 	    }
 	};
 
 	return Contributor;
-    })
+    }])
 
     .controller('contributorsCtrl',
-	['$scope', 'Notifier', 'ContributorModel', 'ContributorFetcher', 'LookupFetcher', 'ListOrderingService', function ($scope, Notifier, ContributorModel, ContributorFetcher, LookupFetcher, ListOrderingService) {
+	['$scope', 'KIND', 'Notifier', 'ContributorModel', 'ContributorFetcher', 'LookupFetcher', 'ListOrderingService', function ($scope, KIND, Notifier, ContributorModel, ContributorFetcher, LookupFetcher, ListOrderingService) {
 	var selectedIndex;
 
-	var KINDS = ['Person', 'Corporation'];
-
-	$scope.contribKindOptions = KINDS;
+	$scope.contribKindOptions = [KIND.person, KIND.corporation];
 
 	$scope.isPerson = function(contributor) {
 	    return contributor.isPerson(contributor);
@@ -185,17 +177,9 @@ angular.module('pw.contributors', ['pw.contributorDAO', 'pw.dataList', 'pw.fetch
 		    }
 		}
 		else {
-		    Notifier.warn('Mismatch in returned contributor data');
+		    Notifier.error('Mismatch in returned contributor data');
 		}
 	    });
-	});
-
-	LookupFetcher.promise('people').then(function(response) {
-	    $scope.personOptions = response.data;
-	});
-
-	LookupFetcher.promise('corporations').then(function(response) {
-	    $scope.corporationOptions = response.data;
 	});
 
 	$scope.selectedTab = function(index) {
@@ -217,10 +201,9 @@ angular.module('pw.contributors', ['pw.contributorDAO', 'pw.dataList', 'pw.fetch
 	};
 
 	$scope.updateContributorInfo = function(index) {
-	    ContributorFetcher.fetchContributorById($scope.contribTabs[selectedIndex].data[index].contributorId).then(function(response) {
-		angular.extend($scope.contribTabs[selectedIndex].data[index], response.data);
+	    ContributorFetcher.fetchContributorById($scope.contribTabs[selectedIndex].data[index].getContributorId()).then(function(response) {
+		$scope.contribTabs[selectedIndex].data[index].updateContributor();
 	    });
-
 	};
     }]);
 

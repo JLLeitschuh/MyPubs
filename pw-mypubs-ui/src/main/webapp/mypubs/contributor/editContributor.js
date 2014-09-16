@@ -170,6 +170,10 @@
 	    $scope.cancelChanges = function() {
 		$route.reload();
 	    };
+
+	    $scope.create = function() {
+		$location.path('Contributor');
+	    };
 	}]);
 }) ();
 

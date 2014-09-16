@@ -84,7 +84,7 @@
 			deferredPersistence.reject(response);
 		    }
 		    else{
-			deferredPersistence.reject(new Error(errorPersistingMessage));
+			deferredPersistence.reject(new Error(response));
 		    }
 	    });
 
