@@ -1,5 +1,5 @@
 <div id="edit-contributor">
-    <pre id="validation-errors" ng-show ="contributor['validation-errors'].length" ng-bind="contributor['validation-errors'] | json"></pre>
+    <pre id="validationErrors" ng-show ="contributor['validationErrors'].length" ng-bind="contributor['validationErrors'] | json"></pre>
     <div class="form-group"ng-if="contributor.isNew()">
 	<label>Contributor Type</label>
 	<select class="form-control" placeholder="Select kind" ui-select2 ng-model="localKind.id" ng-change="changeContribKind()">

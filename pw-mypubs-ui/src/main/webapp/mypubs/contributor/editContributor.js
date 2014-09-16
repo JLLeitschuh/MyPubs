@@ -150,11 +150,11 @@
 			if ($scope.contributor.isNew()) {
 			    $location.path('Contributor/' + returnedData.contributorId);
 			}
-			delete $scope.contributor['validation-errors'];
+			delete $scope.contributor['validationErrors'];
 			Notifier.notify('Contributor successfully saved');
 		    }, function(reason) {
-			if (reason['validation-errors']) {
-			    $scope.contributor['validation-errors'] = reason['validation-errors'];
+			if (reason['validationErrors']) {
+			    $scope.contributor['validationErrors'] = reason['validationErrors'];
 			    Notifier.error('Contributor not saved - validation errors.');
 			}
 			else if (reason.message){
