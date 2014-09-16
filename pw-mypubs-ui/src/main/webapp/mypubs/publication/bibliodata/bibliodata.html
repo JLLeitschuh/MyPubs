@@ -2,7 +2,7 @@
     <div id="pub-type-div" class="form-group">
         <label class="control-label col-sm-3" for="pub-type-input">Publication Type</label>
         <div class="col-sm-9">
-            <select class="form-control" placeholder="Select a publication type" ng-model="localPubTypeId" ng-change="changeType()" ui-select2="{ allowClear : true }">
+            <select id="pub-type-input" class="form-control" placeholder="Select a publication type" ng-model="localPubTypeId" ng-change="changeType()" ui-select2="{ allowClear : true }">
                 <option></option>
                 <option ng-repeat="option in typeOptions" value="{{option.id}}">{{option.text}}</option>            
             </select>
@@ -11,34 +11,19 @@
     <div id="pub-subtype-div" class="form-group">
         <label class="control-label col-sm-3" for="pub-subtype-input">Publication Subtype</label>
         <div class="col-sm-9">
-            <input class="form-control" type="hidden" ng-model="localPubGenreId" ng-change="changeGenre()" ui-select2="subtypeSelect2Options" />
+            <input id="pub-subtype-input" class="form-control" type="hidden" ng-model="localPubGenreId" ng-change="changeGenre()" ui-select2="subtypeSelect2Options" />
         </div>
-    </div>
-    <div id="larger-work-type-div" class="form-group">
-        <label class="control-label col-sm-3" for="pub-type-input">Larger Work Type</label>
-        <div class="col-sm-9">
-            <select class="form-control" placeholder="Select a larger work type" ng-model="localLargerWorkTypeId" ui-select2="{ allowClear : true }">
-                <option></option>
-                <option ng-repeat="option in typeOptions" value="{{option.id}}">{{option.text}}</option>            
-            </select>
-        </div>
-    </div>
-    <div class="form-group" id="larger-work-title-div">
-         <label class="control-label col-sm-3" for="isbn-input">Larger Work Title</label>
-         <div class="col-sm-9">
-            <input id="larger-work-title-input" type="text" class="form-control" ng-model="pubData.largerWorkTitle" />
-         </div>
     </div>
     <div id="series-title-tiv"  class="form-group">
         <label class="control-label col-sm-3" for="series-title-input">Series Title</label>
         <div class="col-sm-9">
-            <input class="form-control" type="hidden" ng-model="localSeriesTitle" ui-select2="seriesTitleSelect2Options" />
+            <input id="series-title-input" class="form-control" type="hidden" ng-model="localSeriesTitle" ui-select2="seriesTitleSelect2Options" />
         </div>
     </div>
     <div class="form-group" id="cost-centers-div">
         <label class="control-label col-sm-3" for="cost-centers-input">Cost Centers</label>
         <div class="col-sm-9">
-            <select class="form-control" multiple ng-model="localCostCenters" ui-select2="costCenterSelect2Options">
+            <select id="cost-centers-input" class="form-control" multiple ng-model="localCostCenters" ui-select2="costCenterSelect2Options">
                 <option></option>
                 <option ng-repeat="option in costCenterOptions" value="{{option.id}}">{{option.text}}</option>
             </select>
@@ -92,22 +77,37 @@
             <input id="collaboration-input" type="text" class="form-control" ng-model="pubData.collaboration" />
          </div>
     </div>
+    <div id="larger-work-type-div" class="form-group">
+        <label class="control-label col-sm-3" for="pub-type-input">Larger Work Type</label>
+        <div class="col-sm-9">
+            <select class="form-control" placeholder="Select a larger work type" ng-model="localLargerWorkTypeId" ui-select2="{ allowClear : true }">
+                <option></option>
+                <option ng-repeat="option in typeOptions" value="{{option.id}}">{{option.text}}</option>            
+            </select>
+        </div>
+    </div>
+    <div class="form-group" id="larger-work-title-div">
+         <label class="control-label col-sm-3" for="isbn-input">Larger Work Title</label>
+         <div class="col-sm-9">
+            <input id="larger-work-title-input" type="text" class="form-control" ng-model="pubData.largerWorkTitle" />
+         </div>
+    </div>
     <div class="form-group" id="language-div">
          <label class="control-label col-sm-3" for="title-input">Language</label>
          <div class="col-sm-9">
             <input id="language-input" type="text" class="form-control" ng-model="pubData.language" />
          </div>
     </div>
-    <div class="form-group" id="publication-div">
-         <label class="control-label col-sm-3" for="publication-input">Publication</label>
+    <div class="form-group" id="publisher-div">
+         <label class="control-label col-sm-3" for="publisher-input">Publisher</label>
          <div class="col-sm-9">
-            <input id="publication-input" type="text" class="form-control" ng-model="pubData.publisher" />
+            <input id="publisher-input" type="text" class="form-control" ng-model="pubData.publisher" />
          </div>
     </div>
-    <div class="form-group" id="publication-location-div">
-         <label class="control-label col-sm-3" for="title-input">Publication Location</label>
+    <div class="form-group" id="publisher-location-div">
+         <label class="control-label col-sm-3" for="publisher-location-input">Publisher Location</label>
          <div class="col-sm-9">
-            <input id="publication-location-input" type="text" class="form-control" ng-model="pubData.publisherLocation" />
+            <input id="publisher-location-input" type="text" class="form-control" ng-model="pubData.publisherLocation" />
          </div>
     </div>
     <div class="form-group" id="publication-year-div">
@@ -152,12 +152,6 @@
             <input id="isbn-input" type="text" class="form-control" ng-model="pubData.isbn" />
          </div>
     </div>
-    <div class="form-group" id="ipds-div">
-         <label class="control-label col-sm-3" for="isbn-input">IPDS</label>
-         <div class="col-sm-9">
-            <input id="ipds-input" type="text" class="form-control" ng-model="pubData.ipdsId" />
-         </div>
-    </div>    
     <div class="form-group" id="update-date-div">
          <label class="control-label col-sm-3">Last Modified Date</label>
          <div class="col-sm-9">
