@@ -9,9 +9,6 @@ var mypubs = angular.module('pw.mypubs', [
 		'ui.bootstrap.datetimepicker' //datetimepicker
 
 	])
-	.constant('APP_CONFIG', {
-		endpoint: 'services/'
-	})
 	.controller('mainCtrl', ['$scope', '$log', '$location',
 		function ($scope, $log, $location) {
 			$scope.show = function(show) {
@@ -38,4 +35,8 @@ var mypubs = angular.module('pw.mypubs', [
 			});
 		};
 	});
+
+	if(angular.isDefined(window.PUBS) && angular.isDefined(PUBS.constants)){
+		mypubs.constant('APP_CONFIG', PUBS.constants); //this is a bit of a hack/magic. This constant is injected into the HTML using JSP (index.jsp + constants.jsp)
+	}
 }) ();
