@@ -40,7 +40,7 @@
 	    //we do not want to send validation errors to the server, nor do we
 	    //want stale validation errors to continue to be displayed on the
 	    //client
-	    delete contributor['validation-errors'];
+	    delete contributor['validationErrors'];
 	    var deferredPersistence = $q.defer();
 	    //use a different http verb and url depending on whether the contributor is new,
 	    //but otherwise do the same same thing
@@ -80,7 +80,7 @@
 		deferredPersistence.resolve(response);
 	    })
 	    .error(function(response){
-		    if(response['validation-errors'] && 0 !== response['validation-errors'].length){
+		    if(response['validationErrors'] && 0 !== response['validationErrors'].length){
 			deferredPersistence.reject(response);
 		    }
 		    else{

@@ -80,7 +80,7 @@ angular.module('pw.publication').constant('APP_CONFIG', {})
                         'chapter' : 'text3',
                         'subchapterNumber' : 'text4',
                         'title' : 'text5',
-                        'abstract' : 'text6',
+                        'docAbstract' : 'text6',
                         'usgsCitation' : 'text7',
                         'language' : 'text8',
                         'publisher' : 'text9',

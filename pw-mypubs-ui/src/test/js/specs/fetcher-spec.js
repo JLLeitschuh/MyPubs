@@ -41,7 +41,7 @@ describe('pw.fetcher module', function() {
 
 		it('should POST new pubs and it should not include validation errors or last modified date', function(){
 			var prunedPublication = _.clone(newPublication);
-			delete prunedPublication['validation-errors'];
+			delete prunedPublication['validationErrors'];
 			delete prunedPublication.lastModifiedDate;
 			
 			PublicationPersister.persistPub(newPublication);
@@ -51,7 +51,7 @@ describe('pw.fetcher module', function() {
 		});
 		it('should PUT existing pubs and it should not include validation errorsor last modified date', function(){
 			var prunedPublication = _.clone(existingPublication);
-			delete prunedPublication['validation-errors'];
+			delete prunedPublication['validationErrors'];
 			delete prunedPublication.lastModifiedDate;
 			
 			PublicationPersister.persistPub(existingPublication);

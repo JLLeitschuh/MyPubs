@@ -175,7 +175,7 @@ describe('Tests for pw.editContributor', function() {
 		persistContributor : function(data) {
 		    var deferred = $q.defer();
 		    if (data.contributorId === 2) {
-			deferred.reject({'validation-errors' : 'Validation errors'});
+			deferred.reject({'validationErrors' : 'Validation errors'});
 		    }
 		    else if (data.contributorId === 3) {
 			deferred.reject({'message' : 'Internal server error'});
@@ -259,17 +259,17 @@ describe('Tests for pw.editContributor', function() {
 	    expect($scope.contributor.affiliation.id).toEqual(2);
 	});
 
-	it('Expects that a save for a new contributor changes the path to use the returned data\'s contributorId and to clear validation-errors', function() {
+	it('Expects that a save for a new contributor changes the path to use the returned data\'s contributorId and to clear validationErrors', function() {
 	    var ctrl = createController(ContributorData());
 	    $scope.$digest();
-	    $scope.contributor['validation-errors'] = 'Some error';
+	    $scope.contributor['validationErrors'] = 'Some error';
 
 	    $scope.saveChanges();
 	    expect(mockContributorPersistor.persistContributor).toHaveBeenCalled();
 	    $scope.$digest();
 	    expect(mockLocation.path).toHaveBeenCalledWith('Contributor/1000');
 	    expect(mockNotifier.notify).toHaveBeenCalled();
-	    expect($scope.contributor['validation-errors']).not.toBeDefined();
+	    expect($scope.contributor['validationErrors']).not.toBeDefined();
 	});
 
 	it('Expects a save for an existing contributor not to change the path and to clear validation errors', function() {
@@ -277,7 +277,7 @@ describe('Tests for pw.editContributor', function() {
 	    contrib.contributorId = 100;
 	    var ctrl = createController(contrib);
 	    $scope.$digest();
-	    $scope.contributor['validation-errors'] = 'Some error';
+	    $scope.contributor['validationErrors'] = 'Some error';
 
 
 	    $scope.saveChanges();
@@ -285,10 +285,10 @@ describe('Tests for pw.editContributor', function() {
 	    $scope.$digest();
 	    expect(mockLocation.path).not.toHaveBeenCalled();
 	    expect(mockNotifier.notify).toHaveBeenCalled();
-	    expect($scope.contributor['validation-errors']).not.toBeDefined();
+	    expect($scope.contributor['validationErrors']).not.toBeDefined();
 	});
 
-	it('Expects a save which returns validation-errors to add the validation-errors to scope', function() {
+	it('Expects a save which returns validationErrors to add the validationErrors to scope', function() {
 	    var contrib = ContributorData();
 	    contrib.contributorId = 2;
 	    var ctrl = createController(contrib);
@@ -297,7 +297,7 @@ describe('Tests for pw.editContributor', function() {
 	    $scope.saveChanges();
 	    expect(mockContributorPersistor.persistContributor).toHaveBeenCalled();
 	    $scope.$digest();
-	    expect($scope.contributor['validation-errors']).toBeDefined();
+	    expect($scope.contributor['validationErrors']).toBeDefined();
 	    expect(mockNotifier.error).toHaveBeenCalled();
 	});
 
@@ -310,7 +310,7 @@ describe('Tests for pw.editContributor', function() {
 	    $scope.saveChanges();
 	    expect(mockContributorPersistor.persistContributor).toHaveBeenCalled();
 	    $scope.$digest();
-	    expect($scope.contributor['validation-errors']).not.toBeDefined();
+	    expect($scope.contributor['validationErrors']).not.toBeDefined();
 	    expect(mockNotifier.error).toHaveBeenCalled();
 	})
 

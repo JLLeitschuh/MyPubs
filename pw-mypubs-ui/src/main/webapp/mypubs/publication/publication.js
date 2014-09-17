@@ -47,7 +47,7 @@ angular.module('pw.publication', ['ngRoute', 'pw.notify',
                 "chapter": "",
                 "subchapterNumber": "",
                 "title": "",
-                "abstract": "",
+                "docAbstract": "",
                 "language": "",
                 "publisher": "",
                 "publisherLocation": "",
@@ -84,7 +84,7 @@ angular.module('pw.publication', ['ngRoute', 'pw.notify',
                 "temporalEnd": "",
                 "authors": [],
                 "editors": [],
-                "validation-errors": []
+                "validationErrors": []
               };
 				angular.forEach(properties, function(defaultValue, propertyName){
 					self[propertyName] = defaultValue;
@@ -162,8 +162,8 @@ function($scope, $routeParams, $route, pubData, PublicationPersister, Notifier, 
 			}
 			Notifier.notify('Publication successfully saved');
 		}, function(reason){
-			if(reason['validation-errors']){
-				$scope.pubData['validation-errors'] = reason['validation-errors'];
+			if(reason['validationErrors']){
+				$scope.pubData['validationErrors'] = reason['validationErrors'];
 				Notifier.error('Publication not saved; there were validation errors.');
 			}
 			else if (reason.message){

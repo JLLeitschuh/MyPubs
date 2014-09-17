@@ -110,7 +110,7 @@ angular.module('pw.bibliodata',['pw.fetcher', 'pw.lookups'])
                 placeholder : 'Select one or more cost centers'
             };
 
-            $scope.abstractEditorOptions = {
+            $scope.docAbstractEditorOptions = {
                 menubar : false
             };
 

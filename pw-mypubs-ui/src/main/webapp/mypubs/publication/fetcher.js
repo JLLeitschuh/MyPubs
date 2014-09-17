@@ -67,7 +67,7 @@ angular.module('pw.fetcher',[])
 			//we do not want to send validation errors to the server, nor do we
 			//want stale validation errors to continue to be displayed on the
 			//client
-			delete clientPub['validation-errors'];
+			delete clientPub['validationErrors'];
 
 			var pub = _.clone(clientPub);
 
@@ -106,7 +106,7 @@ angular.module('pw.fetcher',[])
 				deferredPubPersistence.resolve(response);
 			})
 			.error(function(response){
-				if(response['validation-errors'] && 0 !== response['validation-errors'].length){
+				if(response['validationErrors'] && 0 !== response['validationErrors'].length){
 						deferredPubPersistence.reject(response);
 					}
 				else{
