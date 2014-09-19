@@ -87,6 +87,9 @@ angular.module('pw.publication', ['ngRoute', 'pw.notify',
                 "temporalEnd": "",
                 "authors": [],
                 "editors": [],
+				"scale" : "",
+				"projection" : "",
+				"datum" : "",
                 "validationErrors": []
               };
 				angular.forEach(properties, function(defaultValue, propertyName){
