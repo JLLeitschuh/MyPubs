@@ -72,6 +72,9 @@ angular.module('pw.publication', ['ngRoute', 'pw.notify',
                 "largerWorkType": {
                   "id": ''
                 },
+				"largerWorkSubtype" : {
+					"id" : ''
+				},
                 "largerWorkTitle": "",
                 "lastModifiedDate": "",
                 "productDescription": "",
