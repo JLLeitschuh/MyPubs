@@ -85,7 +85,8 @@ angular.module('pw.publication').constant('APP_CONFIG', {})
                         'language' : 'text8',
                         'publisher' : 'text9',
                         'publisherLocation' : 'text10',
-                        'largerWorkType' : {id : ''},
+                        'largerWorkType' : {id : 6},
+						'largerWorkSubtype' : {id : 7},
                         'doi' : 'text11',
                         'issn' : 'text12',
                         'isbn' : 'text13'
@@ -114,6 +115,7 @@ angular.module('pw.publication').constant('APP_CONFIG', {})
                     expect(pubData.seriesTitle.id).toEqual('');
                 });
 
+				
                 it('The subtypeSelect2Options.query should use the LookupCascadeSelect2 service', function() {
                     var query, queryParam;
                     myCtrl = createController();
