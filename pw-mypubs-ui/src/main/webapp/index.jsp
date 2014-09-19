@@ -9,10 +9,10 @@
 	
 	<link rel="stylesheet" type="text/css" href="webjars/ng-grid/2.0.11/ng-grid.min.css" />
 
-        <link rel="stylesheet" type="text/css" href="webjars/bootstrap/3.2.0/css/bootstrap.min.css">
-        <link rel="stylesheet" type="text/css" href="lib/angular-bootstrap-datetimepicker/css/datetimepicker.css">
-        <link rel="stylesheet" type="text/css" href="lib/select2/select2.css">
-        <link rel="stylesheet" type="text/css" href="lib/select2/select2-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="webjars/bootstrap/3.2.0/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="lib/angular-bootstrap-datetimepicker/css/datetimepicker.css">
+    <link rel="stylesheet" type="text/css" href="lib/select2/select2.css">
+    <link rel="stylesheet" type="text/css" href="lib/select2/select2-bootstrap.css">
 	<link rel="stylesheet" type="text/css" href="lib/font-awesome-4.1.0/css/font-awesome.min.css">
 	<link rel="stylesheet" type="text/css" href="mypubs/main/mypubs.css">
 	<link rel="stylesheet" type="text/css" href="mypubs/main/header.css">
@@ -126,6 +126,7 @@
 	<script type="text/javascript" src="mypubs/publication/catalog/catalog.js"></script>
 	<script type="text/javascript" src="mypubs/publication/contacts/contacts.js"></script>
 	<script type="text/javascript" src="mypubs/publication/links/links.js"></script>
+	<script type="text/javascript" src="mypubs/publication/geo/geo.js"></script>
 	<script type="text/javascript" src="mypubs/publication/contributors/contributor.js"></script>
 	
 		<!-- main controller -->

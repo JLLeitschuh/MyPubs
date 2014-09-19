@@ -1,7 +1,7 @@
 (function() {
 var PUB_ROOT = '/Publication';
 angular.module('pw.publication', ['ngRoute', 'pw.notify',
-	'pw.bibliodata', 'pw.catalog', 'pw.contacts', 'pw.links', 'pw.contributors', 'pw.fetcher' // pub edit modules
+	'pw.bibliodata', 'pw.catalog', 'pw.contacts', 'pw.links', 'pw.contributors', 'pw.geo', 'pw.fetcher' // pub edit modules
 ])
 .config(['$routeProvider',
 	function($routeProvider) {
@@ -90,6 +90,12 @@ angular.module('pw.publication', ['ngRoute', 'pw.notify',
 				"scale" : "",
 				"projection" : "",
 				"datum" : "",
+				"country" : "",
+				"state" : "",
+				"county" : "",
+				"city" : "",
+				"otherGeospatial" : "",
+				"geographicExtents" : "",
                 "validationErrors": []
               };
 				angular.forEach(properties, function(defaultValue, propertyName){
