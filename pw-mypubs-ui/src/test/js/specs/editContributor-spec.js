@@ -155,21 +155,21 @@ describe('Tests for pw.editContributor', function() {
 	    mockRoute = jasmine.createSpyObj('mockRoute', ['reload']);
 	    mockLocation = jasmine.createSpyObj('mockLocation', ['path']);
 
-	    mockLookupFetcher = {
-		promise : function(lookup) {
-		    var result = [];
-		    var deferred = $q.defer();
-		    if (lookup === 'costcenters') {
-			result = COST_CENTERS;
-		    }
-		    else if (lookup === 'outsideaffiliates') {
-			result = OUTSIDE_AFFILIATIONS;
-		    }
-		    deferred.resolve({data : result});
-		    return deferred.promise;
-		}
-	    };
-	    spyOn(mockLookupFetcher, 'promise').andCallThrough();
+		mockLookupFetcher = jasmine.createSpyObj('mockLookupFetcher', ['promise', 'dynamicSelectOptions']);
+
+	    mockLookupFetcher.promise.andCallFake(function(lookup) {
+			var result = [];
+			var deferred = $q.defer();
+			if (lookup === 'costcenters') {
+				result = COST_CENTERS;
+			}
+			else if (lookup === 'outsideaffiliates') {
+				result = OUTSIDE_AFFILIATIONS;
+			}
+			deferred.resolve({data : result});
+			return deferred.promise;
+		});
+		mockLookupFetcher.dynamicSelectOptions.andReturn({opt1 : 'Opt1'});
 
 	    mockContributorPersistor = {
 		persistContributor : function(data) {
@@ -202,17 +202,34 @@ describe('Tests for pw.editContributor', function() {
 	    $controller = $injector.get('$controller');
 
 	    createController = function(thisContributor) {
-		return $controller('editContributorCtrl', {
-		    '$scope' : $scope,
-		    '$route' : mockRoute,
-		    '$location' : mockLocation,
-		    'thisContributor' : thisContributor,
-		    'LookupFetcher' : mockLookupFetcher,
-		    'Notifier' : mockNotifier,
-		    'ContributorPersister' : mockContributorPersistor
-		});
+			return $controller('editContributorCtrl', {
+				'$scope' : $scope,
+				'$route' : mockRoute,
+				'$location' : mockLocation,
+				'thisContributor' : thisContributor,
+				'LookupFetcher' : mockLookupFetcher,
+				'Notifier' : mockNotifier,
+				'ContributorPersister' : mockContributorPersistor
+			});
 	    };
 	}));
+
+	it('Expects that a null contributor sets enableEdit to false', function() {
+		var contrib = ContributorData();
+		var ctrl = createController(contrib);
+		$scope.$digest();
+		expect($scope.enableEdit).toBe(false);
+		expect($scope.showContribSelect).toBe(false);
+	});
+
+	it('Expects that a non-null contributor sets enableEdit to true', function() {
+		var contrib = ContributorData();
+		contrib.contributorId = '1';
+		var ctrl = createController(contrib);
+		$scope.$digest();
+		expect($scope.enableEdit).toBe(true);
+		expect($scope.showContribSelect).toBe(false);
+	})
 
 	it('Expects that controller initialized with a non USGS contributor assigns the outside affiliations to affiliations', function() {
 	    var contrib = ContributorData();
@@ -234,16 +251,18 @@ describe('Tests for pw.editContributor', function() {
 	    expect($scope.affiliations).toEqual(COST_CENTERS);
 	});
 
-	it('Expects that changing the localKind, updates the contributor\'s corporation property)', function() {
-	    var ctrt = createController(ContributorData());
+	it('Expects that changing the localKind, updates the contributor\'s corporation property and sets the contrib select2', function() {
+	    var ctrl = createController(ContributorData());
 	    $scope.$digest();
 	    $scope.localKind.id = 'P';
 	    $scope.changeContribKind();
 	    expect($scope.contributor.corporation).toBe(false);
+		expect(mockLookupFetcher.dynamicSelectOptions).toHaveBeenCalledWith('people', '');
 
 	    $scope.localKind.id = 'C';
 	    $scope.changeContribKind();
 	    expect($scope.contributor.corporation).toBe(true);
+		expect(mockLookupFetcher.dynamicSelectOptions).toHaveBeenCalledWith('corporations', '');
 	});
 
 	it('Expects a change to localAffiliationId to update the contributor\'s affiliation', function() {
