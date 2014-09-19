@@ -1,6 +1,10 @@
 <div id="edit-contributor">
+	<div>
+		<a href="#/Search" class="btn active">Back to Search</a>
+	</div>
+	<br/>
     <pre id="validationErrors" ng-show ="contributor['validationErrors'].length" ng-bind="contributor['validationErrors'] | json"></pre>
-	<div ng-hide="enableEdit">
+	<div class="form" ng-hide="enableEdit">
 		<div class="row">
 			<div  class="col-sm-5 form-group">
 				<label>Select contributor type to create or edit </label>
@@ -20,7 +24,7 @@
 			</div>
 		</div>
 	</div>
-	<div ng-if="enableEdit">
+	<div class="form" ng-if="enableEdit">
 		<div ng-if="contributor.isPerson()">
 			<div class="form-group">
 				<label>First name</label>
