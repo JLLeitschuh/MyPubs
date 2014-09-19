@@ -108,71 +108,95 @@
 		function($scope, $route, $location, thisContributor, LookupFetcher, Notifier, ContributorPersister) {
 
 	    var retrieveAffiliations = function(isUSGS) {
-		var lookupKind;
-		if (isUSGS) {
-		    lookupKind = 'costcenters';
-		}
-		else {
-		    lookupKind = 'outsideaffiliates';
-		}
-		LookupFetcher.promise(lookupKind).then(function(response) {
-		    $scope.affiliations = response.data;
-		});
+			var lookupKind;
+			if (isUSGS) {
+				lookupKind = 'costcenters';
+			}
+			else {
+				lookupKind = 'outsideaffiliates';
+			}
+			LookupFetcher.promise(lookupKind).then(function(response) {
+				$scope.affiliations = response.data;
+			});
 	    };
 
 	    $scope.contributor = thisContributor;
+		$scope.enableEdit = thisContributor.contributorId !== '';
+		$scope.showContribSelect = false;
 
 	    // Setting up person/corporation picker
 	    $scope.contributorKinds = [{id : 'P', text: 'Person'}, {id : 'C', text : 'Corporation'}];
 
 	    $scope.localKind = {id : ''};
 	    $scope.changeContribKind = function() {
-		$scope.contributor.corporation = ($scope.localKind.id === 'C');
+			$scope.contributor.corporation = ($scope.localKind.id === 'C');
+			$scope.showContribSelect = true;
+			if ($scope.contributor.isCorporation()) {
+				$scope.selectContrib = {
+					options : LookupFetcher.dynamicSelectOptions('corporations', ''),
+					choice : ''
+				};
+				angular.extend($scope.selectContrib.options, {placeholder : 'Select corporation'});
+			}
+			else {
+				$scope.selectContrib = {
+					options : LookupFetcher.dynamicSelectOptions('people', ''),
+					choice : ''
+				};
+				angular.extend($scope.selectContrib.options, {placeholder : 'Select person'});
+			}
 	    };
+		$scope.editChoice = function() {
+			$location.path('Contributor/' + $scope.selectContrib.choice.id);
+		};
+
+		$scope.createNew = function() {
+			$scope.enableEdit = true;
+		};
 
 	    // Setting up affiliations picker
 	    $scope.localAffiliation = $scope.contributor.affiliation;
 	    $scope.$watch('localAffiliation.id', function(value) {
-		$scope.contributor.affiliation = {id : value, text: ''};
+			$scope.contributor.affiliation = {id : value, text: ''};
 	    });
 
 	    retrieveAffiliations($scope.contributor.isUSGS());
 
 	    $scope.changeAffiliationSelect = function() {
-		retrieveAffiliations($scope.contributor.isUSGS());
+			retrieveAffiliations($scope.contributor.isUSGS());
 	    };
 
 	    // Controller actions
 	    $scope.saveChanges = function(){
-		var persistancePromise = ContributorPersister.persistContributor($scope.contributor.getData());
-		persistancePromise.
-		    then(function(returnedData) {
-			if ($scope.contributor.isNew()) {
-			    $location.path('Contributor/' + returnedData.contributorId);
-			}
-			delete $scope.contributor['validationErrors'];
-			Notifier.notify('Contributor successfully saved');
-		    }, function(reason) {
-			if (reason['validationErrors']) {
-			    $scope.contributor['validationErrors'] = reason['validationErrors'];
-			    Notifier.error('Contributor not saved - validation errors.');
-			}
-			else if (reason.message){
-			    Notifier.error(reason.message);
-			}
-			else{
-			    Notifier.error('Publication not saved; there were unanticipated errors. Consult browser logs');
-			    throw new Error(reason);
-			}
+			var persistancePromise = ContributorPersister.persistContributor($scope.contributor.getData());
+			persistancePromise.
+				then(function(returnedData) {
+				if ($scope.contributor.isNew()) {
+					$location.path('Contributor/' + returnedData.contributorId);
+				}
+				delete $scope.contributor['validationErrors'];
+				Notifier.notify('Contributor successfully saved');
+				}, function(reason) {
+				if (reason['validationErrors']) {
+					$scope.contributor['validationErrors'] = reason['validationErrors'];
+					Notifier.error('Contributor not saved - validation errors.');
+				}
+				else if (reason.message){
+					Notifier.error(reason.message);
+				}
+				else{
+					Notifier.error('Publication not saved; there were unanticipated errors. Consult browser logs');
+					throw new Error(reason);
+				}
 		    });
 	    };
 
 	    $scope.cancelChanges = function() {
-		$route.reload();
+			$route.reload();
 	    };
 
 	    $scope.create = function() {
-		$location.path('Contributor');
+			$location.path('Contributor');
 	    };
 	}]);
 }) ();

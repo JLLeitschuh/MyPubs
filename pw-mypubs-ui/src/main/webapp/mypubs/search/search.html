@@ -15,11 +15,15 @@
 					<div class="pub-list-grid" ng-grid="pubsListGrid"></div>
 				</div>
 			</div>
+	
 		</div>
 		<div class="col-lg-9 pub-list-section">
-			<button class="btn" ng-click="editSelectedPublication()">Edit Selected</button>
-			<button class="btn" ng-click="removeSelectedPublicationsFromLists()">Remove Selected</button>
-			<button class="btn" ng-click="morePublicationOptions()">More <i class="glyphicon glyphicon-new-window" ></i></button><br/>
+			<div id="pub-management-div">
+				<button class="btn" ng-click="editSelectedPublication()">Edit Selected</button>
+				<button class="btn" ng-click="removeSelectedPublicationsFromLists()">Remove Selected</button>
+				<button class="btn" ng-click="morePublicationOptions()">More <i class="glyphicon glyphicon-new-window" ></i></button>
+				<a href="#/Contributor" class="pull-right btn active">Manage Contributors</a>
+			</div>
 			<div class="pub-grid-container">
 				<span ng-hide="searchTerm || selectedPubsLists && selectedPubsLists.length > 0">
 			        All publications available
