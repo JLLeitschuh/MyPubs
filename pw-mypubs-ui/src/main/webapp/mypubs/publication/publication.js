@@ -18,9 +18,20 @@ angular.module('pw.publication', ['ngRoute', 'pw.notify',
 			templateUrl: 'mypubs/publication/publication.html',
 			controller: 'publicationCtrl',
             resolve : {
-			    pubData : ['$route', 'Publication', function($route, Publication) {
+			    pubData : ['$route', 'Publication', 'PubsModal', '$location', function($route, Publication, PubsModal, $location) {
                     var pubsId = $route.current.params.pubsid;
-                    return Publication(pubsId);
+                    return Publication(pubsId).then(
+                    		function(pub) { return pub; },
+                    		function(reason) {
+                    			if(reason.status == 409 &&
+                    					reason.data &&
+                    					reason.data.validationErrors) {
+                    				PubsModal.alert("Could Not Open Requested Publication", "The publication has been locked by the user \"" +
+                    						reason.data.validationErrors[0].value + "\" and must be released. Please wait for the lock to be released by the user. " +
+                    								"The lock will also be released after a 3 hour timeout if no activity is detected. ");
+                    				$location.path("/Search");
+                    			}
+                    		});
 			    }]
             }
 		});
@@ -135,6 +146,8 @@ angular.module('pw.publication', ['ngRoute', 'pw.notify',
                         safePub[key] = response[key] || defaultValue;
                     });
                     deferred.resolve(safePub);
+                }, function(reason) {
+                	deferred.reject(reason);
                 });
                 pubToReturn = deferred.promise;
             }
