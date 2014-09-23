@@ -225,7 +225,7 @@ function($scope, $routeParams, $route, pubData, PublicationPersister, Notifier, 
 		},
 		{
 			title:"Contacts",
-			templateUrl: 'mypubs/publication/contacts/contact.html',
+			templateUrl: 'mypubs/publication/contacts/contacts.html',
 			controller: 'contactCtrl'
 		},
 		{
