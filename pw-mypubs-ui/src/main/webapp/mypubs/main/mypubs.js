@@ -8,13 +8,17 @@ var mypubs = angular.module('pw.mypubs', [
 		'pw.auth', 'pw.notify', 'pw.fetcher',// pw util modules
 		'pw.search', 'pw.publication', 'pw.editContributor' // mypubs pages
 	])
-	.controller('mainCtrl', ['$scope',
-		function ($scope) {
+	.controller('mainCtrl', ['$scope', 'AuthService',
+		function ($scope, AuthService) {
 			$scope.show = function(show) {
 				if ( angular.isUndefined(show) ) {
 					return $scope._show;
 				}
 				return $scope._show = show;
+			};
+
+			$scope.logout = function() {
+				AuthService.logout();
 			};
 	}])
 	.config(['$routeProvider', '$httpProvider',
