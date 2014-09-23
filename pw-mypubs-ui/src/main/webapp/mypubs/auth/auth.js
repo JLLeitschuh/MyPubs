@@ -48,7 +48,11 @@
 					}
 				}).error(function(response, status){
 					if(status == 401) {
-						deferred.reject("Invalid username/password.");
+						if(response.reason) {
+							deferred.reject(response.reason);
+						} else {
+							deferred.reject("Unable to authenticate.");
+						}
 					} else {
 						deferred.reject("There was a server error.");
 					}
@@ -104,8 +108,10 @@
 
 	.factory('AuthorizationInterceptor', function($q, $location, AuthState) {
 		var attachAuthToken = function(config) {
-			//this is following a standard header format used by OAUTH2
-			config.headers[AUTH_TOKEN_HEADER] = "Bearer " + AuthState.getToken();
+			if(AuthState.getToken() != null) {
+				//this is following a standard header format used by OAUTH2
+				config.headers[AUTH_TOKEN_HEADER] = "Bearer " + AuthState.getToken();
+			}
 			return config;
 		};
 		
