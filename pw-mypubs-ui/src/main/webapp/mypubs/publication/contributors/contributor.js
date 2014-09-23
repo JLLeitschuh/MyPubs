@@ -87,7 +87,7 @@ angular.module('pw.contributors', ['pw.contributorDAO', 'pw.dataList', 'pw.fetch
 
 			updateContributor : function(data) {
 				if (data) {
-					if (this.getContributorId !== data.contributorId) {
+					if (this.getContributorId() !== data.contributorId) {
 						this.contributorId = data.contributorId;
 					}
 					this.affiliation = data.affiliation || {};
