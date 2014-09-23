@@ -16,13 +16,9 @@
 	<link rel="stylesheet" type="text/css" href="lib/font-awesome-4.1.0/css/font-awesome.min.css">
 	<link rel="stylesheet" type="text/css" href="mypubs/main/mypubs.css">
 	<link rel="stylesheet" type="text/css" href="mypubs/main/header.css">
-	<link rel="stylesheet" type="text/css" href="mypubs/datarow/datarow.css">
 	<link rel="stylesheet" type="text/css" href="mypubs/publication/publication.css">
-	<link rel="stylesheet" type="text/css" href="mypubs/publication/contacts/contacts.css">
 	<link rel="stylesheet" type="text/css" href="mypubs/publication/contributors/contributor.css">
 	<link rel="stylesheet" type="text/css" href="mypubs/publication/links/links.css">
-	<link rel="stylesheet" type="text/css" href="mypubs/dnd/dragdrop.css">
-	<link rel="stylesheet" type="text/css" href="mypubs/list/list.css">
     <link rel="stylesheet" type="text/css" href="css/custom.css">
 
 </head>
@@ -89,11 +85,7 @@
 
 	<!-- mypubs application utils -->
      
-	<script type="text/javascript" src="mypubs/datarow/datarow.js"></script>
-	<script type="text/javascript" src="mypubs/dnd/dragdrop.js"></script>
-	<script type="text/javascript" src="mypubs/list/list.js"></script>
-        <script type="text/javascript" src="mypubs/dataList/dataList.js"></script>
-	<script type="text/javascript" src="mypubs/main/collection.js"></script>
+	<script type="text/javascript" src="mypubs/dataList/dataList.js"></script>
 	<script type="text/javascript" src="mypubs/notify/notify.js"></script>
 	<script type="text/javascript" src="mypubs/modal/modal.js"></script>
 	
@@ -103,17 +95,11 @@
 	<!-- login page -->
 	<script type="text/javascript" src="mypubs/auth/auth.js"></script>
 
-	<!-- home page -->
-	<script type="text/javascript" src="mypubs/main/home.js"></script>
-
 	<!-- search page -->
 	<script type="text/javascript" src="mypubs/search/search.js"></script>
 	
 	<!-- edit contributor page -->
 	<script type="text/javascript" src="mypubs/contributor/editContributor.js"></script>
-
-	<!-- reservation page -->
-	<script type="text/javascript" src="mypubs/reservation/reservation.js"></script>
 
 	<!-- publications page -->
 

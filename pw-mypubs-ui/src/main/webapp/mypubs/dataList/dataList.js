@@ -23,10 +23,10 @@
 	srv.addNewObj = function(list, newEmptyObj) {
 	    var result = list;
 	    if (result.length === 0) {
-		newEmptyObj.rank = 1;
+			newEmptyObj.rank = 1;
 	    }
 	    else {
-		newEmptyObj.rank = _.max(list, function(obj) { return obj.rank; }).rank + 1;
+			newEmptyObj.rank = _.max(list, function(obj) { return obj.rank; }).rank + 1;
 	    }
 	    result.push(newEmptyObj);
 	    return result.concat([]);
@@ -46,16 +46,15 @@
 
     mod.directive('pwDataListRow', function() {
 	// The onDelete attribute should be a function which removes the row from the DOM and scope.
-	return {
-	    restrict : 'E',
-	    transclude : true,
-	    templateUrl : 'mypubs/dataList/data_list_row.html',
-	    scope: {
-		'delete' : '&onDelete'
-	    }
-	};
+		return {
+			restrict : 'E',
+			transclude : true,
+			templateUrl : 'mypubs/dataList/data_list_row.html',
+			scope: {
+			'delete' : '&onDelete'
+			}
+		};
     });
-
 })();
 
 
