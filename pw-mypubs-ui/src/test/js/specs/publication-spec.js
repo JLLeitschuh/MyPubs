@@ -24,20 +24,26 @@ describe("pw.publication module", function(){
 			angular.module('pw.publication').constant('pubData' , {});
 			module('pw.publication');
 			inject(['$rootScope', '$controller', 'Publication',
-			function($rootScope, $controller, Publication){
-				scope = $rootScope.$new();
-				scope.pubData = new Publication();
-				controller = $controller('pubHeaderCtrl', {
-					'$scope': scope
-				});
-			}
-		]);
-	});
+				function($rootScope, $controller, Publication){
+					scope = $rootScope.$new();
+					scope.pubData = new Publication();
+					controller = $controller('pubHeaderCtrl', {
+						'$scope': scope
+					});
+				}
+			]);
+		});
+
 		it('when the "date to display to public" in the controller scope changes, a watch should write a custom serialization to the model', function(){
 			scope.localDisplayToPublicDate = new Date('Nov 17 2016 06:15:00 GMT-0600');
 			scope.$digest();
 			expect(scope.pubData.displayToPublicDate).toBe('2016-11-17T06:15:00');
+
+			scope.localDisplayToPublicDate = '';
+			scope.$digest();
+			expect(scope.pubData.displayToPublicDate).toBe('');
 		});
+
 	});
 	describe('publicationCtrl', function(){
 		var scope, controller, $httpBackend, existingPub, newPub, newPubHandler, existingPubHandler;
