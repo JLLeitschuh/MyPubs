@@ -121,10 +121,10 @@ angular.module('pw.publication', ['ngRoute', 'pw.notify',
 	    var isNew = true;
 	    var id = this.id;
 	    if (angular.isString(id) && id.length > 1) {
-		isNew = false;
+			isNew = false;
 	    }
 	    else if (angular.isNumber(id)) {
-		isNew = false;
+			isNew = false;
 	    }
 	    return isNew;
 	};
@@ -137,7 +137,7 @@ angular.module('pw.publication', ['ngRoute', 'pw.notify',
 	SkeletonPublication.prototype.update = function(newPubData) {
 	    var that = this;
 	    angular.forEach(that, function(value, key) {
-		that[key] = newPubData[key] || value;
+			that[key] = newPubData[key] || value;
 	    });
 	};
 
@@ -166,8 +166,8 @@ angular.module('pw.publication', ['ngRoute', 'pw.notify',
         return pubConstructor;
     }])
 .controller('publicationCtrl',
-[ '$scope', '$routeParams', '$route', 'pubData', 'PublicationPersister', 'Notifier', '$location',
-function($scope, $routeParams, $route, pubData, PublicationPersister, Notifier, $location) {
+[ '$scope', '$route', 'pubData', 'PublicationPersister', 'Notifier', '$location',
+function($scope, $route, pubData, PublicationPersister, Notifier, $location) {
 	$scope.pubData = pubData;
 	/**
 	 *
@@ -200,6 +200,9 @@ function($scope, $routeParams, $route, pubData, PublicationPersister, Notifier, 
 			}
 		});
 		return persistencePromise;
+	};
+	$scope.resetPub = function() {
+		$route.reload();
 	};
 
     $scope.returnToSearch = function(){
