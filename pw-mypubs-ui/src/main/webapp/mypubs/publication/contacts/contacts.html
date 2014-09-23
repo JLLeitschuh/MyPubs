@@ -1,34 +1,4 @@
 <div id="contacts"  ng-controller="contactsCtrl">
-	<h4>All {{contacts.length}} Contact{{contacts.length===1?'':'s'}}</h4>
-	<div class="contactsGroup">
-
-		<div pw-list entries="contacts" type-label="'Contact'" entry-height="166" entry-width="400"
-			 service="Contacts" controls-align="left" hide-button="true">
-			<div class="contactItem" ng-click="select(entry.id)"
-				 ng-class="isSelected(entry.id)?'contactSelected':'contact'">
-
-				<div class="addressName list-group-item-heading" ng-bind="entry.name"></div>
-				<div class="addressLine list-group-item-text" ng-bind="entry.address1"></div>
-				<div class="addressLine list-group-item-text" ng-bind="entry.address2"></div>
-				<div class="addressLine list-group-item-text" ng-bind="entry.address3"></div>
-				<div class="addressCityStateZip list-group-item-text">
-					<span class="addressCity"  ng-bind="entry.city"></span>
-					<span class="addressState" ng-bind="entry.state"></span>
-					<span class="addressZip"   ng-bind="entry.zipcode"></span>
-				</div>
-				<div class="addressWeb list-group-item-text">
-					Web Address:
-					<a href="{{entry.website}}" target="_new" ng-bind="entry.website"></a>
-				</div>
-				<div class="addressLink ">
-					Link:
-					<a href="{{entry.link}}" target="_new" ng-bind="entry.link_text"></a>
-				</div>
-
-			</div>
-		</div>
-
-	</div>
 </div>
 
 

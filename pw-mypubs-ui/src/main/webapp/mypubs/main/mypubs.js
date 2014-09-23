@@ -4,13 +4,12 @@
 var mypubs = angular.module('pw.mypubs', [
 
 		'ngRoute', 'ngGrid', 'ngCookies', 'ui.select2','ui.bootstrap', 'ui.tinymce', 'ngAnimate', 'ui.sortable',// angular util modules
+		'ui.bootstrap.datetimepicker', //datetimepicker
 		'pw.auth', 'pw.notify', 'pw.fetcher',// pw util modules
-		'pw.home','pw.search', 'pw.publication', 'pw.editContributor', 'pw.reservation', // mypubs pages
-		'ui.bootstrap.datetimepicker' //datetimepicker
-
+		'pw.search', 'pw.publication', 'pw.editContributor' // mypubs pages
 	])
-	.controller('mainCtrl', ['$scope', '$log', '$location',
-		function ($scope, $log, $location) {
+	.controller('mainCtrl', ['$scope',
+		function ($scope) {
 			$scope.show = function(show) {
 				if ( angular.isUndefined(show) ) {
 					return $scope._show;
