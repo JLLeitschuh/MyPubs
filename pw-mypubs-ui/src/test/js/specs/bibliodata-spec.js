@@ -1,5 +1,13 @@
 describe("pw.bibliodata module", function(){
-angular.module('pw.publication').constant('APP_CONFIG', {})
+	var APP_CONFIG = {
+        endpoint : 'https://dummy_service/'
+    };
+	beforeEach(function () {
+		module(function ($provide) {
+			$provide.value('APP_CONFIG', APP_CONFIG);
+		});
+	});
+
 	beforeEach(function(){
         module('pw.bibliodata');
         module('pw.publication');
@@ -115,7 +123,7 @@ angular.module('pw.publication').constant('APP_CONFIG', {})
                     expect(pubData.seriesTitle.id).toEqual('');
                 });
 
-				
+
                 it('The subtypeSelect2Options.query should use the LookupCascadeSelect2 service', function() {
                     var query, queryParam;
                     myCtrl = createController();

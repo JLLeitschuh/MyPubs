@@ -46,6 +46,9 @@
 		<div class="container mainContainer" ng-controller="mainCtrl">	    
 
 			<div class="row">
+				<div id="logout-div" class="pull-right">
+					<button type="button" class="btn btn-link" ng-click="logout()">Logout</button>
+				</div>
 
 				<div class="col-lg-12">
 
@@ -91,6 +94,8 @@
 	
 	<script type="text/javascript" src="mypubs/services/lookups.js"></script>
 	<script type="text/javascript" src="mypubs/services/contributorDAO.js"></script>
+	<script type="text/javascript" src="mypubs/services/publicationDAO.js"></script>
+
 
 	<!-- login page -->
 	<script type="text/javascript" src="mypubs/auth/auth.js"></script>
@@ -104,8 +109,6 @@
 	<!-- publications page -->
 
 	<script type="text/javascript" src="mypubs/publication/publication.js"></script>
-
-	<script type="text/javascript" src="mypubs/publication/fetcher.js"></script>
 
 	<!-- publications tabs -->
 	<script type="text/javascript" src="mypubs/publication/bibliodata/bibliodata.js"></script>

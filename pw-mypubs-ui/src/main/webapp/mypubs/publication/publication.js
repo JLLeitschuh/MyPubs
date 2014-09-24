@@ -1,7 +1,7 @@
 (function() {
 var PUB_ROOT = '/Publication';
 angular.module('pw.publication', ['ngRoute', 'pw.notify',
-	'pw.bibliodata', 'pw.catalog', 'pw.contacts', 'pw.links', 'pw.contributors', 'pw.geo', 'pw.fetcher' // pub edit modules
+	'pw.bibliodata', 'pw.catalog', 'pw.contacts', 'pw.links', 'pw.contributors', 'pw.geo', 'pw.publicationDAO' // pub edit modules
 ])
 .config(['$routeProvider',
 	function($routeProvider) {
@@ -121,10 +121,10 @@ angular.module('pw.publication', ['ngRoute', 'pw.notify',
 	    var isNew = true;
 	    var id = this.id;
 	    if (angular.isString(id) && id.length > 1) {
-		isNew = false;
+			isNew = false;
 	    }
 	    else if (angular.isNumber(id)) {
-		isNew = false;
+			isNew = false;
 	    }
 	    return isNew;
 	};
@@ -137,7 +137,7 @@ angular.module('pw.publication', ['ngRoute', 'pw.notify',
 	SkeletonPublication.prototype.update = function(newPubData) {
 	    var that = this;
 	    angular.forEach(that, function(value, key) {
-		that[key] = newPubData[key] || value;
+			that[key] = newPubData[key] || value;
 	    });
 	};
 
@@ -166,8 +166,8 @@ angular.module('pw.publication', ['ngRoute', 'pw.notify',
         return pubConstructor;
     }])
 .controller('publicationCtrl',
-[ '$scope', '$routeParams', '$route', 'pubData', 'PublicationPersister', 'Notifier', '$location',
-function($scope, $routeParams, $route, pubData, PublicationPersister, Notifier, $location) {
+[ '$scope', '$route', 'pubData', 'PublicationPersister', 'Notifier', '$location',
+function($scope, $route, pubData, PublicationPersister, Notifier, $location) {
 	$scope.pubData = pubData;
 	/**
 	 *
@@ -200,6 +200,13 @@ function($scope, $routeParams, $route, pubData, PublicationPersister, Notifier, 
 			}
 		});
 		return persistencePromise;
+	};
+	$scope.resetPub = function() {
+		$route.reload();
+	};
+
+	$scope.releasePub = function() {
+
 	};
 
     $scope.returnToSearch = function(){
@@ -244,7 +251,12 @@ function($scope, $routeParams, $route, pubData, PublicationPersister, Notifier, 
 '$scope', function ($scope) {
     $scope.localDisplayToPublicDate = $scope.pubData.displayToPublicDate;
     $scope.$watch('localDisplayToPublicDate', function(newDate) {
-	$scope.pubData.displayToPublicDate = moment(newDate).format('YYYY-MM-DDTHH:mm:ss');
+		if (newDate) {
+			$scope.pubData.displayToPublicDate = moment(newDate).format('YYYY-MM-DDTHH:mm:ss');
+		}
+		else {
+			$scope.pubData.displayToPublicDate = '';
+		}
     });
 
 }]);
