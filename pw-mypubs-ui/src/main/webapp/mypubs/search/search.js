@@ -1,7 +1,7 @@
 (function() {
 	var DEFAULT_PAGE_SIZE = 15;
 
-	angular.module('pw.search', ['ngRoute', 'ngGrid', 'pw.fetcher', 'pw.modal'])
+	angular.module('pw.search', ['ngRoute', 'ngGrid', 'pw.publicationDAO', 'pw.modal'])
 
 
 	.config(['$routeProvider',

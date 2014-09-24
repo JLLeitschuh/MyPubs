@@ -2,10 +2,9 @@
 
 
 var mypubs = angular.module('pw.mypubs', [
-
 		'ngRoute', 'ngGrid', 'ngCookies', 'ui.select2','ui.bootstrap', 'ui.tinymce', 'ngAnimate', 'ui.sortable',// angular util modules
 		'ui.bootstrap.datetimepicker', //datetimepicker
-		'pw.auth', 'pw.notify', 'pw.fetcher',// pw util modules
+		'pw.auth', 'pw.notify',// pw util modules
 		'pw.search', 'pw.publication', 'pw.editContributor' // mypubs pages
 	])
 	.controller('mainCtrl', ['$scope', 'AuthService',

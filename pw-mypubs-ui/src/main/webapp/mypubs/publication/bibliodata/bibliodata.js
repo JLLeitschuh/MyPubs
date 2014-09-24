@@ -1,7 +1,7 @@
 (function () {
 
 
-	angular.module('pw.bibliodata', ['pw.fetcher', 'pw.lookups'])
+	angular.module('pw.bibliodata', ['pw.lookups'])
 		.controller('biblioCtrl', [
 			'$scope', 'LookupFetcher', 'LookupCascadeSelect2', '$routeParams',
 			function ($scope, LookupFetcher, LookupCascadeSelect2, $routeParams) {

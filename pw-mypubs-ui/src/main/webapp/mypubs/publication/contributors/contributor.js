@@ -1,7 +1,7 @@
 (function() {
 
 
-angular.module('pw.contributors', ['pw.contributorDAO', 'pw.dataList', 'pw.fetcher', 'pw.lookups'])
+angular.module('pw.contributors', ['pw.contributorDAO', 'pw.dataList', 'pw.lookups'])
     .value('KIND', {person : 'Person', corporation : 'Corporation'})
 
     .factory('ContributorModel', ['KIND', 'LookupFetcher', function(KIND, LookupFetcher) {

@@ -1,4 +1,4 @@
-describe('pw.fetcher module', function() {
+xdescribe('pw.publicationDAO module', function() {
 
     var APP_CONFIG = {
         endpoint : 'https://dummy_service/'
@@ -6,17 +6,19 @@ describe('pw.fetcher module', function() {
     var MIMETYPE = '?mimetype=json';
 
     it('should have a pubs fetcher module pw.fetcher', function() {
-	    expect(function() { angular.module('pw.fetcher'); }).not.toThrow();
+	    expect(function() { angular.module('pw.publicationDAO'); }).not.toThrow();
     });
 
-	describe('pw.fetcher.PublicationPersister', function () {
+	describe('pw.publicationDAO.PublicationPersister', function () {
 		var $httpBackend, PublicationPersister, Publication, newPublication, existingPublication;
+
+		beforeEach(module('pw.publicationDAO'));
+
 		beforeEach(function () {
 			module(function ($provide) {
 				$provide.value('APP_CONFIG', APP_CONFIG);
 			});
 		});
-		beforeEach(module('pw.fetcher'));
 		beforeEach(module('pw.publication'));
 
 		beforeEach(function () {
@@ -43,9 +45,9 @@ describe('pw.fetcher module', function() {
 			var prunedPublication = _.clone(newPublication);
 			delete prunedPublication['validationErrors'];
 			delete prunedPublication.lastModifiedDate;
-			
+
 			PublicationPersister.persistPub(newPublication);
-			
+
 			$httpBackend.expectPOST(PublicationPersister.CREATE_ENDPOINT, prunedPublication);
 			$httpBackend.flush();
 		});
@@ -53,7 +55,7 @@ describe('pw.fetcher module', function() {
 			var prunedPublication = _.clone(existingPublication);
 			delete prunedPublication['validationErrors'];
 			delete prunedPublication.lastModifiedDate;
-			
+
 			PublicationPersister.persistPub(existingPublication);
 
 			$httpBackend.expectPUT(PublicationPersister.UPDATE_ENDPOINT + existingPublication.id, prunedPublication);
@@ -61,7 +63,7 @@ describe('pw.fetcher module', function() {
 		});
 
 	});
-    describe('pw.fetcher.PublicationFetcher', function() {
+    describe('pw.publicationDAO.PublicationFetcher', function() {
 		var $httpBackend;
         beforeEach(module('pw.fetcher'));
 

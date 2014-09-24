@@ -1,7 +1,7 @@
 (function() {
 var PUB_ROOT = '/Publication';
 angular.module('pw.publication', ['ngRoute', 'pw.notify',
-	'pw.bibliodata', 'pw.catalog', 'pw.contacts', 'pw.links', 'pw.contributors', 'pw.geo', 'pw.fetcher' // pub edit modules
+	'pw.bibliodata', 'pw.catalog', 'pw.contacts', 'pw.links', 'pw.contributors', 'pw.geo', 'pw.publicationDAO' // pub edit modules
 ])
 .config(['$routeProvider',
 	function($routeProvider) {
@@ -203,6 +203,10 @@ function($scope, $route, pubData, PublicationPersister, Notifier, $location) {
 	};
 	$scope.resetPub = function() {
 		$route.reload();
+	};
+
+	$scope.releasePub = function() {
+
 	};
 
     $scope.returnToSearch = function(){

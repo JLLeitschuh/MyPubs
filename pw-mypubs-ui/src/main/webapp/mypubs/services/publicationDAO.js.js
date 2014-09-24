@@ -1,15 +1,19 @@
 (function() {
 
 
-angular.module('pw.fetcher',[])
+angular.module('pw.publicationDAO', [])
 
-    .factory('PublicationFetcher', ['$http',  'APP_CONFIG', function($http, APP_CONFIG) {
+	.factory('PubEndpoint', ['APP_CONFIG', function(APP_CONFIG) {
+		return APP_CONFIG + 'mppublications/';
+	}])
+
+    .factory('PublicationFetcher', ['$http', function($http) {
 
         return {
             fetchPubById : function(pubId) {
                 var result = undefined;
                 if (pubId) {
-                    result = $http.get(APP_CONFIG.endpoint + 'mppublication/' + pubId,{
+                    result = $http.get(PUB_ENDPOINT.update + pubId,{
                         params : {
                             mimetype : 'json'
                         }
@@ -37,7 +41,7 @@ angular.module('pw.fetcher',[])
                 	parms.page_row_start = startRow;
                 }
 
-                result = $http.get(APP_CONFIG.endpoint + 'mppublications',{
+                result = $http.get(PUB_ENDPOINT.other, {
                     params : parms
                 });
                 return result;
@@ -45,10 +49,9 @@ angular.module('pw.fetcher',[])
         };
     }])
 
-	.factory('PublicationPersister', ['$http',  'APP_CONFIG', '$q', function($http, APP_CONFIG, $q) {
 
-		var pubCreateEndpoint =  APP_CONFIG.endpoint + 'mppublications';
-		var pubUpdateEndpoint = APP_CONFIG.endpoint + 'mppublication/';
+	.factory('PublicationPersister', ['$http', '$q', function($http, $q) {
+
 		var httpResponseIsErrorFree = function(httpResponse){
 			var text = JSON.stringify(httpResponse).toLowerCase();
 			var indexOfException = text.indexOf('exception');
@@ -79,14 +82,13 @@ angular.module('pw.fetcher',[])
 			var deferredPubPersistence = $q.defer();
 			//use a different http verb and url depending on whether the pub is new,
 			//but otherwise do the same same thing
-			var httpVerb, url;
+			var httpVerb
+			var url = PUB_ENDPOINT;
 			if (pub.isNew()) {
-				url = pubCreateEndpoint;
 				httpVerb = 'post';
 			}
 			else{
 				httpVerb = 'put';
-				url = pubUpdateEndpoint;
 				url += pub.id;
 			}
 
@@ -117,9 +119,7 @@ angular.module('pw.fetcher',[])
 			return deferredPubPersistence.promise;
 		};
 		return {
-			persistPub : persistPub,
-			CREATE_ENDPOINT: pubCreateEndpoint,
-			UPDATE_ENDPOINT: pubUpdateEndpoint
+			persistPub : persistPub
 		};
 	}]);
 }) ();
