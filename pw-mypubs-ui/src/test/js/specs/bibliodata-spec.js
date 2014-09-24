@@ -1,4 +1,4 @@
-xdescribe("pw.bibliodata module", function(){
+describe("pw.bibliodata module", function(){
 	var APP_CONFIG = {
         endpoint : 'https://dummy_service/'
     };

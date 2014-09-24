@@ -94,6 +94,8 @@
 	
 	<script type="text/javascript" src="mypubs/services/lookups.js"></script>
 	<script type="text/javascript" src="mypubs/services/contributorDAO.js"></script>
+	<script type="text/javascript" src="mypubs/services/publicationDAO.js"></script>
+
 
 	<!-- login page -->
 	<script type="text/javascript" src="mypubs/auth/auth.js"></script>
@@ -107,8 +109,6 @@
 	<!-- publications page -->
 
 	<script type="text/javascript" src="mypubs/publication/publication.js"></script>
-
-	<script type="text/javascript" src="mypubs/publication/fetcher.js"></script>
 
 	<!-- publications tabs -->
 	<script type="text/javascript" src="mypubs/publication/bibliodata/bibliodata.js"></script>

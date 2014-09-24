@@ -4,16 +4,16 @@
 angular.module('pw.publicationDAO', [])
 
 	.factory('PubEndpoint', ['APP_CONFIG', function(APP_CONFIG) {
-		return APP_CONFIG + 'mppublications/';
+		return APP_CONFIG.endpoint + 'mppublications/';
 	}])
 
-    .factory('PublicationFetcher', ['$http', function($http) {
+    .factory('PublicationFetcher', ['$http', 'PubEndpoint', function($http, PubEndpoint) {
 
         return {
             fetchPubById : function(pubId) {
                 var result = undefined;
                 if (pubId) {
-                    result = $http.get(PUB_ENDPOINT.update + pubId,{
+                    result = $http.get(PubEndpoint + pubId,{
                         params : {
                             mimetype : 'json'
                         }
@@ -41,7 +41,7 @@ angular.module('pw.publicationDAO', [])
                 	parms.page_row_start = startRow;
                 }
 
-                result = $http.get(PUB_ENDPOINT.other, {
+                result = $http.get(PubEndpoint, {
                     params : parms
                 });
                 return result;
@@ -50,7 +50,7 @@ angular.module('pw.publicationDAO', [])
     }])
 
 
-	.factory('PublicationPersister', ['$http', '$q', function($http, $q) {
+	.factory('PublicationPersister', ['$http', '$q', 'PubEndpoint', function($http, $q, PubEndpoint) {
 
 		var httpResponseIsErrorFree = function(httpResponse){
 			var text = JSON.stringify(httpResponse).toLowerCase();
@@ -83,7 +83,7 @@ angular.module('pw.publicationDAO', [])
 			//use a different http verb and url depending on whether the pub is new,
 			//but otherwise do the same same thing
 			var httpVerb
-			var url = PUB_ENDPOINT;
+			var url = PubEndpoint;
 			if (pub.isNew()) {
 				httpVerb = 'post';
 			}

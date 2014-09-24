@@ -1,19 +1,5 @@
 describe("pw.mypubs module", function() {
 
-
-	var scope, location;
-
-
-	beforeEach(function () {
-		module("pw.mypubs");
-		inject(function($rootScope, $controller, $log, $location) {
-			scope = $rootScope.$new();
-			location = $location;
-			$controller('mainCtrl', {$scope:scope, $log:$log, $location:$location});
-		});
-	});
-
-
 	it('should have a main module', function() {
 
 		// angular should not find an undefined mod
