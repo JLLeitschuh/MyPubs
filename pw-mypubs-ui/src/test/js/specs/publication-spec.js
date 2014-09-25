@@ -68,12 +68,27 @@ describe("pw.publication module", function(){
 	});
 
 	describe('publicationCtrl', function(){
-		var $scope, controller, mockNotifier, Publication, mockPersister, mockRoute, mockLocation;
+		var $scope, controller, mockNotifier, Publication, mockUpdater, mockRoute, mockLocation, mockPubsModal;
 		beforeEach(function() {
 			mockNotifier = jasmine.createSpyObj('mockNotifier', ['notify', 'error']);
 			mockRoute = jasmine.createSpyObj('mockRoute', ['reload']);
 			mockLocation = jasmine.createSpyObj('mockLocation', ['path']);
-			mockPersister = {
+			mockPubsModal = jasmine.createSpyObj('mockPubsModal', ['confirm']);
+			mockIdUpdater = function(id) {
+				var deferred = $q.defer();
+				if (id === 4) {
+					deferred.reject({'validationErrors' : 'Validation updater errors'});
+				}
+				else if (id === 5) {
+					deferred.reject({'message' : 'Internal server error'});
+				}
+				else {
+					deferred.resolve({validationErrors : []});
+				}
+				return deferred.promise;
+			};
+
+			mockUpdater = {
 				persistPub : function(data) {
 					var deferred = $q.defer();
 					if (data.id === 2) {
@@ -89,9 +104,12 @@ describe("pw.publication module", function(){
 						deferred.resolve(data);
 					}
 					return deferred.promise;
-				}
+				},
+				releasePub : jasmine.createSpy('releasePub').andCallFake(mockIdUpdater),
+				publishPub : jasmine.createSpy('publishPub').andCallFake(mockIdUpdater),
+				deletePub : jasmine.createSpy('deletePub').andCallFake(mockIdUpdater)
 			};
-			spyOn(mockPersister, 'persistPub').andCallThrough();
+			spyOn(mockUpdater, 'persistPub').andCallThrough();
 		});
 		beforeEach(inject(function($injector){
 			var $controller, $rootScope;
@@ -105,9 +123,10 @@ describe("pw.publication module", function(){
 					'$scope' : $scope,
 					'$route' : mockRoute,
 					'pubData' : thisPub,
-					'PublicationPersister' : mockPersister,
+					'PublicationUpdater' : mockUpdater,
 					'Notifier' : mockNotifier,
-					'$location' : mockLocation
+					'$location' : mockLocation,
+					'PubsModal' : mockPubsModal
 				});
 			};
 		}));
@@ -168,6 +187,163 @@ describe("pw.publication module", function(){
 			}, function(message){
 				expect(message.length).not.toBe(0);
 			});
+		});
+
+		it('Should change the location path is sucessful release', function() {
+			var pub = Publication();
+			pub.id = 10;
+			createController(pub);
+			$scope.$digest();
+
+			$scope.releasePub();
+			$scope.$digest();
+			expect(mockLocation.path).toHaveBeenCalledWith('/Search');
+			expect(mockNotifier.error).not.toHaveBeenCalled();
+		});
+
+		it('A call to releasePub should change the location path if the publication has not yet been created', function() {
+			var pub = Publication();
+			createController(pub);
+			$scope.$digest();
+
+			$scope.releasePub();
+			$scope.$digest();
+			expect(mockLocation.path).toHaveBeenCalledWith('/Search');
+			expect(mockNotifier.error).not.toHaveBeenCalled();
+		});
+
+		it('A call to releasePub hould show validation errors and notify the user if errors have been received', function() {
+			var pub = Publication();
+			pub.id = 4;
+			createController(pub);
+			$scope.$digest();
+
+			$scope.releasePub();
+			$scope.$digest();
+			expect(mockLocation.path).not.toHaveBeenCalled();
+			expect($scope.pubData.validationErrors).toBeDefined();
+			expect(mockNotifier.error).toHaveBeenCalled();
+		});
+
+		it('Expects publishPub to first persist the Pub and if successful confirm that the user wants to publish', function() {
+			mockPubsModal.confirm.andCallFake(function() {
+				var deferred = $q.defer();
+				deferred.resolve();
+				return deferred.promise;
+			});
+			var pub = Publication();
+			pub.id = 1;
+			createController(pub);
+			$scope.$digest();
+
+			$scope.publishPub();
+			expect(mockUpdater.persistPub).toHaveBeenCalledWith(pub);
+			$scope.$digest();
+			expect(mockUpdater.publishPub).toHaveBeenCalledWith(pub.id)
+			$scope.$digest();
+			expect(mockLocation.path).toHaveBeenCalled();
+		});
+
+		it('Expects publish Pub to not publish the publication if the user cancels the action', function() {
+			mockPubsModal.confirm.andCallFake(function() {
+				var deferred = $q.defer();
+				deferred.reject();
+				return deferred.promise;
+			});
+
+			var pub = Publication();
+			pub.id = 1;
+			createController(pub);
+			$scope.$digest();
+			$scope.publishPub();
+			$scope.$digest();
+			expect(mockUpdater.publishPub).not.toHaveBeenCalled();
+		});
+
+		it('Expects an invalid publication to not be published and to show validation errors', function() {
+			var pub = Publication();
+			pub.id = 2;
+			createController(pub);
+			$scope.$digest();
+			$scope.publishPub();
+			$scope.$digest();
+			expect($scope.pubData.validationErrors).toEqual('Validation errors');
+		});
+
+		it('Expects an error when trying to publish to show validation errors', function() {
+			var pub = Publication();
+			pub.id = 4;
+			mockPubsModal.confirm.andCallFake(function() {
+				var deferred = $q.defer();
+				deferred.resolve();
+				return deferred.promise;
+			});
+			createController(pub);
+			$scope.$digest();
+			$scope.publishPub();
+			$scope.$digest();
+			$scope.$digest();
+			expect($scope.pubData.validationErrors).toEqual('Validation updater errors');
+		});
+
+		it('Expects delete on a publication that has not been created, returns to search', function() {
+			var pub = Publication();
+			createController(pub);
+			$scope.$digest();
+			$scope.deletePub();
+			expect(mockLocation.path).toHaveBeenCalled();
+		});
+
+		it('Expects delete to require a confirm dialog before proceeding', function() {
+			var pub = Publication();
+			pub.id = 10;
+			mockPubsModal.confirm.andCallFake(function() {
+				var deferred = $q.defer();
+				deferred.resolve();
+				return deferred.promise;
+			});
+
+			createController(pub);
+			$scope.$digest();
+			$scope.deletePub();
+			expect(mockPubsModal.confirm).toHaveBeenCalled();
+			$scope.$digest();
+			expect(mockUpdater.deletePub).toHaveBeenCalledWith(pub.id);
+			$scope.$digest();
+			expect(mockLocation.path).toHaveBeenCalled();
+		});
+
+		it('Expects delete to not call delete if confirm dialog is canceled', function() {
+			var pub = Publication();
+			pub.id = 10;
+			mockPubsModal.confirm.andCallFake(function() {
+				var deferred = $q.defer();
+				deferred.reject();
+				return deferred.promise;
+			});
+
+			createController(pub);
+			$scope.$digest();
+			$scope.deletePub();
+			$scope.$digest();
+			expect(mockUpdater.deletePub).not.toHaveBeenCalled();
+		});
+
+		it('Expects delete which returns validation errors to set the pubs validationErrors', function() {
+			var pub = Publication();
+			pub.id = 4;
+			mockPubsModal.confirm.andCallFake(function() {
+				var deferred = $q.defer();
+				deferred.resolve();
+				return deferred.promise;
+			});
+
+			createController(pub);
+			$scope.$digest();
+			$scope.deletePub();
+			$scope.$digest();
+			$scope.$digest();
+			expect($scope.pubData.validationErrors).toEqual('Validation updater errors');
 		});
 	});
 

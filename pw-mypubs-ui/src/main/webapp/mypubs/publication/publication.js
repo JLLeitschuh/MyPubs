@@ -1,6 +1,6 @@
 (function() {
 var PUB_ROOT = '/Publication';
-angular.module('pw.publication', ['ngRoute', 'pw.notify',
+angular.module('pw.publication', ['ngRoute', 'pw.notify', 'ui.bootstrap.modal',
 	'pw.bibliodata', 'pw.catalog', 'pw.contacts', 'pw.links', 'pw.contributors', 'pw.geo', 'pw.publicationDAO' // pub edit modules
 ])
 .config(['$routeProvider',
@@ -165,19 +165,37 @@ angular.module('pw.publication', ['ngRoute', 'pw.notify',
 
         return pubConstructor;
     }])
+
 .controller('publicationCtrl',
-[ '$scope', '$route', 'pubData', 'PublicationPersister', 'Notifier', '$location',
-function($scope, $route, pubData, PublicationPersister, Notifier, $location) {
+[ '$scope', '$route', 'pubData', 'PublicationUpdater', 'Notifier', '$location', 'PubsModal',
+function($scope, $route, pubData, PublicationUpdater, Notifier, $location, PubsModal) {
+
+	var handleServiceErrors = function(reason, errorMessage) {
+		if (reason.validationErrors) {
+			$scope.pubData.validationErrors = reason.validationErrors;
+			Notifier.error(errorMessage + '; there were validation errors.');
+		}
+		else if (reason.message) {
+			Notifier.error(reason.message);
+		}
+		else {
+			Notifier.error(errorMessage + '; there were unanticipated errors. Consult browser logs.');
+		}
+	};
+
+	var returnToSearch = function() {
+		$location.path('/Search');
+	};
+
 	$scope.pubData = pubData;
 	/**
 	 *
 	 * @returns {Promise}
 	 */
 	$scope.persistPub = function(){
-		var persistencePromise = PublicationPersister.persistPub($scope.pubData);
+		var persistencePromise = PublicationUpdater.persistPub($scope.pubData);
 		persistencePromise
 		.then(function(returnedPubData){
-
 			if($scope.pubData.isNew()){
 				$location.path(PUB_ROOT + '/' + returnedPubData.id);
 			}
@@ -187,32 +205,71 @@ function($scope, $route, pubData, PublicationPersister, Notifier, $location) {
 			}
 			Notifier.notify('Publication successfully saved');
 		}, function(reason){
-			if(reason['validationErrors']){
-				$scope.pubData['validationErrors'] = reason['validationErrors'];
-				Notifier.error('Publication not saved; there were validation errors.');
-			}
-			else if (reason.message){
-				Notifier.error(reason.message);
-			}
-			else{
-				Notifier.error('Publication not saved; there were unanticipated errors. Consult browser logs');
-				throw new Error(reason);
-			}
+			handleServiceErrors(reason, 'Publication not saved');
 		});
 		return persistencePromise;
 	};
+
 	$scope.resetPub = function() {
 		$route.reload();
 	};
 
 	$scope.releasePub = function() {
-
+		if ($scope.pubData.id) {
+			PublicationUpdater.releasePub($scope.pubData.id).then(
+				function(data) {
+					returnToSearch();
+				}, function(reason) {
+					handleServiceErrors(reason, 'Publication not released');
+				}
+			);
+		}
+		else {
+			returnToSearch();
+		}
 	};
 
-    $scope.returnToSearch = function(){
-    	//TODO verify dirty form status before allowing a return
-		$location.path("/Search");
-    };
+	$scope.publishPub = function() {
+		PublicationUpdater.persistPub($scope.pubData).then(
+			function(pubData) {
+				PubsModal.confirm('Are you sure you want to publish this publication?').then(
+					function() {
+						PublicationUpdater.publishPub(pubData.id).then(
+							function(data) {
+								returnToSearch();
+							},
+							function(reason) {
+								handleServiceErrors(reason, 'Publication not published');
+							}
+						);
+					}
+				);
+			},
+			function(reason){
+				handleServiceErrors(reason, 'Publication not saved');
+			}
+		);
+	};
+
+	$scope.deletePub = function() {
+		if ($scope.pubData.id) {
+			PubsModal.confirm('Are you sure you want to delete this publication?').then(
+				function() {
+					PublicationUpdater.deletePub($scope.pubData.id).then(
+						function(data) {
+							returnToSearch();
+						},
+						function(reason) {
+							handleServiceErrors(reason, 'Publication not deleted');
+						}
+					);
+				}
+			);
+		}
+		else {
+			returnToSearch();
+		}
+	};
 
 	$scope.tabs = [
 		{
