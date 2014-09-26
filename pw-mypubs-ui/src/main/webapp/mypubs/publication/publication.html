@@ -1,5 +1,4 @@
- <pre id="validationErrors" ng-show="pubData['validationErrors'].length" ng-bind="pubData['validationErrors'] | json"></pre>
-<button class="btn btn-default active" ng-click="returnToSearch()">Return To Search</button>
+<pre id="validationErrors" ng-show="pubData['validationErrors'].length" ng-bind="pubData['validationErrors'] | json"></pre>
 <div>
 <div id="pubHeader" ng-controller="pubHeaderCtrl">
 
@@ -44,10 +43,11 @@
         </div>
     </div>
 	<div class="row actions">
-		<button class="btn btn-default col-xs-3" ng-click="resetPub()">Reset</button>
-		<button class="btn btn-default col-xs-3" ng-click="releasePub()">Release</button>
-		<button class="btn btn-default col-xs-3" ng-click="persistPub()">Save Changes</button>
-		<button class="btn btn-default col-xs-3" >Publish</button>
+		<button class="btn btn-default col-xs-offset-1 col-xs-2" ng-click="resetPub()">Reset</button>
+		<button class="btn btn-default col-xs-2" ng-click="releasePub()">Release</button>
+		<button class="btn btn-default col-xs-2" ng-click="persistPub()">Save Changes</button>
+		<button class="btn btn-default col-xs-2" ng-click="publishPub()">Publish</button>
+		<button class="btn btn-default col-xs-2" ng-click="deletePub()">Delete</button>
 	</div>
 </div>
 

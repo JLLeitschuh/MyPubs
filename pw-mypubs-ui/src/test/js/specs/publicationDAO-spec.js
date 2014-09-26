@@ -9,8 +9,8 @@ describe('pw.publicationDAO module', function() {
 	    expect(function() { angular.module('pw.publicationDAO'); }).not.toThrow();
     });
 
-	describe('pw.publicationDAO.PublicationPersister', function () {
-		var $httpBackend, PublicationPersister, Publication, PubEndpoint, newPublication, existingPublication;
+	describe('pw.publicationDAO.PublicationUpdater.persistPub', function () {
+		var $httpBackend, PublicationUpdater, Publication, PubEndpoint, newPublication, existingPublication;
 
 		beforeEach(module('pw.publicationDAO'));
 
@@ -31,7 +31,7 @@ describe('pw.publicationDAO module', function() {
 				existingPublication = new Publication();
 				existingPublication.id = 12;
 
-				PublicationPersister = $injector.get('PublicationPersister');
+				PublicationUpdater = $injector.get('PublicationUpdater');
 
 				$httpBackend.when('POST', PubEndpoint).respond(newPublication);
 				$httpBackend.when('PUT', PubEndpoint + existingPublication.id).respond(existingPublication);
@@ -48,7 +48,7 @@ describe('pw.publicationDAO module', function() {
 			delete prunedPublication['validationErrors'];
 			delete prunedPublication.lastModifiedDate;
 
-			PublicationPersister.persistPub(newPublication);
+			PublicationUpdater.persistPub(newPublication);
 
 			$httpBackend.expectPOST(PubEndpoint, prunedPublication);
 			$httpBackend.flush();
@@ -58,13 +58,164 @@ describe('pw.publicationDAO module', function() {
 			delete prunedPublication['validationErrors'];
 			delete prunedPublication.lastModifiedDate;
 
-			PublicationPersister.persistPub(existingPublication);
+			PublicationUpdater.persistPub(existingPublication);
 
 			$httpBackend.expectPUT(PubEndpoint + existingPublication.id, prunedPublication);
 			$httpBackend.flush();
 		});
 
 	});
+
+	describe('pw.publicationDAO.PublicationUpdate.releasePub', function() {
+		var $httpBackend, PubEndpoint, PublicationUpdater
+		var successSpy, errorSpy;
+
+		beforeEach(module('pw.publicationDAO'));
+
+		beforeEach(function () {
+			module(function ($provide) {
+				$provide.value('APP_CONFIG', APP_CONFIG);
+			});
+		});
+		beforeEach(module('pw.publication'));
+
+		beforeEach(function () {
+			inject(function ($injector) {
+				$httpBackend = $injector.get('$httpBackend');
+				PubEndpoint = $injector.get('PubEndpoint');
+
+				successSpy = jasmine.createSpy('successSpy');
+				errorSpy = jasmine.createSpy('errorSpy');
+
+
+				PublicationUpdater = $injector.get('PublicationUpdater');
+				$httpBackend.when('POST', PubEndpoint + 'release', {id : 1}).respond({validationErrors : []});
+				$httpBackend.when('POST', PubEndpoint + 'release', {id : 2}).respond(400, {validationErrors : 'a validation error'});
+			});
+		});
+
+		afterEach(function() {
+			$httpBackend.verifyNoOutstandingExpectation();
+			$httpBackend.verifyNoOutstandingRequest();
+		});
+
+		it('Expects a successful response to resolve and send no errors', function() {
+			PublicationUpdater.releasePub(1).then(successSpy, errorSpy);
+			$httpBackend.expectPOST(PubEndpoint + 'release', {id : 1});
+			$httpBackend.flush();
+			expect(successSpy).toHaveBeenCalled();
+			expect(errorSpy).not.toHaveBeenCalled();
+		});
+
+		it('Expects a response with validation errors to call error handler with errors', function() {
+			PublicationUpdater.releasePub(2).then(successSpy, errorSpy);
+			$httpBackend.expectPOST(PubEndpoint + 'release', {id : 2});
+			$httpBackend.flush();
+			expect(successSpy).not.toHaveBeenCalled();
+			expect(errorSpy).toHaveBeenCalledWith({validationErrors : 'a validation error'});
+		});
+	});
+
+	describe('pw.publicationDAO.PublicationUpdate.publishPub', function() {
+		var $httpBackend, PubEndpoint, PublicationUpdater
+		var successSpy, errorSpy;
+
+		beforeEach(module('pw.publicationDAO'));
+
+		beforeEach(function () {
+			module(function ($provide) {
+				$provide.value('APP_CONFIG', APP_CONFIG);
+			});
+		});
+		beforeEach(module('pw.publication'));
+
+		beforeEach(function () {
+			inject(function ($injector) {
+				$httpBackend = $injector.get('$httpBackend');
+				PubEndpoint = $injector.get('PubEndpoint');
+
+				successSpy = jasmine.createSpy('successSpy');
+				errorSpy = jasmine.createSpy('errorSpy');
+
+
+				PublicationUpdater = $injector.get('PublicationUpdater');
+				$httpBackend.when('POST', PubEndpoint + 'publish', {id : 1}).respond({validationErrors : []});
+				$httpBackend.when('POST', PubEndpoint + 'publish', {id : 2}).respond(400, {validationErrors : 'a validation error'});
+			});
+		});
+
+		afterEach(function() {
+			$httpBackend.verifyNoOutstandingExpectation();
+			$httpBackend.verifyNoOutstandingRequest();
+		});
+
+		it('Expects a successful response to resolve and send no errors', function() {
+			PublicationUpdater.publishPub(1).then(successSpy, errorSpy);
+			$httpBackend.expectPOST(PubEndpoint + 'publish', {id : 1});
+			$httpBackend.flush();
+			expect(successSpy).toHaveBeenCalled();
+			expect(errorSpy).not.toHaveBeenCalled();
+		});
+
+		it('Expects a response with validation errors to call error handler with errors', function() {
+			PublicationUpdater.publishPub(2).then(successSpy, errorSpy);
+			$httpBackend.expectPOST(PubEndpoint + 'publish', {id : 2});
+			$httpBackend.flush();
+			expect(successSpy).not.toHaveBeenCalled();
+			expect(errorSpy).toHaveBeenCalledWith({validationErrors : 'a validation error'});
+		});
+	});
+
+	describe('pw.publicationDAO.PublicationUpdate.deletePub', function() {
+		var $httpBackend, PubEndpoint, PublicationUpdater
+		var successSpy, errorSpy;
+
+		beforeEach(module('pw.publicationDAO'));
+
+		beforeEach(function () {
+			module(function ($provide) {
+				$provide.value('APP_CONFIG', APP_CONFIG);
+			});
+		});
+		beforeEach(module('pw.publication'));
+
+		beforeEach(function () {
+			inject(function ($injector) {
+				$httpBackend = $injector.get('$httpBackend');
+				PubEndpoint = $injector.get('PubEndpoint');
+
+				successSpy = jasmine.createSpy('successSpy');
+				errorSpy = jasmine.createSpy('errorSpy');
+
+
+				PublicationUpdater = $injector.get('PublicationUpdater');
+				$httpBackend.when('DELETE', PubEndpoint + '1', {}).respond({validationErrors : []});
+				$httpBackend.when('DELETE', PubEndpoint + '2', {}).respond(400, {validationErrors : 'a validation error'});
+			});
+		});
+
+		afterEach(function() {
+			$httpBackend.verifyNoOutstandingExpectation();
+			$httpBackend.verifyNoOutstandingRequest();
+		});
+
+		it('Expects a successful response to resolve and send no errors', function() {
+			PublicationUpdater.deletePub(1).then(successSpy, errorSpy);
+			$httpBackend.expectDELETE(PubEndpoint + '1');
+			$httpBackend.flush();
+			expect(successSpy).toHaveBeenCalled();
+			expect(errorSpy).not.toHaveBeenCalled();
+		});
+
+		it('Expects a response with validation errors to call error handler with errors', function() {
+			PublicationUpdater.deletePub(2).then(successSpy, errorSpy);
+			$httpBackend.expectDELETE(PubEndpoint + '2');
+			$httpBackend.flush();
+			expect(successSpy).not.toHaveBeenCalled();
+			expect(errorSpy).toHaveBeenCalledWith({validationErrors : 'a validation error'});
+		});
+	});
+
     describe('pw.publicationDAO.PublicationFetcher', function() {
 		var $httpBackend, PubEndpoint;
         beforeEach(module('pw.publicationDAO'));
