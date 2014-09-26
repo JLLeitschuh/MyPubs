@@ -1,7 +1,7 @@
 (function() {
 	var DEFAULT_PAGE_SIZE = 15;
 
-	angular.module('pw.search', ['ngRoute', 'ngGrid', 'pw.publicationDAO', 'pw.modal'])
+	angular.module('pw.search', ['ngRoute', 'ngGrid', 'pw.publicationDAO', 'pw.pubsListDAO', 'pw.modal', 'pw.notify'])
 
 
 	.config(['$routeProvider',
@@ -13,9 +13,20 @@
 	}
 	])
 
-	.controller('searchCtrl', [ '$scope', '$location', 'PublicationFetcher', 'PubsModal', function($scope, $location, fetcher, PubsModal) {
-		$scope.pubsLists = []; //TODO load these lists with future functionality
+	.controller('searchCtrl', [ '$scope', '$location', 'PublicationFetcher', 'PubsListFetcher', 'PubsModal', 'Notifier',
+	function($scope, $location, PublicationFetcher, PubsListFetcher, PubsModal, Notifier) {
+		$scope.pubsLists = [];
 		$scope.pubs = [];
+
+		PubsListFetcher.fetchAllLists().then(
+			function(value) {
+				$scope.pubsLists = value.data;
+			},
+			function(reason) {
+				Notifier.error('Publication lists could not be loaded');
+			}
+		);
+
 
 		$scope.searchClick = function(searchTermField) {
 			$scope.searchTerm = searchTermField; //a way for us to not update the model until we get a click
@@ -40,7 +51,7 @@
 
 			var currentPage = $scope.pagingState.currentPage;
 			var startRow = (currentPage - 1) * pageSize;
-			fetcher.searchByTermAndListIds(searchTerm, listIds, pageSize, startRow).then(function(httpPromise){
+			PublicationFetcher.searchByTermAndListIds(searchTerm, listIds, pageSize, startRow).then(function(httpPromise){
 				$scope.pubs = httpPromise.data.records;
 				$scope.recordCount = httpPromise.data.recordCount;
 				$scope.selectedPubs.length = 0; //clear selections, for some reason, ngGrid/angular needs a reference to the original array to keep the watch valid
@@ -81,7 +92,7 @@
 				data: 'pubsLists',
 				selectedItems: $scope.selectedPubsLists,
 				columnDefs: [
-				             {field:'name', displayName:'Name'},
+				             {field:'text', displayName:'Name'},
 				             {field:'description', displayName:'Description'}]
 		};
 

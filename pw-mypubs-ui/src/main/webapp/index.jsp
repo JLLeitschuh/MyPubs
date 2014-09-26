@@ -95,7 +95,7 @@
 	<script type="text/javascript" src="mypubs/services/lookups.js"></script>
 	<script type="text/javascript" src="mypubs/services/contributorDAO.js"></script>
 	<script type="text/javascript" src="mypubs/services/publicationDAO.js"></script>
-
+	<script type="text/javascript" src="mypubs/services/pubsListDAO.js"></script>
 
 	<!-- login page -->
 	<script type="text/javascript" src="mypubs/auth/auth.js"></script>
