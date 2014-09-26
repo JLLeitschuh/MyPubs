@@ -1,3 +1,23 @@
 .links-input-div {
     padding : 10px;
 }
+.link-type {
+	width: 16%;
+}
+.link-text {
+	width: 30%;
+}
+.link-file-size {
+	width: 10%;
+}
+.link-file-type {
+	width : 12%;
+}
+.link-description  {
+	width: 30%;
+}
+.link-url {
+	margin-top: 4px;
+	margin-left : 15px;
+	width: 94%;
+}

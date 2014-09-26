@@ -1,25 +1,25 @@
 
 <div id="links" ng-controller="linksCtrl" >
     <div ui-sortable="sortOptions" ng-model="pubData.links">
-	<div class="links-input-div" ng-repeat="link in pubData.links">
-	    <pw-data-list-row on-delete="deleteLink($index)">
-	    <select placeholder="Link type" ui-select2 ng-model="link.type.id">
-		<option></option>
-		<option ng-repeat="option in linkTypeOptions" value="{{option.id}}">{{option.text}}</option>	
-	    </select>
-	    <input type="text" ng-model="link.url" placeholder="Link">
-	    <input type="text" ng-model="link.text" placeholder="Link Text">
-	    <input type="text" ng-model="link.size" placeholder="File size">
-	    <select placeholder="File Type" ui-select2 ="{ allowClear : true }"ng-model="link.linkFileType.id">
-		<option></option>
-		<option ng-repeat="option in fileTypeOptions" value="{{option.id}}">{{option.text}}</option>
-	    </select>
-	    <input type="text" ng-model="link.description" placeholder="Link Description">
-	    </pw-data-list-row>
+		<div class="links-input-div" ng-repeat="link in pubData.links">
+			<pw-data-list-row on-delete="deleteLink($index)">
+					<select class="link-type" placeholder="Link type" ui-select2 ng-model="link.type.id">
+						<option></option>
+						<option ng-repeat="option in linkTypeOptions" value="{{option.id}}">{{option.text}}</option>	
+					</select>
+					<input class="link-text" type="text" ng-model="link.text" placeholder="Link Text">
+					<input class="link-file-size" type="text" ng-model="link.size" placeholder="File size">
+					<select  class="link-file-type" placeholder="File Type" ui-select2 ="{ allowClear : true }"ng-model="link.linkFileType.id">
+						<option></option>
+						<option ng-repeat="option in fileTypeOptions" value="{{option.id}}">{{option.text}}</option>
+					</select>
+					<input class="link-description" type="text" ng-model="link.description" placeholder="Link Description">
+			</pw-data-list-row>
+			<input class="link-url" type="text" ng-model="link.url" placeholder="Link">
 	    </div>
     </div>
     
     <div>
-	<button type="button" class="btn btn-default" ng-click="addNewLink()">New Link</button>
+		<button type="button" class="btn btn-default" ng-click="addNewLink()">New Link</button>
     </div>
 </div>

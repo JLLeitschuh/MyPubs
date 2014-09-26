@@ -91,14 +91,17 @@
 					else {
 						largerWorkTypeInputIsInitialized = true;
 					}
-				}
+				};
 				LookupFetcher.promise('publicationtypes').then(function (response) {
 					$scope.typeOptions = response.data;
 
 				});
 
-				LookupFetcher.promise('costcenters').then(function (response) {
-					$scope.costCenterOptions = response.data;
+				LookupFetcher.promise('costcenters', {active : 'y'}).then(function(response) {
+					$scope.activeCostCenterOptions = response.data;
+				});
+				LookupFetcher.promise('costcenters', {active : 'n'}).then(function(response) {
+					$scope.notActiveCostCenterOptions = response.data;
 				});
 
 				$scope.subtypeSelect2Options = {
