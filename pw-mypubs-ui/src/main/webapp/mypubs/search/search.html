@@ -5,12 +5,9 @@
 				<label>Search Criteria</label><br/>
 				<input id="search-term-input" type="text" class="form-control" ng-model="searchTermField"/><br/>
 				<button type="submit" class="btn btn-default" ng-click="searchClick(searchTermField)">Search</button>
-				<button type="button" class="btn btn-default" ng-click="toggleSearch()">Advanced Search</button>
 			</form>
 			<div class="row pub-lists-section"> 
 				<label>View Lists</label><br/>
-				<button class="btn btn-default" ng-click="addPubList()">Add List</button>
-				<button class="btn btn-default" ng-click="moreListOptions()">More <i class="glyphicon glyphicon-new-window" ></i></button><br/>
 				<div class="pub-list-grid-container">
 					<div class="pub-list-grid" ng-grid="pubsListGrid"></div>
 				</div>
@@ -20,8 +17,6 @@
 		<div class="col-lg-9 pub-list-section">
 			<div id="pub-management-div">
 				<button class="btn btn-default" ng-click="editSelectedPublication()">Edit Selected</button>
-				<button class="btn btn-default" ng-click="removeSelectedPublicationsFromLists()">Remove Selected</button>
-				<button class="btn btn-default" ng-click="morePublicationOptions()">More <i class="glyphicon glyphicon-new-window" ></i></button>
 				<a href="#/Publication" class="btn btn-default">Create</a>
 				<a href="#/Contributor" class="pull-right btn  btn-default">Manage Contributors</a>
 			</div>

@@ -60,31 +60,12 @@
 			$scope.searchTerm = searchTerm; //apply search term to scope so template updates
 		};
 
-		$scope.toggleSearch = function(searchTerm) {
-			PubsModal.alert("Not Yet Implemented", "Will toggle advanced search fields!");
-		};
-
-		$scope.addPubList = function() {
-			PubsModal.alert("Not Yet Implemented", "Will provide function to create new publications list");
-		};
-
-		$scope.moreListOptions = function() {
-			PubsModal.alert("Not Yet Implemented", "Give users more functions to operate on lists");
-		};
-
 		$scope.editSelectedPublication = function() {
 			if($scope.selectedPubs.length == 1) {
 				$location.path("/Publication/" + $scope.selectedPubs[0].id);
 			} else {
 				PubsModal.alert("Select One Publication", "You must select one, and only one, publication to edit.");
 			}
-		};
-		$scope.removeSelectedPublicationsFromLists = function() {
-			PubsModal.alert("Not Yet Implemented", "Function to remove selected pubs from selected lists");
-		};
-
-		$scope.morePublicationOptions = function() {
-			PubsModal.alert("Not Yet Implemented", "function for more publication functions");
 		};
 
 		$scope.selectedPubsLists = [];
