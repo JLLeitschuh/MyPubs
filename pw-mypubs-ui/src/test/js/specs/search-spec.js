@@ -32,7 +32,7 @@ describe("pw.search module", function(){
 	}));
 
 	describe('pw.search.searchCtrl', function() {
-		var scope, location, fetcher, pubsModal, q, pubsGridEl, pubsListsGridEl;
+		var scope, location, fetcher, pubsModal, q, pubsGridEl, pubsListsGridEl, pubsListFetcher;
 
 		//TODO this is an anticipated format, update when service side is done
 		var PUB_LISTS =
@@ -51,6 +51,11 @@ describe("pw.search module", function(){
 				//pub two
 				,{"id":2,"title":"TEST TITLE 2","language":"English","publisher":"Publisher2","collaboration":"Collab desc 2","links":[{"id":1,"rank":1,"type":{"id":1, "name": "LinkTypeName1"},"url":"www.wow.org","text":"amazing link","size":"12 GB","linkFileType":{"id":1, "name": "LinkFileTypeName1"},"description":"link desc 1"},{"id":2,"rank":2,"type":{"id":2, "name": "LinkTypeName2"},"url":"www.xyz.org","text":"end of the line","size":"1 TB","linkFileType":{"id":2, "name": "LinkFileTypeName2"},"description":"link desc 2"}],"indexId":"pub1IndexId","displayToPublicDate":"2014-07-14T17:27:36.000","publicationType":{"id":1, "name": "PubTypeName1"},"publicationSubtype":{"id":2, "name": "PubTypeName2"},"seriesTitle":{"id":1, "title": "Series1Title"},"seriesNumber":"seriesNumber1","subseriesTitle":"Subseries Title","publisherLocation":"Reston, VA","temporalStart":"2014-07-14T12:00:00","temporalEnd":"2014-07-20T12:00:00","authors":[{"contributorId":1,"family":"FamilyName","given":"GivenName","suffix":"Suffix1","email":"email@usgs.gov","affiliation":{"id":1,"text":"Affiliation Text 1"},"id":1,"rank":1},{"contributorId":2,"organization":"Contributing Org 2","id":2,"rank":2}],"editors":[{"contributorId":1,"family":"FamilyName","given":"GivenName","suffix":"Suffix1","email":"email@usgs.gov","affiliation":{"contributorId":2,"organization":"Contributing Org 2","id":2,"rank":2}},{"contributorId":2,"organization":"Contributing Org 4","id":4,"rank":1}],"costCenters":[{"id":74,"text":"CostCenter74"},{"id":114,"text":"CostCenter114"}]}
 			]};
+
+		var PUBS_LISTS =
+			[{id : 1, text : 'Name1', description : 'Description1', type : 'Type1'},
+			{id : 2, text : 'Name2', description : 'Description2', type : 'Type2'}
+		];
 		//
 		beforeEach(inject(function($injector, $compile) {
 	        rootScope = $injector.get('$rootScope');
@@ -63,7 +68,14 @@ describe("pw.search module", function(){
 	                return q.when({data : PUB_SEARCH_RESULTS});
 	            }
 	        };
-	        spyOn(fetcher, 'searchByTermAndListIds').andCallThrough();
+			spyOn(fetcher, 'searchByTermAndListIds').andCallThrough();
+
+			pubsListFetcher = {
+				fetchAllLists : function() {
+					return $q.when({data : PUBS_LISTS});
+				}
+			};
+			spyOn(pubsListFetcher, 'fetchAllLists').andCallThrough();
 
 	        pubsModal  = { //mock PubsModal TODO test modal
 	    		alert : function(title, message, ctrl) {
@@ -80,6 +92,7 @@ describe("pw.search module", function(){
 	                '$scope': scope,
 	                '$location' : location,
 	                'PublicationFetcher' : fetcher,
+					'PubsListFetcher' : pubsListFetcher,
 	                'PubsModal' : pubsModal,
 	                '$routeParams': {}
 	            });
@@ -120,6 +133,13 @@ describe("pw.search module", function(){
 			expect(scope.pubs.length).toBe(2);
 			expect(scope.pubs[0].title).toBe("TEST TITLE 1");
 			expect(scope.pubs[1].title).toBe("TEST TITLE 2");
+		});
+
+		it('immediately loads the publication lists', function() {
+			var searchCtrl = createControlleWithdFullInit();
+			expect(pubsListFetcher.fetchAllLists).toHaveBeenCalled();
+			scope.$digest();
+			expect(scope.pubsLists.data = PUBS_LISTS);
 		});
 
 		it('updates stored search term when user searches', function() {
