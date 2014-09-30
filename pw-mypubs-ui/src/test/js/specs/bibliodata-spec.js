@@ -148,33 +148,15 @@ describe("pw.bibliodata module", function(){
                         'publicationsubtypes', {publicationtypeid : 1}, 2, callback);
                 });
 
-                it('The seriesTitleSelect2Options.query should use the LookupCascadeSelect2 service', function() {
-                    var query, queryParam;
+                it('Expects publicationseries lookup by used to set the active and inactive select options for series', function() {
                     myCtrl = createController();
                     scope.$digest();
 
-                    // This mocks what happend when the subtype select changes
-                    scope.pubData.genre = {id : 2};
-                    scope.$digest();
-
-                    query = scope.seriesTitleSelect2Options.query;
-                    queryParam = {callback : jasmine.createSpy('queryCallback')};
-                    query(queryParam);
-                    expect(mockLookupCascadeSelect2.query).toHaveBeenCalledWith(
-                        queryParam, 'publicationseries', {publicationsubtypeid : 2});
-                });
-
-                it('The seriesTitleSelect2Options.initSelection should set the initial selection', function() {
-                    var element, callback, initSelection;
-                    callback = jasmine.createSpy('initCallback');
-
-                    myCtrl = createController();
-                    initSelection = scope.seriesTitleSelect2Options.initSelection;
-
-                    initSelection(element, callback);
-                    expect(mockLookupCascadeSelect2.initSelection).toHaveBeenCalledWith(
-                        'publicationseries', {publicationsubtypeid : 2}, 3, callback);
-                });
+					expect(mockLookupFetcher.promise).toHaveBeenCalledWith('publicationseries', {publicationsubtypeid : 2, active : 'y'});
+					expect(mockLookupFetcher.promise).toHaveBeenCalledWith('publicationseries', {publicationsubtypeid : 2, active : 'n'});
+					expect(scope.activeSeries).toEqual(LOOKUP_DATA);
+					expect(scope.notActiveSeries).toEqual(LOOKUP_DATA);
+				});
             });
         });
 });
