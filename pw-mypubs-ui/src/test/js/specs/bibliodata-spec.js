@@ -77,104 +77,86 @@ describe("pw.bibliodata module", function(){
             });
 
             describe('Tests with pub data', function() {
-                beforeEach(function() {
-                    scope.pubData = {
-                        publicationType : {id : 1},
-                        publicationSubtype : {id : 2},
-                        'seriesTitle' : {id : 3},
-                        'costCenters' : [{id : 4}, {id : 5}],
-                        'subseriesTitle' : 'text1',
-                        seriesNumber : 'text2',
-                        'chapter' : 'text3',
-                        'subchapterNumber' : 'text4',
-                        'title' : 'text5',
-                        'docAbstract' : 'text6',
-                        'usgsCitation' : 'text7',
-                        'language' : 'text8',
-                        'publisher' : 'text9',
-                        'publisherLocation' : 'text10',
-                        'largerWorkType' : {id : 6},
-						'largerWorkSubtype' : {id : 7},
-                        'doi' : 'text11',
-                        'issn' : 'text12',
-                        'isbn' : 'text13'
-                    };
-                });
+                beforeEach(function () {
+					scope.pubData = {
+						publicationType: {id: 1},
+						publicationSubtype: {id: 2},
+						'seriesTitle': {id: 3},
+						'costCenters': [{id: 4}, {id: 5}],
+						'subseriesTitle': 'text1',
+						seriesNumber: 'text2',
+						'chapter': 'text3',
+						'subchapterNumber': 'text4',
+						'title': 'text5',
+						'docAbstract': 'text6',
+						'usgsCitation': 'text7',
+						'language': 'text8',
+						'publisher': 'text9',
+						'publisherLocation': 'text10',
+						'largerWorkType': {id: 6},
+						'largerWorkSubtype': {id: 7},
+						'doi': 'text11',
+						'issn': 'text12',
+						'isbn': 'text13'
+					};
+				});
 
-                it('Expects that genre and collection-title are cleared after changeType is called', function() {
-                    myCtrl = createController();
-                    var pubData = scope.pubData;
-                    scope.$digest();
-                    expect(pubData.publicationSubtype.id).toEqual(2);
-                    expect(pubData.seriesTitle.id).toEqual(3);
-                    scope.changeType();
-                    scope.$digest();
-                    expect(pubData.publicationSubtype.id).toEqual('');
-                    expect(pubData.seriesTitle.id).toEqual('');
-                });
+				it('Expects that genre and collection-title are cleared after changeType is called', function () {
+					myCtrl = createController();
+					var pubData = scope.pubData;
+					scope.$digest();
+					expect(pubData.publicationSubtype.id).toEqual(2);
+					expect(pubData.seriesTitle.id).toEqual(3);
+					scope.changeType();
+					scope.$digest();
+					expect(pubData.publicationSubtype.id).toEqual('');
+					expect(pubData.seriesTitle.id).toEqual('');
+				});
 
-                it('Expects collection-title is cleared after changeGenre is called', function() {
-                    myCtrl = createController();
-                    var pubData = scope.pubData;
-                    scope.$digest();
-                    expect(pubData.seriesTitle.id).toEqual(3);
-                    scope.changeGenre();
-                    scope.$digest();
-                    expect(pubData.seriesTitle.id).toEqual('');
-                });
+				it('Expects collection-title is cleared after changeGenre is called', function () {
+					myCtrl = createController();
+					var pubData = scope.pubData;
+					scope.$digest();
+					expect(pubData.seriesTitle.id).toEqual(3);
+					scope.changeGenre();
+					scope.$digest();
+					expect(pubData.seriesTitle.id).toEqual('');
+				});
 
 
-                it('The subtypeSelect2Options.query should use the LookupCascadeSelect2 service', function() {
-                    var query, queryParam;
-                    myCtrl = createController();
-                    scope.$digest();
+				it('The subtypeSelect2Options.query should use the LookupCascadeSelect2 service', function () {
+					var query, queryParam;
+					myCtrl = createController();
+					scope.$digest();
 
-                    query = scope.subtypeSelect2Options.query;
-                    queryParam = {callback : jasmine.createSpy('queryCallback')};
-                    query(queryParam);
-                    expect(mockLookupCascadeSelect2.query).toHaveBeenCalledWith(
-                        queryParam, 'publicationsubtypes', {publicationtypeid : 1});
-                });
+					query = scope.subtypeSelect2Options.query;
+					queryParam = {callback: jasmine.createSpy('queryCallback')};
+					query(queryParam);
+					expect(mockLookupCascadeSelect2.query).toHaveBeenCalledWith(
+						queryParam, 'publicationsubtypes', {publicationtypeid: 1});
+				});
 
-                it('The subtypeSelect2Options.initSelection should set the initial selection', function() {
-                    var element, callback, initSelection;
-                    callback = jasmine.createSpy('initCallback');
+				it('The subtypeSelect2Options.initSelection should set the initial selection', function () {
+					var element, callback, initSelection;
+					callback = jasmine.createSpy('initCallback');
 
-                    myCtrl = createController();
-                    initSelection = scope.subtypeSelect2Options.initSelection;
+					myCtrl = createController();
+					initSelection = scope.subtypeSelect2Options.initSelection;
 
-                    initSelection(element, callback);
-                    expect(mockLookupCascadeSelect2.initSelection).toHaveBeenCalledWith(
-                        'publicationsubtypes', {publicationtypeid : 1}, 2, callback);
-                });
+					initSelection(element, callback);
+					expect(mockLookupCascadeSelect2.initSelection).toHaveBeenCalledWith(
+						'publicationsubtypes', {publicationtypeid: 1}, 2, callback);
+				});
 
-                it('The seriesTitleSelect2Options.query should use the LookupCascadeSelect2 service', function() {
-                    var query, queryParam;
-                    myCtrl = createController();
-                    scope.$digest();
+				it('Expects publicationseries lookup by used to set the active and inactive select options for series', function () {
+					myCtrl = createController();
+					scope.$digest();
 
-                    // This mocks what happend when the subtype select changes
-                    scope.pubData.genre = {id : 2};
-                    scope.$digest();
-
-                    query = scope.seriesTitleSelect2Options.query;
-                    queryParam = {callback : jasmine.createSpy('queryCallback')};
-                    query(queryParam);
-                    expect(mockLookupCascadeSelect2.query).toHaveBeenCalledWith(
-                        queryParam, 'publicationseries', {publicationsubtypeid : 2});
-                });
-
-                it('The seriesTitleSelect2Options.initSelection should set the initial selection', function() {
-                    var element, callback, initSelection;
-                    callback = jasmine.createSpy('initCallback');
-
-                    myCtrl = createController();
-                    initSelection = scope.seriesTitleSelect2Options.initSelection;
-
-                    initSelection(element, callback);
-                    expect(mockLookupCascadeSelect2.initSelection).toHaveBeenCalledWith(
-                        'publicationseries', {publicationsubtypeid : 2}, 3, callback);
-                });
-            });
+					expect(mockLookupFetcher.promise).toHaveBeenCalledWith('publicationseries', {publicationsubtypeid: 2, active: 'y'});
+					expect(mockLookupFetcher.promise).toHaveBeenCalledWith('publicationseries', {publicationsubtypeid: 2, active: 'n'});
+					expect(scope.activeSeries).toEqual(LOOKUP_DATA);
+					expect(scope.notActiveSeries).toEqual(LOOKUP_DATA);
+				});
+			});
         });
 });

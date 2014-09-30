@@ -82,23 +82,23 @@
 	    };
 
 	    var getContributor = function(contributorId){
-		var result;
-		if (contributorId) {
-		    var deferred = $q.defer();
+			var result;
+			if (contributorId) {
+				var deferred = $q.defer();
 
-		    ContributorFetcher.fetchContributorById(contributorId).then(function(response) {
-			var safeContributor = new SkeletonContributor();
-			angular.forEach(safeContributor, function(defaultValue, key) {
-			   safeContributor[key] = (key in response.data) ? response.data[key] : defaultValue;
-			});
-			deferred.resolve(safeContributor);
-		    });
-		    result = deferred.promise;
-		}
-		else {
-		    result = new SkeletonContributor();
-		}
-		return result;
+				ContributorFetcher.fetchContributorById(contributorId).then(function(response) {
+				var safeContributor = new SkeletonContributor();
+				angular.forEach(safeContributor, function(defaultValue, key) {
+				   safeContributor[key] = (key in response.data) ? response.data[key] : defaultValue;
+				});
+				deferred.resolve(safeContributor);
+				});
+				result = deferred.promise;
+			}
+			else {
+				result = new SkeletonContributor();
+			}
+			return result;
 	    };
 
 	    return getContributor;
@@ -115,8 +115,11 @@
 			else {
 				lookupKind = 'outsideaffiliates';
 			}
-			LookupFetcher.promise(lookupKind).then(function(response) {
-				$scope.affiliations = response.data;
+			LookupFetcher.promise(lookupKind, {active : 'y'}).then(function(response) {
+				$scope.activeAffiliations = response.data;
+			});
+			LookupFetcher.promise(lookupKind, {active : 'n'}).then(function(response) {
+				$scope.notActiveAffiliations = response.data;
 			});
 	    };
 

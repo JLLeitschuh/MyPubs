@@ -16,8 +16,16 @@
     </div>
     <div id="series-title-tiv"  class="form-group">
         <label class="control-label col-sm-3" for="series-title-input">Series Title</label>
-        <div class="col-sm-9">
-            <input id="series-title-input" class="form-control" type="hidden" ng-model="localSeriesTitle" ui-select2="seriesTitleSelect2Options" />
+		<div class="col-sm-9">
+			<select id="series-title-input" class="form-control" placeholder="Select a series" ng-model="localSeriesTitle" ui-select2="{ allowClear : true }">
+				<option></option>
+				<optgroup label="Active">
+					<option ng-repeat="option in activeSeries" value="{{option.id}}">{{option.text}}</option>
+				</optgroup>
+				<optgroup label="Not Active">
+					<option ng-repeat="option in notActiveSeries" value="{{option.id}}">{{option.text}}</option>
+				</optgroup>
+			</select>
         </div>
     </div>
     <div class="form-group" id="cost-centers-div">
