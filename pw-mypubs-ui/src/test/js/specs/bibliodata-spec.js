@@ -77,29 +77,29 @@ describe("pw.bibliodata module", function(){
             });
 
             describe('Tests with pub data', function() {
-                beforeEach(function() {
-                    scope.pubData = {
-                        publicationType : {id : 1},
-                        publicationSubtype : {id : 2},
-                        'seriesTitle' : {id : 3},
-                        'costCenters' : [{id : 4}, {id : 5}],
-                        'subseriesTitle' : 'text1',
-                        seriesNumber : 'text2',
-                        'chapter' : 'text3',
-                        'subchapterNumber' : 'text4',
-                        'title' : 'text5',
-                        'docAbstract' : 'text6',
-                        'usgsCitation' : 'text7',
-                        'language' : 'text8',
-                        'publisher' : 'text9',
-                        'publisherLocation' : 'text10',
-                        'largerWorkType' : {id : 6},
-						'largerWorkSubtype' : {id : 7},
-                        'doi' : 'text11',
-                        'issn' : 'text12',
-                        'isbn' : 'text13'
-                    };
-                });
+                beforeEach(function () {
+					scope.pubData = {
+						publicationType: {id: 1},
+						publicationSubtype: {id: 2},
+						'seriesTitle': {id: 3},
+						'costCenters': [{id: 4}, {id: 5}],
+						'subseriesTitle': 'text1',
+						seriesNumber: 'text2',
+						'chapter': 'text3',
+						'subchapterNumber': 'text4',
+						'title': 'text5',
+						'docAbstract': 'text6',
+						'usgsCitation': 'text7',
+						'language': 'text8',
+						'publisher': 'text9',
+						'publisherLocation': 'text10',
+						'largerWorkType': {id: 6},
+						'largerWorkSubtype': {id: 7},
+						'doi': 'text11',
+						'issn': 'text12',
+						'isbn': 'text13'
+					};
+				});
 
                 it('Expects that genre and collection-title are cleared after changeType is called', function() {
                     myCtrl = createController();

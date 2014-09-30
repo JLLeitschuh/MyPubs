@@ -43,77 +43,77 @@ angular.module('pw.publication', ['ngRoute', 'pw.notify', 'ui.bootstrap.modal',
 			//avoid repetitive assignments to 'this' by declaring properties
 			//and values in a map and iteratively assigning them to 'this'
 			var properties = {
-                "id": '',
-                "publicationType": {
-                  "id": ''
-                },
-                "publicationSubtype": {
-                  "id": ''
-                },
-                "seriesTitle": {
-                  "id": ''
-                },
-                "seriesNumber": "",
-                "subseriesTitle": "",
-                "chapter": "",
-                "subchapterNumber": "",
-                "title": "",
-                "docAbstract": "",
-                "language": "",
-                "publisher": "",
-                "publisherLocation": "",
-                "doi": "",
-                "issn": "",
-                "isbn": "",
-                "displayToPublicDate": "",
-                "indexId": "",
-                "collaboration": "",
-                "usgsCitation": "",
-                "costCenters": [],
-                "links": [],
-                "notes": "",
-                "contact": {
-                  "id": ''
-                },
-                "ipdsId": "",
-                "publicationYear": "",
-                "conferenceTitle": "",
-                "conferenceDate": "",
-                "conferenceLocation": "",
-                "largerWorkType": {
-                  "id": ''
-                },
-				"largerWorkSubtype" : {
-					"id" : ''
+				"id": '',
+				"publicationType": {
+					"id": ''
 				},
-                "largerWorkTitle": "",
-                "lastModifiedDate": "",
-                "productDescription": "",
-				"volume" : "",
-				"issue" : "",
-                "startPage": "",
-                "endPage": "",
-                "numberOfPages": "",
-                "onlineOnly": "N",
-                "additionalOnlineFiles": "N",
-                "temporalStart": "",
-                "temporalEnd": "",
-                "authors": [],
-                "editors": [],
-				"scale" : "",
-				"projection" : "",
-				"datum" : "",
-				"country" : "",
-				"state" : "",
-				"county" : "",
-				"city" : "",
-				"otherGeospatial" : "",
-				"geographicExtents" : "",
-                "validationErrors": []
-              };
-				angular.forEach(properties, function(defaultValue, propertyName){
-					self[propertyName] = defaultValue;
-				});
+				"publicationSubtype": {
+					"id": ''
+				},
+				"seriesTitle": {
+					"id": ''
+				},
+				"seriesNumber": "",
+				"subseriesTitle": "",
+				"chapter": "",
+				"subchapterNumber": "",
+				"title": "",
+				"docAbstract": "",
+				"language": "",
+				"publisher": "",
+				"publisherLocation": "",
+				"doi": "",
+				"issn": "",
+				"isbn": "",
+				"displayToPublicDate": "",
+				"indexId": "",
+				"collaboration": "",
+				"usgsCitation": "",
+				"costCenters": [],
+				"links": [],
+				"notes": "",
+				"contact": {
+					"id": ''
+				},
+				"ipdsId": "",
+				"publicationYear": "",
+				"conferenceTitle": "",
+				"conferenceDate": "",
+				"conferenceLocation": "",
+				"largerWorkType": {
+					"id": ''
+				},
+				"largerWorkSubtype": {
+					"id": ''
+				},
+				"largerWorkTitle": "",
+				"lastModifiedDate": "",
+				"productDescription": "",
+				"volume": "",
+				"issue": "",
+				"startPage": "",
+				"endPage": "",
+				"numberOfPages": "",
+				"onlineOnly": "N",
+				"additionalOnlineFiles": "N",
+				"temporalStart": "",
+				"temporalEnd": "",
+				"authors": [],
+				"editors": [],
+				"scale": "",
+				"projection": "",
+				"datum": "",
+				"country": "",
+				"state": "",
+				"county": "",
+				"city": "",
+				"otherGeospatial": "",
+				"geographicExtents": "",
+				"validationErrors": []
+			};
+			angular.forEach(properties, function(defaultValue, propertyName){
+				self[propertyName] = defaultValue;
+			});
         };
 	/**
 	 * Is this Publication new?
