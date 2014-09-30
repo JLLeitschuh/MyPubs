@@ -23,7 +23,9 @@
 				$scope.pubsLists = value.data;
 			},
 			function(reason) {
-				Notifier.error('Publication lists could not be loaded');
+				if (reason.status !== 401) {
+					Notifier.error('Publication lists could not be loaded');
+				}
 			}
 		);
 
