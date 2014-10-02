@@ -80,7 +80,7 @@ describe("pw.bibliodata module", function(){
                 beforeEach(function () {
 					scope.pubData = {
 						publicationType: {id: 1},
-						publicationSubtype: {id: 2},
+						publicationSubtype: {id: 2, text: 'Subtype2'},
 						'seriesTitle': {id: 3},
 						'costCenters': [{id: 4}, {id: 5}],
 						'subseriesTitle': 'text1',
@@ -136,16 +136,14 @@ describe("pw.bibliodata module", function(){
 						queryParam, 'publicationsubtypes', {publicationtypeid: 1});
 				});
 
-				it('The subtypeSelect2Options.initSelection should set the initial selection', function () {
+			it('The subtypeSelect2Options.initSelection should set the initial selection', function () {
 					var element, callback, initSelection;
 					callback = jasmine.createSpy('initCallback');
 
 					myCtrl = createController();
 					initSelection = scope.subtypeSelect2Options.initSelection;
-
 					initSelection(element, callback);
-					expect(mockLookupCascadeSelect2.initSelection).toHaveBeenCalledWith(
-						'publicationsubtypes', {publicationtypeid: 1}, 2, callback);
+					expect(callback).toHaveBeenCalledWith({id: 2, text: 'Subtype2'});
 				});
 
 				it('Expects publicationseries lookup by used to set the active and inactive select options for series', function () {

@@ -9,6 +9,7 @@ describe ('Tests for pw.contributors', function() {
 		var personData = {
 			id : 1,
 			contributorId : 10,
+			text : 'Person1',
 			rank : 1,
 			family : 'Jones',
 			given : 'Nancy',
@@ -20,6 +21,7 @@ describe ('Tests for pw.contributors', function() {
 		var corporationData = {
 			id : 2,
 			contributorId : 20,
+			text : 'Corp1',
 			rank : 1,
 			organization : 'Colorado Water Science Center',
 			corporation : true
@@ -55,7 +57,7 @@ describe ('Tests for pw.contributors', function() {
 			expect(contrib.affiliation).toEqual({id : 1, text : 'Wisconsin Water Science Center'});
 			expect(contrib.kind).toEqual(KIND.person);
 			expect(contrib.select2Options).toBeDefined();
-			expect(mockLookupFetcher.dynamicSelectOptions).toHaveBeenCalledWith('people', 10);
+			expect(mockLookupFetcher.dynamicSelectOptions).toHaveBeenCalledWith('people', {id : 10, text : 'Person1'});
 		}));
 
 		it('Expects a contributor which is a Corporation to be created with kind equal to Corporation', inject(function(ContributorModel) {
@@ -66,7 +68,7 @@ describe ('Tests for pw.contributors', function() {
 			expect(contrib.rank).toEqual(1);
 			expect(contrib.kind).toEqual(KIND.corporation);
 			expect(contrib.select2Options).toBeDefined();
-			expect(mockLookupFetcher.dynamicSelectOptions).toHaveBeenCalledWith('corporations', 20);
+			expect(mockLookupFetcher.dynamicSelectOptions).toHaveBeenCalledWith('corporations', {id : 20, text : 'Corp1'});
 		}));
 
 		it('Expects changeKind to modify the contributor properties to match the kind while preserving the id', inject(function(ContributorModel) {
@@ -134,7 +136,7 @@ describe ('Tests for pw.contributors', function() {
 		it('Expects update to update the kind, affiliation, and contributorId fields', inject(function(ContributorModel) {
 			var contrib = new ContributorModel(personData);
 			contrib.contributorId = {id : 10, text : 'Text10'};
-			contrib.update({id : 2, contributorId : 10, corporation : false, rank : 1});
+			contrib.update({id : 2, contributorId : 10, text : 'Text10', corporation : false, rank : 1});
 			expect(contrib.id).toEqual(2);
 			expect(contrib.contributorId).toEqual({id : 10, text : 'Text10'});
 			expect(contrib.affiliation).toEqual({});
