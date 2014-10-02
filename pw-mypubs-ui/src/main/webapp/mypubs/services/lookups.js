@@ -27,12 +27,7 @@ angular.module('pw.lookups',['pw.notify'])
 		    });
 		},
 		initSelection : function(element, callback) {
-		   that.promise(lookupType).then(function(response) {
-		       var items = _.where(response.data, {id : parseInt(initValue)});
-		       if (items.length > 0) {
-			   callback(items[0]);
-		       }
-		   });
+			callback(initValue);
 		}
 	    };
 	};

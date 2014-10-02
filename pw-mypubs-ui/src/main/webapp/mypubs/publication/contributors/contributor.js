@@ -17,7 +17,7 @@ angular.module('pw.contributors', ['pw.contributorDAO', 'pw.dataList', 'pw.looku
 			};
 		};
 
-		var getOptions = function(isCorporation, contributorId) {
+		var getOptions = function(isCorporation, contributorLookup) {
 			var lookup;
 			var result = {minimumInputLength : 2}
 			if (isCorporation) {
@@ -26,7 +26,7 @@ angular.module('pw.contributors', ['pw.contributorDAO', 'pw.dataList', 'pw.looku
 			else {
 				lookup = 'people';
 			}
-			return angular.extend(result, LookupFetcher.dynamicSelectOptions(lookup, contributorId));
+			return angular.extend(result, LookupFetcher.dynamicSelectOptions(lookup, contributorLookup));
 		};
 
 		function Contributor(data) {
@@ -43,7 +43,7 @@ angular.module('pw.contributors', ['pw.contributorDAO', 'pw.dataList', 'pw.looku
 				this.rank = data.rank;
 				this.corporation = data.corporation;
 				this.affiliation = data.affiliation || {};
-				this.select2Options = getOptions(data.corporation, data.contributorId);
+				this.select2Options = getOptions(data.corporation, {id : data.contributorId, text : data.text});
 			}
 			else {
 				angular.extend(this, getEmptyContributor());
@@ -55,7 +55,7 @@ angular.module('pw.contributors', ['pw.contributorDAO', 'pw.dataList', 'pw.looku
 				this.contributorId = '';
 				this.affiliation = {};
 				this.corporation = this.kind === KIND.corporation;
-				this.select2Options = getOptions(this.corporation, this.contributorId);
+				this.select2Options = getOptions(this.corporation, '');
 			},
 			update : function(data) {
 				if (data) {
@@ -73,7 +73,7 @@ angular.module('pw.contributors', ['pw.contributorDAO', 'pw.dataList', 'pw.looku
 					else {
 						this.kind = KIND.person;
 					}
-					this.select2Options = getOptions(data.corporation, this.contributorId);
+					this.select2Options = getOptions(data.corporation, {id : data.contributorId, text : data.text});
 
 				}
 				else {

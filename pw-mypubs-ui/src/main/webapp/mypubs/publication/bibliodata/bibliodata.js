@@ -121,7 +121,7 @@
 						LookupCascadeSelect2.query(query, 'publicationsubtypes', {publicationtypeid: $scope.pubData.publicationType.id});
 					},
 					initSelection: function (element, callback) {
-						LookupCascadeSelect2.initSelection('publicationsubtypes', {publicationtypeid: $scope.pubData.publicationType.id}, $scope.pubData.publicationSubtype.id, callback);
+						callback($scope.pubData.publicationSubtype);
 					},
 					placeholder: 'Select a publication subtype',
 					allowClear: true
