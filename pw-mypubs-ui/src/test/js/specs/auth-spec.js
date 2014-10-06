@@ -5,10 +5,10 @@ describe("pw.auth module", function() {
 	};
 	var AUTH_SERVICE_PATH = 'auth/ad/token';
 	var LOGOUT_SERVICE_PATH = 'auth/logout';
-	
+
 	var AD_TOKEN_URL = APP_CONFIG.endpoint + AUTH_SERVICE_PATH;
 	var LOGOUT_URL = APP_CONFIG.endpoint + LOGOUT_SERVICE_PATH;
-	
+
 	describe("AuthState and AuthService services", function() {
 		var authService, authState, rootScope, authorizationInterceptor, httpBackend, locationMock, cookiesMock, scope, q;
 
@@ -57,7 +57,7 @@ describe("pw.auth module", function() {
 			expect(authState.setToken).toBeDefined();
 			expect(authState.clearToken).toBeDefined();
 		});
-		
+
 		it("AuthService.getNewTokenPromise will do an ajax call to a auth service to get a token " +
 				"and then use AuthState to store the token", function (){
 			//set up server responses
@@ -77,25 +77,25 @@ describe("pw.auth module", function() {
 			httpBackend.flush();
 			rootScope.$digest();
 		});
-		
+
 		it("AuthState.getToken gets the token from a browser cookie if it exists and AuthState.clearCookie clears all tokens", function (){
 			var testToken = "auth-token";
 			var testCookieToken = "token-from-cookie";
-			
+
 			//returns null if nothing was set and all places a token could be are null
 			expect(authState.getToken()).toBe(null);
 			expect(cookiesMock.myPubsAuthToken).toBeUndefined();
 			expect(authState.loginState.authToken).toBe(null);
-			
+
 			//set cookie to mimic already existing in browser
 			cookiesMock.myPubsAuthToken = testCookieToken;
 			expect(authState.getToken()).toBe(testCookieToken); //shows cookie was found in just the cookie
 			expect(authState.loginState.authToken).toBe(testCookieToken); //shows we loaded the cookie token into memory
-			
+
 			authState.clearToken();
 			expect(authState.getToken()).toBe(null);
 			expect(authState.loginState.authToken).toBe(null);
-			
+
 			//set up server responses
 			httpBackend.whenPOST(AD_TOKEN_URL).respond({ token: testToken });
 			authService.getNewTokenPromise("user", "pass").then(function(token) {
@@ -120,24 +120,24 @@ describe("pw.auth module", function() {
 			});
 			httpBackend.expectPOST(AD_TOKEN_URL, "username=user&password=pass");
 			httpBackend.flush();
-			
-			httpBackend.whenGET(LOGOUT_URL).respond("Logged out"); //TODO check for 200?
+
+			httpBackend.whenPOST(LOGOUT_URL).respond("Logged out"); //TODO check for 200?
 			authService.logout();
-			httpBackend.expectGET(LOGOUT_URL);
+			httpBackend.expectPOST(LOGOUT_URL);
 			httpBackend.flush();
-			
+
 			expect(cookiesMock.myPubsAuthToken).toBeFalsy();
 			expect(authState.loginState.authToken).toBeFalsy();
 			expect(locationMock.path).toHaveBeenCalledWith('/Login');
 		});
-		
+
 		it("AuthorizationInterceptor properly updates requests with Authorization header", function(){
 			var requestConfig = {
 				headers: {}
 			};
 			authorizationInterceptor.request(requestConfig);
 			expect(requestConfig.headers['Authorization']).toBeUndefined(); //if no token exists, header not set
-			
+
 			//set up server responses
 			var testToken = "auth-token";
 			httpBackend.whenPOST(AD_TOKEN_URL).respond({token: testToken});
@@ -145,7 +145,7 @@ describe("pw.auth module", function() {
 			//first call results in a fetch to token server
 			authService.getNewTokenPromise("user", "pass").then(function(token) {
 				authorizationInterceptor.request(requestConfig);
-				//interceptor updates config object with authorization header 
+				//interceptor updates config object with authorization header
 				expect(requestConfig.headers['Authorization']).toBe("Bearer " + testToken);
 			}, function(reason){
 				expect(true).toBe(false);
@@ -153,13 +153,13 @@ describe("pw.auth module", function() {
 			httpBackend.expectPOST(AD_TOKEN_URL, "username=user&password=pass");
 			httpBackend.flush();
 		});
-		
+
 		it("AuthorizationInterceptor properly handles 401 responses", function(){
 			var notFoundResponse = { status: 404 };
 			var unauthorizedResponse = { status: 401 };
 			authorizationInterceptor.responseError({ status: 404});
 			expect(q.reject).toHaveBeenCalledWith(notFoundResponse); //normal reject response
-			
+
 			authorizationInterceptor.responseError({ status: 401});
 			expect(locationMock.path).toHaveBeenCalledWith('/Login'); //forward to login screen
 		});
