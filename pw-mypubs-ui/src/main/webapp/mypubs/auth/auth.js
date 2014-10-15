@@ -64,10 +64,10 @@
 				$http.post(APP_CONFIG.endpoint + LOGOUT_SERVICE_PATH,{
 					token : AuthState.getToken()
 				}).success(function(response) {
+					AuthState.clearToken();
 					$location.path("/Login");
 				});
 
-				AuthState.clearToken();
 			}
 		};
 	}])
