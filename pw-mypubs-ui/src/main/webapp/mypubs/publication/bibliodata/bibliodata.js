@@ -31,34 +31,37 @@
 				$scope.localLargerWorkTypeId = $scope.pubData.largerWorkType.id;
 				$scope.localLargerWorkSubtypeId = $scope.pubData.largerWorkSubtype.id;
 
-				var getIdOrOriginal = function (objectOrPrimitive) {
-					var id = objectOrPrimitive;
-					if (objectOrPrimitive.id) {
-						id = objectOrPrimitive.id;
+				// This method and the watches on the select2 local values gets around an issue where you
+				// have to initialize the select2 with an id value, but then it puts an object on the associated
+				// scope object.
+				var updateObject = function(obj, value) {
+					if (angular.isObject(value)) {
+						return value;
 					}
-					return id;
+					else if (obj.id !== value) {
+						return {id: value, text: ''};
+					}
+					else {
+						return {id: obj.id, text : obj.text};
+					}
 				};
+				var getObject = function(value) {
+					if (angular.isObject(value)) {
+						return value;
+					}
+					else {
+						return {id : value};
+					}
+				};
+
 				$scope.$watch('localPubTypeId', function (value) {
-					var id = getIdOrOriginal(value);
-					$scope.pubData.publicationType.id = id;
+					$scope.pubData.publicationType = updateObject($scope.pubData.publicationType, value);
 				});
 				$scope.$watch('localPubGenreId', function (value) {
-					if (value) {
-						var id = getIdOrOriginal(value);
-						$scope.pubData.publicationSubtype.id = id;
-					}
-					else {
-						$scope.pubData.publicationSubtype.id = '';
-					}
+					$scope.pubData.publicationSubtype = updateObject($scope.pubData.publicationSubtype, value);
 				});
 				$scope.$watch('localSeriesTitle', function (value) {
-					if (value) {
-						var id = getIdOrOriginal(value);
-						$scope.pubData.seriesTitle.id = id;
-					}
-					else {
-						$scope.pubData.seriesTitle.id = '';
-					}
+					$scope.pubData.seriesTitle = updateObject($scope.pubData.seriesTitle, value);
 				});
 
 				$scope.changeType = function () {
@@ -80,6 +83,8 @@
 					}
 				};
 
+				// It's ok not to update the costCenter text field since all of the cost center options are loaded
+				// at initialization.
 				$scope.$watch('localCostCenters', function (newCostCenters) {
 					$scope.pubData.costCenters = _.map(newCostCenters, function (costCenterId) {
 						return {id: costCenterId};
@@ -87,12 +92,10 @@
 				});
 
 				$scope.$watch('localLargerWorkTypeId', function (value) {
-					var id = getIdOrOriginal(value);
-					$scope.pubData.largerWorkType.id = id;
+					$scope.pubData.largerWorkType = updateObject($scope.pubData.largerWorkType, value);
 				});
 				$scope.$watch('localLargerWorkSubtypeId', function (value) {
-					var id = getIdOrOriginal(value);
-					$scope.pubData.largerWorkSubtype.id = id;
+					$scope.pubData.largerWorkSubtype = updateObject($scope.pubData.largerWorkSubtype, value);
 				});
 				$scope.changeLargerWorkType = function () {
 					if (largerWorkTypeInputIsInitialized) {
