@@ -79,10 +79,10 @@ describe("pw.bibliodata module", function(){
             describe('Tests with pub data', function() {
                 beforeEach(function () {
 					scope.pubData = {
-						publicationType: {id: 1},
+						publicationType: {id: 1, text : 'Type1'},
 						publicationSubtype: {id: 2, text: 'Subtype2'},
-						'seriesTitle': {id: 3},
-						'costCenters': [{id: 4}, {id: 5}],
+						'seriesTitle': {id: 3, text : 'Series3'},
+						'costCenters': [{id: 4, text : 'CC4'}, {id: 5, text : 'CC5'}],
 						'subseriesTitle': 'text1',
 						seriesNumber: 'text2',
 						'chapter': 'text3',
@@ -93,8 +93,8 @@ describe("pw.bibliodata module", function(){
 						'language': 'text8',
 						'publisher': 'text9',
 						'publisherLocation': 'text10',
-						'largerWorkType': {id: 6},
-						'largerWorkSubtype': {id: 7},
+						'largerWorkType': {id: 6, text : 'Larger Work Type6'},
+						'largerWorkSubtype': {id: 7, text : 'Larger Work subtype7'},
 						'doi': 'text11',
 						'issn': 'text12',
 						'isbn': 'text13'
@@ -147,13 +147,17 @@ describe("pw.bibliodata module", function(){
 				});
 
 				it('Expects publicationseries lookup by used to set the active and inactive select options for series', function () {
+					var query, callbackSpy;
 					myCtrl = createController();
 					scope.$digest();
 
-					expect(mockLookupFetcher.promise).toHaveBeenCalledWith('publicationseries', {publicationsubtypeid: 2, active: 'y'});
-					expect(mockLookupFetcher.promise).toHaveBeenCalledWith('publicationseries', {publicationsubtypeid: 2, active: 'n'});
-					expect(scope.activeSeries).toEqual(LOOKUP_DATA);
-					expect(scope.notActiveSeries).toEqual(LOOKUP_DATA);
+					callbackSpy = jasmine.createSpy('callbackSpy');
+					query = scope.seriesTitleSelect2Options.query;
+					query({term : 'ab', callback : callbackSpy});
+					scope.$digest();
+
+					expect(mockLookupFetcher.promise.calls[3].args).toEqual(['publicationseries', {publicationsubtypeid: 2, active: 'y', text : 'ab'}]);
+					expect(mockLookupFetcher.promise.calls[4].args).toEqual(['publicationseries', {publicationsubtypeid: 2, active: 'n', text : 'ab'}]);
 				});
 			});
         });

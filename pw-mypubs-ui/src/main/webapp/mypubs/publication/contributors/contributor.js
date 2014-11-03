@@ -19,7 +19,7 @@ angular.module('pw.contributors', ['pw.contributorDAO', 'pw.dataList', 'pw.looku
 
 		var getOptions = function(isCorporation, contributorLookup) {
 			var lookup;
-			var result = {minimumInputLength : 2}
+			var result = {minimumInputLength : 2};
 			if (isCorporation) {
 				lookup = 'corporations';
 			}
@@ -40,6 +40,7 @@ angular.module('pw.contributors', ['pw.contributorDAO', 'pw.dataList', 'pw.looku
 				}
 				this.id = data.id;
 				this.contributorId = data.contributorId;
+				this.text = data.text;
 				this.rank = data.rank;
 				this.corporation = data.corporation;
 				this.affiliation = data.affiliation || {};
@@ -53,6 +54,7 @@ angular.module('pw.contributors', ['pw.contributorDAO', 'pw.dataList', 'pw.looku
 		Contributor.prototype = {
 			changeKind : function() {
 				this.contributorId = '';
+				this.text = '';
 				this.affiliation = {};
 				this.corporation = this.kind === KIND.corporation;
 				this.select2Options = getOptions(this.corporation, '');
@@ -62,6 +64,7 @@ angular.module('pw.contributors', ['pw.contributorDAO', 'pw.dataList', 'pw.looku
 					// Only update the contributorId object if it has changed
 					if (data.contributorId !== this.getContributorId()) {
 						this.contributorId = data.contributorId;
+						this.text = data.text;
 					}
 					this.id = data.id;
 					this.rank = data.rank;
@@ -80,6 +83,7 @@ angular.module('pw.contributors', ['pw.contributorDAO', 'pw.dataList', 'pw.looku
 					this.kind = '';
 					this.id = '';
 					this.contributorId = '';
+					this.text = '';
 					this.corporation = false;
 					this.affiliation = {};
 				}
@@ -89,6 +93,7 @@ angular.module('pw.contributors', ['pw.contributorDAO', 'pw.dataList', 'pw.looku
 				if (data) {
 					if (this.getContributorId() !== data.contributorId) {
 						this.contributorId = data.contributorId;
+						this.text = data.text;
 					}
 					this.affiliation = data.affiliation || {};
 				}
@@ -107,10 +112,19 @@ angular.module('pw.contributors', ['pw.contributorDAO', 'pw.dataList', 'pw.looku
 					return this.contributorId;
 				}
 			},
+			getContributorText : function() {
+				if (angular.isDefined(this.contributorId.text)) {
+					return this.contributorId.text;
+				}
+				else {
+					return '';
+				};
+			},
 			getPubData : function() {
 				return {
 					id : this.id,
 					contributorId : this.getContributorId(),
+					text : this.getContributorText(),
 					rank : this.rank,
 					corporation : this.corporation,
 					affiliation : this.affiliation || {}
