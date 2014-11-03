@@ -3,8 +3,8 @@
 
 	angular.module('pw.bibliodata', ['pw.lookups'])
 		.controller('biblioCtrl', [
-			'$scope', 'LookupFetcher', 'LookupCascadeSelect2', '$routeParams',
-			function ($scope, LookupFetcher, LookupCascadeSelect2, $routeParams) {
+			'$scope', '$filter', '$q', 'LookupFetcher', 'LookupCascadeSelect2', '$routeParams',
+			function ($scope, $filter, $q, LookupFetcher, LookupCascadeSelect2, $routeParams) {
 
 				// This are used to control whether the change* functions are executed.
 				// We don't want them to execute the first time it is fired when publication
@@ -43,24 +43,22 @@
 					$scope.pubData.publicationType.id = id;
 				});
 				$scope.$watch('localPubGenreId', function (value) {
-					var id = getIdOrOriginal(value);
-					$scope.pubData.publicationSubtype.id = id;
-					LookupFetcher.promise('publicationseries', {
-						publicationsubtypeid : $scope.pubData.publicationSubtype.id,
-						active : 'y'
-					}).then(function(response) {
-						$scope.activeSeries = response.data;
-					});
-					LookupFetcher.promise('publicationseries', {
-						publicationsubtypeid : $scope.pubData.publicationSubtype.id,
-						active : 'n'
-					}).then(function(response) {
-						$scope.notActiveSeries = response.data;
-					});
+					if (value) {
+						var id = getIdOrOriginal(value);
+						$scope.pubData.publicationSubtype.id = id;
+					}
+					else {
+						$scope.pubData.publicationSubtype.id = '';
+					}
 				});
 				$scope.$watch('localSeriesTitle', function (value) {
-					var id = getIdOrOriginal(value);
-					$scope.pubData.seriesTitle.id = id;
+					if (value) {
+						var id = getIdOrOriginal(value);
+						$scope.pubData.seriesTitle.id = id;
+					}
+					else {
+						$scope.pubData.seriesTitle.id = '';
+					}
 				});
 
 				$scope.changeType = function () {
@@ -104,6 +102,7 @@
 						largerWorkTypeInputIsInitialized = true;
 					}
 				};
+				// Set up select2 lists and/or options to retrieve lists dynamically
 				LookupFetcher.promise('publicationtypes').then(function (response) {
 					$scope.typeOptions = response.data;
 
@@ -127,19 +126,38 @@
 					allowClear: true
 				};
 
-				LookupFetcher.promise('publicationseries', {
-					publicationsubtypeid : $scope.pubData.publicationSubtype.id,
-					active : 'y'
-				}).then(function(response) {
-					$scope.activeSeries = response.data;
-				});
-				LookupFetcher.promise('publicationseries', {
-					publicationsubtypeid : $scope.pubData.publicationSubtype.id,
-					active : 'n'
-				}).then(function(response) {
-					$scope.notActiveSeries = response.data;
-				});
+				$scope.seriesTitleSelect2Options = {
+					query : function(options) {
+						var activePromise, notActivePromise;
+						var activeResults = {text : 'Active', children : []};
+						var notActiveResults = {text : 'Not Active', children : []};
 
+						activePromise = LookupFetcher.promise('publicationseries', {
+							publicationsubtypeid : $scope.pubData.publicationSubtype.id,
+							active : 'y',
+							text : options.term
+						}).then(function(response) {
+							activeResults.children = $filter('limitTo')(response.data, 30);
+						});
+						notActivePromise = LookupFetcher.promise('publicationseries', {
+							publicationsubtypeid : $scope.pubData.publicationSubtype.id,
+							active : 'n',
+							text : options.term
+						}).then(function(response) {
+							notActiveResults.children = $filter('limitTo')(response.data, 30);
+						});
+
+						$q.all([activePromise, notActivePromise]).then(function() {
+							options.callback({results : [activeResults, notActiveResults]});
+						});
+					},
+					initSelection : function(element, callback) {
+						callback($scope.pubData.seriesTitle);
+					},
+					minimumInputLength : 1,
+					placeholder: 'Select a series',
+					allowClear : true
+				};
 				$scope.costCenterSelect2Options = {
 					placeholder: 'Select one or more cost centers'
 				};
