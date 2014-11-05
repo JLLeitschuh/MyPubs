@@ -52,12 +52,6 @@ angular.module('pw.publicationDAO', [])
 
 	.factory('PublicationUpdater', ['$http', '$q', 'PubEndpoint', function($http, $q, PubEndpoint) {
 
-		var httpResponseIsErrorFree = function(httpResponse){
-			var text = JSON.stringify(httpResponse).toLowerCase();
-			var indexOfException = text.indexOf('exception');
-			return  indexOfException === -1;
-		};
-
 		var httpUpdate = function(url, verb, data, errorMessage) {
 			var deferred = $q.defer();
 
@@ -68,12 +62,7 @@ angular.module('pw.publicationDAO', [])
 				}
 			})
 			.success(function(response) {
-				if (httpResponseIsErrorFree(response)) {
-					deferred.resolve(response);
-				}
-				else {
-					deferred.reject(new Error(errorMessage))
-				}
+				deferred.resolve(response);
 			})
 			.error(function(response) {
 				if (response['validationErrors'] && 0 !== response['validationErrors'].length){
