@@ -22,12 +22,6 @@
 	var outsiderEndPoint = APP_CONFIG.endpoint + 'outsidecontributor';
 	var corporationEndPoint = APP_CONFIG.endpoint + 'corporation';
 
-	var httpResponseIsErrorFree = function(httpResponse){
-			var text = JSON.stringify(httpResponse).toLowerCase();
-			var indexOfException = text.indexOf('exception');
-			return  indexOfException === -1;
-		};
-
 	var errorPersistingMessage = 'Error persisting contributor';
 
 	/**
@@ -71,20 +65,14 @@
 		    }
 	    })
 	    .success(function(response){
-		if (httpResponseIsErrorFree(response)) {
 		    deferredPersistence.resolve(response);
-		}
-		else{
-		    deferredPersistence.reject(new Error(errorPersistingMessage));
-		}
-		deferredPersistence.resolve(response);
 	    })
 	    .error(function(response){
 		    if(response['validationErrors'] && 0 !== response['validationErrors'].length){
-			deferredPersistence.reject(response);
+		    	deferredPersistence.reject(response);
 		    }
 		    else{
-			deferredPersistence.reject(new Error(response));
+		    	deferredPersistence.reject(new Error(response));
 		    }
 	    });
 
