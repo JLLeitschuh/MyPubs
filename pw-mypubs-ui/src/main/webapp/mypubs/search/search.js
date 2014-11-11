@@ -1,5 +1,5 @@
 (function() {
-	var DEFAULT_PAGE_SIZE = 15;
+	var DEFAULT_PAGE_SIZE = 100;
 
 	angular.module('pw.search', ['ngRoute', 'ngGrid', 'pw.publicationDAO', 'pw.pubsListDAO', 'pw.modal', 'pw.notify'])
 
@@ -13,10 +13,11 @@
 	}
 	])
 
-	.controller('searchCtrl', [ '$scope', '$location', 'PublicationFetcher', 'PubsListFetcher', 'PubsModal', 'Notifier',
-	function($scope, $location, PublicationFetcher, PubsListFetcher, PubsModal, Notifier) {
+	.controller('searchCtrl', [ '$scope', '$location', 'PublicationFetcher', 'PubsListFetcher', 'PubsListUpdater', 'PubsModal', 'Notifier',
+	function($scope, $location, PublicationFetcher, PubsListFetcher, PubsListUpdater, PubsModal, Notifier) {
 		$scope.pubsLists = [];
 		$scope.pubs = [];
+		$scope.lists = [];
 
 		PubsListFetcher.fetchAllLists().then(
 			function(value) {
@@ -70,13 +71,65 @@
 			}
 		};
 
+		$scope.listSelect2Cfg = {
+			allowClear: true,
+			placeholder: 'Select List(s)'
+		};
+		
+		$scope.addToList = function() {
+			if($scope.selectedPubs.length > 0 && $scope.lists.length > 0) {
+				PubsListUpdater.addPubsToList($scope.lists, $scope.selectedPubs, $scope.pubsLists).then(
+					function(value) {
+						var msg = '';
+						value.forEach(function(val){
+							msg = msg + val + '\n';
+						})
+						PubsModal.alert('Publication(s) added to the list(s)', msg, true);
+					},
+					function(reason) {
+						if (reason.status !== 401) {
+							Notifier.error('Publication(s) could not be added to the list(s)');
+						}
+					}
+				);
+			} else {
+				PubsModal.alert("Select Publication(s)", "You must select at least one publication to add to the list(s)");
+			}
+		};
+
+		$scope.removeFromList = function() {
+			if($scope.selectedPubs.length > 0 && $scope.selectedPubsLists.length == 1) {
+				var list = $scope.selectedPubsLists[0];
+				PubsListUpdater.removePubsFromList(list.id, $scope.selectedPubs).then(
+						function(value) {
+							var msg = '';
+							value.forEach(function(val){
+								msg = msg + val + '\n';
+							})
+							PubsModal.alert('Publication(s) removed from the list "' + list.text + '"', msg, true);
+							$scope.search();
+						},
+						function(reason) {
+							if (reason.status !== 401) {
+								Notifier.error('Publication(s) could not be removed from the list');
+							}
+						}
+					);
+			} else {
+				PubsModal.alert("Select both Publication(s) and a List", "You must select at least one publication and the list to remove it from");
+				$scope.search();
+			}
+		};
+
 		$scope.selectedPubsLists = [];
 		$scope.pubsListGrid = {
 				data: 'pubsLists',
 				selectedItems: $scope.selectedPubsLists,
 				columnDefs: [
 				             {field:'text', displayName:'Name'},
-				             {field:'description', displayName:'Description'}]
+				             {field:'description', displayName:'Description'}],
+				sortInfo: {fields: ['text'], directions: ['asc']},
+				enableSorting: true
 		};
 
 		$scope.selectedPubs = [];
@@ -115,16 +168,16 @@
 				selectedItems: $scope.selectedPubs,
 				columnDefs: [
 		            {field:'publicationType', displayName:'Type', width: 75,
-						cellTemplate: textFieldCellTemplate },
+						cellTemplate: textFieldCellTemplate, sortable: false },
 					{field:'seriesTitle', displayName:'USGS Series', width: 150,
-						cellTemplate: textFieldCellTemplate },
+						cellTemplate: textFieldCellTemplate, sortable: false },
 					{field:'seriesNumber', displayName:'Report Number', width: 125},
 					{field:'publicationYear', displayName:'Year', width: 50},
 					{field:'title', displayName:'Title'},
 					{field:'authors', displayName:'Author', width: 250,
-						cellTemplate: authorsCellTemplate }
+						cellTemplate: authorsCellTemplate, sortable: false }
 				],
-				enableSorting: false,
+				enableSorting: true,
 				enableColumnResize: true,
 				showFooter: true,
 				totalServerItems: 'recordCount',

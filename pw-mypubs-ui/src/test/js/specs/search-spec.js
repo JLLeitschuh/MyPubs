@@ -32,7 +32,7 @@ describe("pw.search module", function(){
 	}));
 
 	describe('pw.search.searchCtrl', function() {
-		var scope, location, fetcher, pubsModal, q, pubsGridEl, pubsListsGridEl, pubsListFetcher;
+		var scope, location, fetcher, pubsModal, q, pubsGridEl, pubsListsGridEl, pubsListFetcher, pubsListUpdater;
 
 		//TODO this is an anticipated format, update when service side is done
 		var PUB_LISTS =
@@ -76,6 +76,17 @@ describe("pw.search module", function(){
 				}
 			};
 			spyOn(pubsListFetcher, 'fetchAllLists').andCallThrough();
+			
+			pubsListUpdater = {
+				addPubsToList : function() {
+					return $q.when({data : 'Hi Dave'});
+				},
+				removePubsFromList : function() {
+					return $q.when({data : 'Bye Dave'});
+				}
+			};
+			spyOn(pubsListUpdater, 'addPubsToList').andCallThrough();
+			spyOn(pubsListUpdater, 'removePubsFromList').andCallThrough();
 
 	        pubsModal  = { //mock PubsModal TODO test modal
 	    		alert : function(title, message, ctrl) {
@@ -93,6 +104,7 @@ describe("pw.search module", function(){
 	                '$location' : location,
 	                'PublicationFetcher' : fetcher,
 					'PubsListFetcher' : pubsListFetcher,
+					'PubsListUpdater' : pubsListUpdater,
 	                'PubsModal' : pubsModal,
 	                '$routeParams': {}
 	            });
@@ -107,7 +119,7 @@ describe("pw.search module", function(){
 	    }));
 
 		it('has these methods/fields defined', function(){
-			var searchCtrl =createControlleWithdFullInit();
+			var searchCtrl = createControlleWithdFullInit();
 
 			expect(scope.search).toBeDefined(); //performs ajax search
 			expect(scope.searchClick).toBeDefined(); //handles user click
@@ -118,7 +130,7 @@ describe("pw.search module", function(){
 
 
 		it('immediately does an ajax request to pull back the first 15 pubs in the database with no search terms or list id filtering', function(){
-			var searchCtrl =createControlleWithdFullInit();
+			var searchCtrl = createControlleWithdFullInit();
 
 			//two requests are actually triggered by two $watch statements
  			expect(fetcher.searchByTermAndListIds.callCount).toBe(2);
