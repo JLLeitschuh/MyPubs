@@ -85,6 +85,8 @@
 							msg = msg + val + '\n';
 						})
 						PubsModal.alert('Publication(s) added to the list(s)', msg, true);
+						$scope.lists = [];
+						$scope.selectedPubs = [];
 					},
 					function(reason) {
 						if (reason.status !== 401) {
