@@ -1,11 +1,12 @@
 (function() {
 	angular.module('pw.modal', ['ui.bootstrap.modal'])
-	.service('PubsModal', ['$rootScope', '$modal', function($rootScope, $modal) {
-		this.alert = function (title, message, ctrl) {
+	.service('PubsModal', ['$rootScope', '$modal', function($rootScope, $modal, PubsListFetcher, PubsListUpdater) {
+		this.alert = function (title, message, preserve) {
 			$rootScope.modalOptions = {};
 			$rootScope.modalOptions.title = title;
 			$rootScope.modalOptions.message = message;
-
+			$rootScope.modalOptions.preserve = preserve;
+			
 			$rootScope.modalInstance = $modal.open({
 				templateUrl: 'mypubs/modal/alert.html',
 				size: 'lg'
