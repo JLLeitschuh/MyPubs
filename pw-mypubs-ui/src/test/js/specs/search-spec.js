@@ -129,14 +129,14 @@ describe("pw.search module", function(){
 		});
 
 
-		it('immediately does an ajax request to pull back the first 15 pubs in the database with no search terms or list id filtering', function(){
+		it('immediately does an ajax request to pull back the first 100 pubs in the database with no search terms or list id filtering', function(){
 			var searchCtrl = createControlleWithdFullInit();
 
 			//two requests are actually triggered by two $watch statements
  			expect(fetcher.searchByTermAndListIds.callCount).toBe(2);
 
  			//verify it's a call with no filtering
-			expect(fetcher.searchByTermAndListIds).toHaveBeenCalledWith(undefined, [ ], 15, 0 );
+			expect(fetcher.searchByTermAndListIds).toHaveBeenCalledWith(undefined, [ ], 100, 0 );
 		});
 
 		it('has loaded the publication data ', function(){
@@ -162,7 +162,7 @@ describe("pw.search module", function(){
  			expect(fetcher.searchByTermAndListIds.callCount).toBe(3);
 
  			//verify it's a call with correct filtering
-			expect(fetcher.searchByTermAndListIds).toHaveBeenCalledWith("search term", [], 15, 0 );
+			expect(fetcher.searchByTermAndListIds).toHaveBeenCalledWith("search term", [], 100, 0 );
 
 			//verify current search term is persisted
 			expect(scope.searchTerm).toBe("search term");
@@ -179,7 +179,7 @@ describe("pw.search module", function(){
  			expect(fetcher.searchByTermAndListIds.callCount).toBe(3);
 
  			//verify it's a call with correct filtering
-			expect(fetcher.searchByTermAndListIds).toHaveBeenCalledWith(undefined, [1,2], 15, 0 );
+			expect(fetcher.searchByTermAndListIds).toHaveBeenCalledWith(undefined, [1,2], 100, 0 );
 		});
 
 		it('displays correct information in pubs grid', function(){
