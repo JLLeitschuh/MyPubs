@@ -179,6 +179,7 @@
 				$scope.docAbstractEditorOptions = {
 					menubar: false,
 					plugins : 'code link',
+					browser_spellcheck : true
 					toolbar : 'undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | subscript superscript | link | code'
 				};
 
