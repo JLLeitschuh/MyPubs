@@ -64,7 +64,8 @@ describe("pw.search module", function(){
 	        q = $injector.get('$q');
 
 	        fetcher = { //mock PublicationFetcher TODO test new fetcher
-	    		searchByTermAndListIds : function(term, listIds, pageSize, startRow) {
+	    		searchByTermAndListIds : function(term, listIds, prodId, indexId, ipdsId, contributor, title, seriesName, typeName,
+	            		year, pageSize, startRow) {
 	                return q.when({data : PUB_SEARCH_RESULTS});
 	            }
 	        };
@@ -136,7 +137,7 @@ describe("pw.search module", function(){
  			expect(fetcher.searchByTermAndListIds.callCount).toBe(2);
 
  			//verify it's a call with no filtering
-			expect(fetcher.searchByTermAndListIds).toHaveBeenCalledWith(undefined, [ ], 100, 0 );
+			expect(fetcher.searchByTermAndListIds).toHaveBeenCalledWith(undefined, [ ], undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, 100, 0 );
 		});
 
 		it('has loaded the publication data ', function(){
@@ -162,7 +163,7 @@ describe("pw.search module", function(){
  			expect(fetcher.searchByTermAndListIds.callCount).toBe(3);
 
  			//verify it's a call with correct filtering
-			expect(fetcher.searchByTermAndListIds).toHaveBeenCalledWith("search term", [], 100, 0 );
+			expect(fetcher.searchByTermAndListIds).toHaveBeenCalledWith("search term", [], undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, 100, 0 );
 
 			//verify current search term is persisted
 			expect(scope.searchTerm).toBe("search term");
@@ -179,7 +180,7 @@ describe("pw.search module", function(){
  			expect(fetcher.searchByTermAndListIds.callCount).toBe(3);
 
  			//verify it's a call with correct filtering
-			expect(fetcher.searchByTermAndListIds).toHaveBeenCalledWith(undefined, [1,2], 100, 0 );
+			expect(fetcher.searchByTermAndListIds).toHaveBeenCalledWith(undefined, [1,2], undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, 100, 0 );
 		});
 
 		it('displays correct information in pubs grid', function(){
