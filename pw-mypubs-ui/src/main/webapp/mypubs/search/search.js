@@ -19,16 +19,21 @@
 		$scope.pubs = [];
 		$scope.lists = [];
 		$scope.advancedSearch = false;
-		
-		$scope.searchProdID = "";
-		$scope.searchIndexID = "";
-		$scope.searchIPDS = "";
-		$scope.searchContributor = "";
-		$scope.searchTitle = "";
-		$scope.searchSeries = "";
-		$scope.searchPubType = "";
-		$scope.searchYear = "";
-		$scope.searchJournal = "";
+		$scope.searchParms = {
+				q: "",
+				listId: [],
+				prodID: "",
+				indexID: "",
+				ipdsId: "",
+				contributor: "",
+				title: "",
+				typeName: "",
+				subtypeName: "",
+				seriesName: "",
+				year: "",
+				page_size: 100,
+				page_row_start: 0
+			};
 
 		PubsListFetcher.fetchAllLists().then(
 			function(value) {
@@ -43,75 +48,51 @@
 
 
 		$scope.searchClick = function(searchTermField) {
-			$scope.searchTerm = searchTermField; //a way for us to not update the model until we get a click
+			$scope.searchParms.q = searchTermField; //a way for us to not update the model until we get a click
 			$scope.search();
 		};
 
-		$scope.toggleAdvancedSearch = function() {
-			$scope.advancedSearch = !$scope.advancedSearch;
+		$scope.toggleAdvancedSearch = function(type) {
+			$scope.advancedSearch = type;
+			$scope.searchParms = {
+					q: "",
+					listId: [],
+					prodId: "",
+					indexId: "",
+					ipdsId: "",
+					contributor: "",
+					title: "",
+					typeName: "",
+					subtypeName: "",
+					seriesName: "",
+					year: "",
+					page_size: 100,
+					page_row_start: 0
+				};
 		}
 		
 		$scope.search = function() {
 			$scope.pubs = {}; //clear grid for loader
 			$scope.pubsGrid.ngGrid.$root.addClass("pubs-loading-indicator");
 
-			var searchTerm = "";
-			var listIds = [];
-			var advancedSearchTerms = {};
-			
-			if ($scope.advancedSearch) {
-				if ($scope.searchProdID && 0 < $scope.searchProdID.length) {
-					advancedSearchTerms.prodId = $scope.searchProdID;
-				}
-				if ($scope.searchIndexID && 0 < $scope.searchIndexID.length) {
-					advancedSearchTerms.indexId = $scope.searchIndexID;
-				}
-				if ($scope.searchIPDS && 0 < $scope.searchIPDS.length) {
-					advancedSearchTerms.ipdsId = $scope.searchIPDS;
-				}
-				if ($scope.searchContributor && 0 < $scope.searchContributor.length) {
-					advancedSearchTerms.contributor = $scope.searchContributor;
-				}
-				if ($scope.searchTitle && 0 < $scope.searchTitle.length) {
-					advancedSearchTerms.title = $scope.searchTitle;
-				}
-				if ($scope.searchSeries && 0 < $scope.searchSeries.length) {
-					advancedSearchTerms.seriesName = $scope.searchSeries;
-				}
-				if ($scope.searchPubType && 0 < $scope.searchPubType.length) {
-					advancedSearchTerms.typeName = $scope.searchPubType;
-				}
-				if ($scope.searchYear && 0 < $scope.searchYear.length) {
-					advancedSearchTerms.year = $scope.searchYear;
-				}
-//				if ($scope.searchJournal && 0 < $scope.searchJournal.length) {
-//					advancedSearchTerms. = $scope.searchJournal;
-//				}
-			} else {
-				searchTerm = $scope.searchTerm;
-	
-				//create array of listIds
-				if($scope.selectedPubsLists) {
-					for(var i in $scope.selectedPubsLists) {
-						listIds.push($scope.selectedPubsLists[i].id);
-					}
+			//create array of listIds
+			if($scope.selectedPubsLists && !$scope.advancedSearch) {
+				for(var i in $scope.selectedPubsLists) {
+					$scope.searchParms.listId.push($scope.selectedPubsLists[i].id);
 				}
 			}
 			
-			var pageSize = $scope.pagingState.pageSize;
+			$scope.searchParms.page_size = $scope.pagingState.pageSize;
 
 			var currentPage = $scope.pagingState.currentPage;
-			var startRow = (currentPage - 1) * pageSize;
-			PublicationFetcher.searchByTermAndListIds(searchTerm, listIds, 
-					advancedSearchTerms.prodId, advancedSearchTerms.indexId, advancedSearchTerms.ipdsId,
-					advancedSearchTerms.contributor, advancedSearchTerms.title, advancedSearchTerms.seriesName,
-					advancedSearchTerms.typeName, advancedSearchTerms.year, pageSize, startRow).then(function(httpPromise){
+			$scope.searchParms.page_row_start = (currentPage - 1) * $scope.searchParms.page_size;
+			PublicationFetcher.searchByTermAndListIds($scope.searchParms).then(function(httpPromise){
 				$scope.pubs = httpPromise.data.records;
 				$scope.recordCount = httpPromise.data.recordCount;
 				$scope.selectedPubs.length = 0; //clear selections, for some reason, ngGrid/angular needs a reference to the original array to keep the watch valid
 				$scope.pubsGrid.ngGrid.$root.removeClass("pubs-loading-indicator");
 			});
-			$scope.searchTerm = searchTerm; //apply search term to scope so template updates
+			$scope.searchTerm = $scope.searchParms.q; //apply search term to scope so template updates
 		};
 
 		$scope.editSelectedPublication = function() {

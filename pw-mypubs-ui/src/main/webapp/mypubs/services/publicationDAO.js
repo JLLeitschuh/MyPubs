@@ -21,55 +21,9 @@ angular.module('pw.publicationDAO', [])
                 }
                 return result;
             },
-            searchByTermAndListIds : function(term, listIds, prodId, indexId, ipdsId, contributor, title, seriesName, typeName,
-            		year, pageSize, startRow) {
+            searchByTermAndListIds : function(parms) {
                 var result = undefined;
-                var parms = {
-                        mimetype : 'json'
-                    };
-                if (term && term.length > 0) {
-                	parms.q = term;
-                }
-                if (listIds && listIds.length > 0) {
-                	parms.listId = listIds;
-                }
-
-				if (prodId && 0 < prodId.length) {
-					parms.prodId = prodId;
-				}
-				if (indexId && 0 < indexId.length) {
-					parms.indexId = indexId;
-				}
-				if (ipdsId && 0 < ipdsId.length) {
-					parms.ipdsId = ipdsId;
-				}
-				if (contributor && 0 < contributor.length) {
-					parms.contributor = contributor;
-				}
-				if (title && 0 < title.length) {
-					parms.title = title;
-				}
-				if (seriesName && 0 < seriesName.length) {
-					parms.seriesName = seriesName;
-				}
-				if (typeName && 0 < typeName.length) {
-					parms.typeName = typeName;
-				}
-				if (year && 0 < year.length) {
-					parms.year = year;
-				}
-//				if (searchJournal && 0 < searchJournal.length) {
-//					advancedSearchTerms. = searchJournal;
-//				}
-
-				if (pageSize) {
-                	parms.page_size = pageSize;
-                }
-
-                if (startRow) {
-                	parms.page_row_start = startRow;
-                }
-
+                parms.mimetype = 'json';
                 result = $http.get(PubEndpoint, {
                     params : parms
                 });
