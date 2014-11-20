@@ -2,45 +2,47 @@
 	<div>
 		<div class="col-lg-3"> <!-- search and list view -->
 			<form class="row pub-search-section"> 
-				<label>Search Criteria</label><br/>
+				<label ng-show="advancedSearch">Advanced </label><label>Search Criteria</label><br/>
+				<label ng-show="advancedSearch">Advanced </label>
 				<input id="search-term-input" type="text" class="form-control" ng-model="searchTermField"/><br/>
+				<div class="row advanced-search-section" ng-show="advancedSearch">
+					<label for="search-prodID">ProdID</label>
+			        <input id="search-prodID" type="text" ng-model="searchParms.prodId"/>
+				    <br/>
+				    <label for="search-indexID">IndexID</label>
+			        <input id="search-indexID" type="text" ng-model="searchParms.indexId"/>
+				    <br/>
+				    <label for="search-IPDS">IPDS Number</label>
+				    <input id="search-IPDS" type="text" ng-model="searchParms.ipdsId"/>
+				    <br/>
+				    <label for="search-contributor">Contributor</label>
+				    <input id="search-contributor" type="text" ng-model="searchParms.contributor"/>
+				    <br/>
+				    <label for="search-title">Title</label>
+				    <input id="search-title" type="text" ng-model="searchParms.title"/>
+				    <br/>
+				    <label for="search-pubType">Pub Type</label>
+				    <input id="search-pubType" type="text" ng-model="searchParms.typeName"/>
+				    <br/>
+				    <label for="search-pubSubtype">Pub Subtype</label>
+				    <input id="search-pubSubtype" type="text" ng-model="searchParms.subtypeName"/>
+				    <br/>
+				    <label for="search-series">Series</label>
+				    <input id="search-series" type="text" ng-model="searchParms.seriesName"/>
+				    <br/>
+				    <label for="search-year">Year</label>
+				    <input id="search-year" type="text" ng-model="searchParms.year"/>
+				    <br/><br/>
+				</div>
 				<button type="submit" class="btn btn-default" ng-click="searchClick(searchTermField)">Search</button>
-				<button class="pull-right btn btn-default" ng-click="toggleAdvancedSearch()" ng-hide="advancedSearch" >Advanced Search</button>
-				<button class="pull-right btn btn-default" ng-click="toggleAdvancedSearch()" ng-show="advancedSearch" >Regular Search</button>
+				<button class="pull-right btn btn-link" ng-click="toggleAdvancedSearch(true)" ng-hide="advancedSearch" >Advanced Search</button>
+				<button class="pull-right btn btn-link" ng-click="toggleAdvancedSearch(false)" ng-show="advancedSearch" >Regular Search</button>
 			</form>
 			<div class="row pub-lists-section" ng-hide="advancedSearch"> 
 				<label>View Lists</label><br/>
 				<div class="pub-list-grid-container">
 					<div class="pub-list-grid" ng-grid="pubsListGrid"></div>
 				</div>
-			</div>
-			<div class="row advanced-search-section" ng-show="advancedSearch">
-				<label for="search-prodID">ProdID</label>
-		        <input id="search-prodID" type="text" ng-model="searchProdID"/>
-			    <br/>
-			    <label for="search-indexID">IndexID</label>
-		        <input id="search-indexID" type="text" ng-model="searchIndexID"/>
-			    <br/>
-			    <label for="search-IPDS">IPDS Number</label>
-			    <input id="search-IPDS" type="text" ng-model="searchIPDS"/>
-			    <br/>
-			    <label for="search-contributor">Contributor</label>
-			    <input id="search-contributor" type="text" ng-model="searchContributor"/>
-			    <br/>
-			    <label for="search-title">Title</label>
-			    <input id="search-title" type="text" ng-model="searchTitle"/>
-			    <br/>
-			    <label for="search-series">Series</label>
-			    <input id="search-series" type="text" ng-model="searchSeries"/>
-			    <br/>
-			    <label for="search-pubType">Publication Type</label>
-			    <input id="search-pubType" type="text" ng-model="searchPubType"/>
-			    <br/>
-			    <label for="search-year">Year</label>
-			    <input id="search-year" type="text" ng-model="searchYear"/>
-<!-- 			    <br/> -->
-<!-- 			    <label for="search-journal">Journal</label> -->
-<!-- 			    <input id="search-journal" type="text" ng-model="searchJournal"/> -->
 			</div>
 		</div>
 		<div class="col-lg-9 pub-list-section">
@@ -51,13 +53,13 @@
 				<button class="pull-right btn btn-default" ng-click="removeFromList()" ng-show="selectedPubsLists && selectedPubsLists.length == 1 && selectedPubs && selectedPubs.length > 0">Remove From List</button>
 			</div>
 			<div class="pub-grid-container">
-				<span ng-hide="searchTerm || selectedPubsLists && selectedPubsLists.length > 0">
+				<span ng-hide="searchTerm || (selectedPubsLists && selectedPubsLists.length > 0) || advancedSearch">
 			        All publications available
 			    </span>
-				<span ng-show="searchTerm">
+				<span ng-show="!advancedSearch && searchTerm">
 			        Publications filtered by "{{searchTerm}}"
 			    </span>
-				<el ng-show="selectedPubsLists && selectedPubsLists.length > 0">
+				<el ng-show="!advancedSearch && selectedPubsLists && selectedPubsLists.length > 0">
 					<span ng-show="searchTerm">
 				        and
 				    </span>

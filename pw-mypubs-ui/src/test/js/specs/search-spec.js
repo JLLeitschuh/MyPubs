@@ -64,8 +64,7 @@ describe("pw.search module", function(){
 	        q = $injector.get('$q');
 
 	        fetcher = { //mock PublicationFetcher TODO test new fetcher
-	    		searchByTermAndListIds : function(term, listIds, prodId, indexId, ipdsId, contributor, title, seriesName, typeName,
-	            		year, pageSize, startRow) {
+	    		searchByTermAndListIds : function(parms) {
 	                return q.when({data : PUB_SEARCH_RESULTS});
 	            }
 	        };
@@ -137,7 +136,7 @@ describe("pw.search module", function(){
  			expect(fetcher.searchByTermAndListIds.callCount).toBe(2);
 
  			//verify it's a call with no filtering
-			expect(fetcher.searchByTermAndListIds).toHaveBeenCalledWith(undefined, [ ], undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, 100, 0 );
+			expect(fetcher.searchByTermAndListIds).toHaveBeenCalledWith( { q : '', listId : [ ], prodID : '', indexID : '', ipdsId : '', contributor : '', title : '', typeName : '', subtypeName : '', seriesName : '', year : '', page_size : 100, page_row_start : 0 }  );
 		});
 
 		it('has loaded the publication data ', function(){
@@ -163,7 +162,7 @@ describe("pw.search module", function(){
  			expect(fetcher.searchByTermAndListIds.callCount).toBe(3);
 
  			//verify it's a call with correct filtering
-			expect(fetcher.searchByTermAndListIds).toHaveBeenCalledWith("search term", [], undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, 100, 0 );
+			expect(fetcher.searchByTermAndListIds).toHaveBeenCalledWith( { q : 'search term', listId : [ ], prodID : '', indexID : '', ipdsId : '', contributor : '', title : '', typeName : '', subtypeName : '', seriesName : '', year : '', page_size : 100, page_row_start : 0 } );
 
 			//verify current search term is persisted
 			expect(scope.searchTerm).toBe("search term");
@@ -180,7 +179,7 @@ describe("pw.search module", function(){
  			expect(fetcher.searchByTermAndListIds.callCount).toBe(3);
 
  			//verify it's a call with correct filtering
-			expect(fetcher.searchByTermAndListIds).toHaveBeenCalledWith(undefined, [1,2], undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, 100, 0 );
+			expect(fetcher.searchByTermAndListIds).toHaveBeenCalledWith( { q : '', listId : [ 1, 2 ], prodID : '', indexID : '', ipdsId : '', contributor : '', title : '', typeName : '', subtypeName : '', seriesName : '', year : '', page_size : 100, page_row_start : 0 }  );
 		});
 
 		it('displays correct information in pubs grid', function(){
