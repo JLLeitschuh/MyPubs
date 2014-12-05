@@ -163,6 +163,12 @@
             <input id="isbn-input" type="text" class="form-control" ng-model="pubData.isbn" />
          </div>
     </div>
+    <div class="form-group" id="tableOfContents-div">
+        <label class="control-label col-sm-3" for="tableOfContents-input">Table of Contents</label>
+        <div class="col-sm-9">
+            <textarea id="tableOfContents-input" class="form-control" ui-tinymce="tableOfContentsEditorOptions" ng-model="pubData.tableOfContents"></textarea>
+        </div>
+    </div>
     <div class="form-group" id="update-date-div">
          <label class="control-label col-sm-3">Last Modified Date</label>
          <div class="col-sm-9">

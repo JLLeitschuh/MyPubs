@@ -72,9 +72,6 @@ angular.module('pw.publication', ['ngRoute', 'pw.notify', 'ui.bootstrap.modal',
 				"costCenters": [],
 				"links": [],
 				"notes": "",
-				"contact": {
-					"id": ''
-				},
 				"ipdsId": "",
 				"publicationYear": "",
 				"conferenceTitle": "",
@@ -109,6 +106,10 @@ angular.module('pw.publication', ['ngRoute', 'pw.notify', 'ui.bootstrap.modal',
 				"city": "",
 				"otherGeospatial": "",
 				"geographicExtents": "",
+				"contact": "",
+				"edition":"",
+				"publicComments":"",
+				"tableOfContents":"",
 				"validationErrors": []
 			};
 			angular.forEach(properties, function(defaultValue, propertyName){

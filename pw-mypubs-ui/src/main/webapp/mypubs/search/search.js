@@ -69,13 +69,14 @@
 					page_size: 100,
 					page_row_start: 0
 				};
-		}
+		};
 		
 		$scope.search = function() {
 			$scope.pubs = {}; //clear grid for loader
 			$scope.pubsGrid.ngGrid.$root.addClass("pubs-loading-indicator");
 
 			//create array of listIds
+			$scope.searchParms.listId = [];
 			if($scope.selectedPubsLists && !$scope.advancedSearch) {
 				for(var i in $scope.selectedPubsLists) {
 					$scope.searchParms.listId.push($scope.selectedPubsLists[i].id);
@@ -115,7 +116,7 @@
 						var msg = '';
 						value.forEach(function(val){
 							msg = msg + val + '\n';
-						})
+						});
 						PubsModal.alert('Publication(s) added to the list(s)', msg, true);
 						$scope.lists = [];
 					},
@@ -138,7 +139,7 @@
 							var msg = '';
 							value.forEach(function(val){
 								msg = msg + val + '\n';
-							})
+							});
 							PubsModal.alert('Publication(s) removed from the list "' + list.text + '"', msg, true);
 							$scope.search();
 						},
@@ -219,11 +220,14 @@
 	};
 
 	//Watches to update pub list when list selection or paging settings change
+	//To avoid double fetch on init, we short circuit the watch on selectedPubsLists during init
 	$scope.$watch('pagingState', function (newVal, oldVal) {
 		$scope.search();
 	}, true);
 	$scope.$watch('selectedPubsLists', function (newVal, oldVal) {
-		$scope.search();
+		if (newVal !== oldVal) {
+			$scope.search();
+		}
 	}, true);
 
 }]);
