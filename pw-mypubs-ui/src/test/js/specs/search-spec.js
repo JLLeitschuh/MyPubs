@@ -132,8 +132,8 @@ describe("pw.search module", function(){
 		it('immediately does an ajax request to pull back the first 100 pubs in the database with no search terms or list id filtering', function(){
 			var searchCtrl = createControlleWithdFullInit();
 
-			//two requests are actually triggered by two $watch statements
- 			expect(fetcher.searchByTermAndListIds.callCount).toBe(2);
+			//only one request is actually triggered by two $watch statements
+ 			expect(fetcher.searchByTermAndListIds.callCount).toBe(1);
 
  			//verify it's a call with no filtering
 			expect(fetcher.searchByTermAndListIds).toHaveBeenCalledWith( { q : '', listId : [ ], prodID : '', indexID : '', ipdsId : '', contributor : '', title : '', typeName : '', subtypeName : '', seriesName : '', year : '', page_size : 100, page_row_start : 0 }  );
@@ -158,8 +158,8 @@ describe("pw.search module", function(){
 			var searchCtrl = createControlleWithdFullInit();
 			scope.searchClick("search term"); //simulates a user clicking on search after typing "search term" into search input
 
-			//two requests are actually triggered by two $watch statements on init, 3rd call in response to call above
- 			expect(fetcher.searchByTermAndListIds.callCount).toBe(3);
+			//one request is triggered by two $watch statements on init, 2nd call in response to call above
+ 			expect(fetcher.searchByTermAndListIds.callCount).toBe(2);
 
  			//verify it's a call with correct filtering
 			expect(fetcher.searchByTermAndListIds).toHaveBeenCalledWith( { q : 'search term', listId : [ ], prodID : '', indexID : '', ipdsId : '', contributor : '', title : '', typeName : '', subtypeName : '', seriesName : '', year : '', page_size : 100, page_row_start : 0 } );
@@ -175,8 +175,8 @@ describe("pw.search module", function(){
         	scope.selectedPubsLists = PUB_LISTS;
         	scope.$digest(); //trigger watches
 
-			//two requests are actually triggered by two $watch statements on init, 3rd call in response to updated list selections
- 			expect(fetcher.searchByTermAndListIds.callCount).toBe(3);
+			//one request is triggered by two $watch statements on init, 2nd call in response to updated list selections
+ 			expect(fetcher.searchByTermAndListIds.callCount).toBe(2);
 
  			//verify it's a call with correct filtering
 			expect(fetcher.searchByTermAndListIds).toHaveBeenCalledWith( { q : '', listId : [ 1, 2 ], prodID : '', indexID : '', ipdsId : '', contributor : '', title : '', typeName : '', subtypeName : '', seriesName : '', year : '', page_size : 100, page_row_start : 0 }  );

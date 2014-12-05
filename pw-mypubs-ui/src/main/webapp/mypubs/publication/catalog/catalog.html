@@ -17,6 +17,12 @@
             <input id="issue-input" type="text" class="form-control" ng-model="pubData.issue" />
 		</div>
 	</div>
+	<div id="pub-edition-div" class="form-group">
+		<label class="control-label col-sm-3" for="edition-input">Edition</label>
+		<div class="col-sm-9">
+            <input id="edition-input" type="text" class="form-control" ng-model="pubData.edition" />
+		</div>
+	</div>
 	<div id="pub-start-page-div" class="form-group">
 		<label class="control-label col-sm-3" for="start-page-input">Start Page</label>
 		<div class="col-sm-9">
@@ -103,4 +109,10 @@
 			<input id="datum-input" type="text" class="form-control" ng-model="pubData.datum" />
 		</div>
 	</div>
+	<div id="pub-comments-div" class="form-group">
+		<label class="control-label col-sm-3" for="comments-input">Public Comments</label>
+		<div class="col-sm-9">
+            <textarea rows="10" id="comment-input" type="text" class="form-control" ng-model="pubData.publicComments" /></textarea>
+		</div>
+	</div>	
 </div>
