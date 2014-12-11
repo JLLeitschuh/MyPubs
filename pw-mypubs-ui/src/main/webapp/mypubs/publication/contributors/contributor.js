@@ -214,6 +214,7 @@ angular.module('pw.contributors', ['pw.contributorDAO', 'pw.dataList', 'pw.looku
 
 			$scope.addContributor = function() {
 				ListOrderingService.addNewObj($scope.contribTabs[selectedIndex].data, new ContributorModel());
+			    $('html, body').animate({scrollTop:$(document).height()}, 'slow');
 			};
 
 			$scope.updateContributorInfo = function(index) {

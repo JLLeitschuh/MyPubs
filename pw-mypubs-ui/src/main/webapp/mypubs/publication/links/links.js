@@ -39,6 +39,7 @@ angular.module('pw.links',['pw.lookups', 'pw.dataList'])
 
 		$scope.addNewLink = function() {
 		    ListOrderingService.addNewObj($scope.pubData.links, getEmptyLink());
+		    $('html, body').animate({scrollTop:$(document).height()}, 'slow');
 		};
 
 		$scope.deleteLink = function(index) {
