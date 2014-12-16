@@ -177,14 +177,12 @@
 				data: 'pubs',
 				selectedItems: $scope.selectedPubs,
 				columnDefs: [
-		            {field:'publicationType', displayName:'Type', width: 75,
-						cellTemplate: textFieldCellTemplate, sortable: false },
-					{field:'seriesTitle', displayName:'USGS Series', width: 150,
-						cellTemplate: textFieldCellTemplate, sortable: false },
+		            {field:'publicationType.text', displayName:'Type', width: 75 },
+					{field:'seriesTitle.text', displayName:'USGS Series', width: 150 },
 					{field:'seriesNumber', displayName:'Report Number', width: 125},
 					{field:'publicationYear', displayName:'Year', width: 50},
 					{field:'title', displayName:'Title'},
-					{field:'contributors.authors[0].text', displayName:'First Author', width: 250, sortable: true }
+					{field:'contributors.authors[0].text', displayName:'First Author', width: 250 }
 				],
 				enableSorting: true,
 				enableColumnResize: true,
