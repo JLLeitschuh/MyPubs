@@ -6,14 +6,15 @@ angular.module('pw.contributors', ['pw.contributorDAO', 'pw.dataList', 'pw.looku
 
     .factory('ContributorModel', ['KIND', 'LookupFetcher', function(KIND, LookupFetcher) {
 
-		var getEmptyContributor = function() {
+		var getEmptyContributor = function(contribTypeId) {
 			return {
 			id : '',
 			contributorId : '',
 			rank : '',
 			kind : '',
 			corporation : false,
-			affiliation : {}
+			affiliation : {},
+			contributorType: {id: contribTypeId}
 			};
 		};
 
@@ -29,7 +30,7 @@ angular.module('pw.contributors', ['pw.contributorDAO', 'pw.dataList', 'pw.looku
 			return angular.extend(result, LookupFetcher.dynamicSelectOptions(lookup, contributorLookup));
 		};
 
-		function Contributor(data) {
+		function Contributor(contributorType, data) {
 			if (data) {
 				if (data.corporation) {
 					this.kind = KIND.corporation;
@@ -40,6 +41,7 @@ angular.module('pw.contributors', ['pw.contributorDAO', 'pw.dataList', 'pw.looku
 				}
 				this.id = data.id;
 				this.contributorId = data.contributorId;
+				this.contributorType = data.contributorType;
 				this.text = data.text;
 				this.rank = data.rank;
 				this.corporation = data.corporation;
@@ -47,7 +49,7 @@ angular.module('pw.contributors', ['pw.contributorDAO', 'pw.dataList', 'pw.looku
 				this.select2Options = getOptions(data.corporation, {id : data.contributorId, text : data.text});
 			}
 			else {
-				angular.extend(this, getEmptyContributor());
+				angular.extend(this, getEmptyContributor(contributorType));
 			}
 		}
 
@@ -127,7 +129,8 @@ angular.module('pw.contributors', ['pw.contributorDAO', 'pw.dataList', 'pw.looku
 					text : this.getContributorText(),
 					rank : this.rank,
 					corporation : this.corporation,
-					affiliation : this.affiliation || {}
+					affiliation : this.affiliation || {},
+					contributorType: this.contributorType
 				};
 			}
 		};
@@ -160,23 +163,23 @@ angular.module('pw.contributors', ['pw.contributorDAO', 'pw.dataList', 'pw.looku
 					var prop = value.text.toLowerCase();
 
 					// Create properties on pubData and then sort by rank
-					if (angular.isUndefined($scope.pubData[prop])) {
-						$scope.pubData[prop] = [];
+					if (angular.isUndefined($scope.pubData.contributors[prop])) {
+						$scope.pubData.contributors[prop] = [];
 					};
-					$scope.pubData[prop] = _.sortBy($scope.pubData[prop], 'rank');
+					$scope.pubData.contributors[prop] = _.sortBy($scope.pubData.contributors[prop], 'rank');
 
 					// This is the scope variable that the html will use.
 					$scope.contribTabs[index].data = [];
-					angular.forEach($scope.pubData[prop], function(dataValue) {
-						$scope.contribTabs[index].data.push(new ContributorModel(dataValue));
+					angular.forEach($scope.pubData.contributors[prop], function(dataValue) {
+						$scope.contribTabs[index].data.push(new ContributorModel($scope.contribTabs[index].id, dataValue));
 					});
 
 					// angular docs caution using $watch with the objectEquality set to true as
 					// there are memory and performance implications.
 					$scope.$watch('contribTabs[' + index + '].data', function(newValue) {
-						$scope.pubData[prop] = [];
+						$scope.pubData.contributors[prop] = [];
 						angular.forEach(newValue, function(contributor) {
-							$scope.pubData[prop].push(contributor.getPubData());
+							$scope.pubData.contributors[prop].push(contributor.getPubData());
 						});
 					}, true);
 				});
@@ -186,10 +189,10 @@ angular.module('pw.contributors', ['pw.contributorDAO', 'pw.dataList', 'pw.looku
 				var i;
 				angular.forEach($scope.contribTabs, function(value, index) {
 					var prop = value.text.toLowerCase();
-					if ($scope.pubData[prop].length === $scope.contribTabs[index].data.length) {
-						$scope.pubData[prop] = _.sortBy($scope.pubData[prop], 'rank');
-						for (i = 0; i < $scope.pubData[prop].length; i++){
-							$scope.contribTabs[index].data[i].update($scope.pubData[prop][i]);
+					if ($scope.pubData.contributors[prop].length === $scope.contribTabs[index].data.length) {
+						$scope.pubData.contributors[prop] = _.sortBy($scope.pubData.contributors[prop], 'rank');
+						for (i = 0; i < $scope.pubData.contributors[prop].length; i++){
+							$scope.contribTabs[index].data[i].update($scope.pubData.contributors[prop][i]);
 						}
 					}
 					else {
@@ -213,7 +216,7 @@ angular.module('pw.contributors', ['pw.contributorDAO', 'pw.dataList', 'pw.looku
 			};
 
 			$scope.addContributor = function() {
-				ListOrderingService.addNewObj($scope.contribTabs[selectedIndex].data, new ContributorModel());
+				ListOrderingService.addNewObj($scope.contribTabs[selectedIndex].data, new ContributorModel($scope.contribTabs[selectedIndex].id));
 			    $('html, body').animate({scrollTop:$(document).height()}, 'slow');
 			};
 

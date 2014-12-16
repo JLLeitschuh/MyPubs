@@ -16,7 +16,8 @@ describe ('Tests for pw.contributors', function() {
 			suffix : 'Ms',
 			email : 'jones@usgs.gov',
 			affiliation : {id : 1, text : 'Wisconsin Water Science Center'},
-			corporation : false
+			corporation : false,
+			contributorType: {id: 1}
 		};
 		var corporationData = {
 			id : 2,
@@ -24,7 +25,8 @@ describe ('Tests for pw.contributors', function() {
 			text : 'Corp1',
 			rank : 1,
 			organization : 'Colorado Water Science Center',
-			corporation : true
+			corporation : true,
+			contributorType: {id: 2}
 		};
 
 		beforeEach(module('pw.contributors', function($provide) {
@@ -40,39 +42,42 @@ describe ('Tests for pw.contributors', function() {
 		}));
 
 		it('Expects an empty contributor object to be created if no data is provided', inject(function(ContributorModel) {
-			var contrib = new ContributorModel();
+			var contrib = new ContributorModel(1);
 			expect(contrib.id).toEqual('');
 			expect(contrib.contributorId).toEqual('');
 			expect(contrib.rank).toEqual('');
 			expect(contrib.kind).toEqual('');
+			expect(contrib.contributorType).toEqual({id: 1});
 			expect(contrib.select2Options).not.toBeDefined();
 		}));
 
 		it('Expects a contributor which is a Person to be created with kind equal to Person', inject(function(ContributorModel) {
-			var contrib = new ContributorModel(personData);
+			var contrib = new ContributorModel(1, personData);
 
 			expect(contrib.id).toEqual(1);
 			expect(contrib.contributorId).toEqual(10);
 			expect(contrib.rank).toEqual(1);
 			expect(contrib.affiliation).toEqual({id : 1, text : 'Wisconsin Water Science Center'});
 			expect(contrib.kind).toEqual(KIND.person);
+			expect(contrib.contributorType).toEqual({id: 1});
 			expect(contrib.select2Options).toBeDefined();
 			expect(mockLookupFetcher.dynamicSelectOptions).toHaveBeenCalledWith('people', {id : 10, text : 'Person1'});
 		}));
 
 		it('Expects a contributor which is a Corporation to be created with kind equal to Corporation', inject(function(ContributorModel) {
-			var contrib = new ContributorModel(corporationData);
+			var contrib = new ContributorModel(2, corporationData);
 
 			expect(contrib.id).toEqual(2);
 			expect(contrib.contributorId).toEqual(20);
 			expect(contrib.rank).toEqual(1);
 			expect(contrib.kind).toEqual(KIND.corporation);
+			expect(contrib.contributorType).toEqual({id: 2});
 			expect(contrib.select2Options).toBeDefined();
 			expect(mockLookupFetcher.dynamicSelectOptions).toHaveBeenCalledWith('corporations', {id : 20, text : 'Corp1'});
 		}));
 
 		it('Expects changeKind to modify the contributor properties to match the kind while preserving the id', inject(function(ContributorModel) {
-			var contrib = new ContributorModel(corporationData);
+			var contrib = new ContributorModel(2, corporationData);
 			contrib.kind = KIND.person;
 			contrib.changeKind();
 			expect(contrib.contributorId).toEqual('');
@@ -80,61 +85,64 @@ describe ('Tests for pw.contributors', function() {
 			expect(contrib.rank).toEqual(1);
 			expect(contrib.id).toEqual(2);
 			expect(contrib.corporation).toBe(false);
+			expect(contrib.contributorType).toEqual({id: 2});
 			expect(mockLookupFetcher.dynamicSelectOptions.calls[1].args).toEqual(['people', '']);
 
-			contrib = new ContributorModel();
+			contrib = new ContributorModel(1);
 			contrib.kind = 'Corporation';
 			contrib.changeKind();
 			expect(contrib.id).toEqual('');
 			expect(contrib.corporation).toBe(true);
+			expect(contrib.contributorType).toEqual({id: 1});
 			expect(mockLookupFetcher.dynamicSelectOptions.calls[2].args).toEqual(['corporations', '']);
 
-			contrib = new ContributorModel(personData);
+			contrib = new ContributorModel(1, personData);
 			contrib.kind = 'Corporation';
 			contrib.changeKind();
 			expect(contrib.id).toEqual(1);
 			expect(contrib.contributorId).toEqual('');
 			expect(contrib.affiliation).toEqual({});
+			expect(contrib.contributorType).toEqual({id: 1});
 			expect(mockLookupFetcher.dynamicSelectOptions.calls[4].args).toEqual(['corporations', '']);
 			expect(contrib.corporation).toBe(true);
 		}));
 
 		it('Expects isPerson to return whether a contributor is a person object', inject(function(ContributorModel) {
-			var contrib = new ContributorModel(personData);
+			var contrib = new ContributorModel(1,personData);
 			expect(contrib.isPerson()).toBe(true);
-			contrib = new ContributorModel();
+			contrib = new ContributorModel(1);
 			expect(contrib.isPerson()).toBe(false);
-			contrib = new ContributorModel(corporationData);
+			contrib = new ContributorModel(2,corporationData);
 			expect(contrib.isPerson()).toBe(false);
 		}));
 
 		it('Expects isCorporation to return whether a contributor is a corporation object', inject(function(ContributorModel) {
-			var contrib = new ContributorModel(personData);
+			var contrib = new ContributorModel(1,personData);
 			expect(contrib.isCorporation()).toBe(false);
-			contrib = new ContributorModel();
+			contrib = new ContributorModel(1);
 			expect(contrib.isCorporation()).toBe(false);
-			contrib = new ContributorModel(corporationData);
+			contrib = new ContributorModel(2,corporationData);
 			expect(contrib.isCorporation()).toBe(true);
 		}));
 
 		it('Expects getPubData to return an object with the contributor model specific values removed',  inject(function(ContributorModel) {
-			var contrib = new ContributorModel(personData);
+			var contrib = new ContributorModel(1,personData);
 
-			expect(contrib.getPubData()).toEqual({id : 1, contributorId : 10, text: '', rank : 1, corporation : false, affiliation : {id : 1, text : 'Wisconsin Water Science Center'}});
+			expect(contrib.getPubData()).toEqual({id : 1, contributorId : 10, text: '', rank : 1, corporation : false, affiliation : {id : 1, text : 'Wisconsin Water Science Center'}, contributorType: {id: 1}});
 
-			contrib = new ContributorModel(corporationData);
-			expect(contrib.getPubData()).toEqual({id : 2, contributorId : 20, text : '', rank : 1, corporation : true, affiliation : {}});;
+			contrib = new ContributorModel(2,corporationData);
+			expect(contrib.getPubData()).toEqual({id : 2, contributorId : 20, text : '', rank : 1, corporation : true, affiliation : {}, contributorType: {id: 2}});;
 		}));
 
 		it('Expects getContributorId to return the contributorId value if it is not an object, otherwise return the id property', inject(function(ContributorModel) {
-			var contrib = new ContributorModel(personData);
+			var contrib = new ContributorModel(1,personData);
 			expect(contrib.getContributorId()).toEqual(10);
 			contrib.contributorId = {id : 11, text : 'Text11'};
 			expect(contrib.getContributorId()).toEqual(11);
 		}));
 
 		it('Expects update to update the kind, affiliation, and contributorId fields', inject(function(ContributorModel) {
-			var contrib = new ContributorModel(personData);
+			var contrib = new ContributorModel(1,personData);
 			contrib.contributorId = {id : 10, text : 'Text10'};
 			contrib.update({id : 2, contributorId : 10, text : 'Text10', corporation : false, rank : 1});
 			expect(contrib.id).toEqual(2);
@@ -142,14 +150,16 @@ describe ('Tests for pw.contributors', function() {
 			expect(contrib.affiliation).toEqual({});
 			expect(contrib.corporation).toBe(false);
 			expect(contrib.rank).toEqual(1);
+			expect(contrib.contributorType).toEqual({id: 1});
 			expect(mockLookupFetcher.dynamicSelectOptions.calls[1].args).toEqual(['people', {id : 10, text : 'Text10'}]);
 		}));
 
 		it('Expects updateContributor to only update the affiliation and contributorId properties', inject(function(ContributorModel) {
-			var contrib = new ContributorModel();
+			var contrib = new ContributorModel(1);
 			contrib.updateContributor({contributorId : 2, affiliation : {id : 1, text : 'Text1'}});
 			expect(contrib.contributorId).toEqual(2);
 			expect(contrib.affiliation).toEqual({id : 1, text : 'Text1'});
+			expect(contrib.contributorType).toEqual({id: 1});
 		}));
     });
 
@@ -162,11 +172,11 @@ describe ('Tests for pw.contributors', function() {
 		var PERSONS = [{id : 1, text : 'Person1'}, {id : 2, text : 'Person2'}, {id : 3, text : 'Person3'}];
 		var CORPORATIONS = [{id : 1, text : 'Corp1'}, {id : 2, text : 'Corp2'}];
 
-		var PUB_DATA = {
-			tab1 : [{id : 1, contributorId : 1, corporation : false, rank : 1, corporation : false}, {id : 2, contributorId : 20, corporation : false, rank : 2}],
-			tab2 : [{id : 3, contributorId : 30, corporation : true, rank : 1}],
-			tab3 : [{id : 4, contributorId : 40, corporation : false, rank : 3}, {id : 5, contributorId : 50, corporation : false, rank : 1}, {id : 6, contributorId : 60, corporation : false, rank : 2}]
-		};
+		var PUB_DATA = {contributors: {
+				tab1 : [{id : 1, contributorId : 1, corporation : false, rank : 1, corporation : false}, {id : 2, contributorId : 20, corporation : false, rank : 2}],
+				tab2 : [{id : 3, contributorId : 30, corporation : true, rank : 1}],
+				tab3 : [{id : 4, contributorId : 40, corporation : false, rank : 3}, {id : 5, contributorId : 50, corporation : false, rank : 1}, {id : 6, contributorId : 60, corporation : false, rank : 2}]
+		}};
 
 		beforeEach(module('pw.contributors', function($provide) {
 			$provide.value('LookupFetcher', mockLookupFetcher);
@@ -177,7 +187,8 @@ describe ('Tests for pw.contributors', function() {
 			fetchContributorById : function(contributorId) {
 				return q.when({data : {
 				contributorId : contributorId,
-				name : 'New Name'
+				name : 'New Name',
+				contributorType : 1
 				}});
 			}
 			};
@@ -229,7 +240,7 @@ describe ('Tests for pw.contributors', function() {
 		}));
 
 		it('Expects the controller to fetch the current contributor types', function() {
-			scope.pubData = {};
+			scope.pubData = {contributors: []};
 			myCtrl = createController();
 			scope.$digest();
 
@@ -245,13 +256,13 @@ describe ('Tests for pw.contributors', function() {
 		});
 
 		it('Expects that if the controller is created with the contrib properties undefined, the controller defines them and adds them to contribTabs', function() {
-			scope.pubData = {};
+			scope.pubData = {contributors: []};
 			myCtrl = createController();
 			scope.$digest();
 
-			expect(scope.pubData.tab1).toEqual([]);
-			expect(scope.pubData.tab2).toEqual([]);
-			expect(scope.pubData.tab3).toEqual([]);
+			expect(scope.pubData.contributors.tab1).toEqual([]);
+			expect(scope.pubData.contributors.tab2).toEqual([]);
+			expect(scope.pubData.contributors.tab3).toEqual([]);
 
 			expect(scope.contribTabs[0].data).toEqual([]);
 			expect(scope.contribTabs[1].data).toEqual([]);
@@ -264,10 +275,18 @@ describe ('Tests for pw.contributors', function() {
 			myCtrl = createController();
 			scope.$digest();
 
-			expect(scope.pubData.tab1[0].id).toEqual(1);
-			expect(scope.pubData.tab1[0].rank).toEqual(1);
-			expect(scope.pubData.tab3[0].id).toEqual(5);
-			expect(scope.pubData.tab3[0].rank).toEqual(1);
+			expect(scope.pubData.contributors.tab1[0].id).toEqual(1);
+			expect(scope.pubData.contributors.tab1[0].rank).toEqual(1);
+			expect(scope.pubData.contributors.tab1[1].id).toEqual(2);
+			expect(scope.pubData.contributors.tab1[1].rank).toEqual(2);
+			expect(scope.pubData.contributors.tab2[0].id).toEqual(3);
+			expect(scope.pubData.contributors.tab2[0].rank).toEqual(1);
+			expect(scope.pubData.contributors.tab3[0].id).toEqual(5);
+			expect(scope.pubData.contributors.tab3[0].rank).toEqual(1);
+			expect(scope.pubData.contributors.tab3[1].id).toEqual(6);
+			expect(scope.pubData.contributors.tab3[1].rank).toEqual(2);
+			expect(scope.pubData.contributors.tab3[2].id).toEqual(4);
+			expect(scope.pubData.contributors.tab3[2].rank).toEqual(3);
 
 			expect(scope.contribTabs[2].data[0].id).toEqual(5);
 		});
@@ -279,15 +298,15 @@ describe ('Tests for pw.contributors', function() {
 
 			scope.contribTabs[0].data[0].contributorId = 7;
 			scope.$digest();
-			expect(scope.pubData.tab1[0].contributorId).toEqual(7);
+			expect(scope.pubData.contributors.tab1[0].contributorId).toEqual(7);
 
 			scope.contribTabs[2].data.pop();
 			scope.$digest();
-			expect(scope.pubData.tab3.length).toBe(2);
+			expect(scope.pubData.contributors.tab3.length).toBe(2);
 
-			scope.contribTabs[1].data.push(new ContributorModel());
+			scope.contribTabs[1].data.push(new ContributorModel(1));
 			scope.$digest();
-			expect(scope.pubData.tab2.length).toBe(2);
+			expect(scope.pubData.contributors.tab2.length).toBe(2);
 		});
 
 		it('Expects the sortOptions to contain a stop function which updates the currently selected tab\'s data', function() {
@@ -349,7 +368,7 @@ describe ('Tests for pw.contributors', function() {
 			scope.pubData = PUB_DATA;
 			myCtrl = createController();
 			scope.$digest();
-			scope.pubData.tab1[0].id = 1;
+			scope.pubData.contributors.tab1[0].id = 1;
 			scope.$broadcast('refreshPubData');
 			expect(scope.$on).toHaveBeenCalled();
 			expect(scope.contribTabs[0].data[0].id).toEqual(1);
