@@ -173,30 +173,6 @@
 				currentPage: 1
 		};
 
-		//TODO these templates are extracted from the main search template. This is a work around since
-		//ngGrid does not support passing in a template location for each of the cellTemplate configs.
-		//Would like to either remove the direct dom calls here into a service, or wait for ngGrid to support
-		//templateUrl.
-		var textFieldCellTemplate = $('#textFieldCellTemplate').html();
-		var authorsCellTemplate = $('#authorsCellTemplate').html();
-		//TODO: need to use a function since we do not have ng-repeat in cellTemplate, this is "view" code that should be moved out of the controller
-		$scope.formatAuthors = function(authArray) {
-			var authString = "";
-			angular.forEach(authArray, function(auth) {
-				if(authString.length > 0) {
-					authString += "; ";
-				}
-
-				//person
-				if(auth.family || auth.given) {
-					authString += auth.given + " " + auth.family + (auth.suffix ? ' ' + auth.suffix : '');
-				} else if(auth.organization) { //corporation/organization as author
-					authString += auth.organization;
-				}
-			});
-			return authString;
-		};
-
 		$scope.pubsGrid = {
 				data: 'pubs',
 				selectedItems: $scope.selectedPubs,
@@ -208,8 +184,7 @@
 					{field:'seriesNumber', displayName:'Report Number', width: 125},
 					{field:'publicationYear', displayName:'Year', width: 50},
 					{field:'title', displayName:'Title'},
-					{field:'authors', displayName:'Author', width: 250,
-						cellTemplate: authorsCellTemplate, sortable: false }
+					{field:'contributors.authors[0].text', displayName:'First Author', width: 250, sortable: true }
 				],
 				enableSorting: true,
 				enableColumnResize: true,

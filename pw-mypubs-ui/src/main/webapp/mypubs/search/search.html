@@ -72,18 +72,6 @@
 			        </ul>
 			    </el>
 				<div class="pub-grid" ng-grid="pubsGrid"></div>
-				<div style="display:none"> <!-- Hacky solution to extract some "view configuration" into HTML due to limitations in ngGrid-->
-					<div id="textFieldCellTemplate">
-						<div class="ngCellText" ng-class="col.colIndex()"><span ng-cell-text>{{COL_FIELD.text}}</span></div>
-					</div>
-					<div id="authorsCellTemplate">
-						<div class="ngCellText" ng-class="col.colIndex()">
-							<span ng-cell-text>
-								{{formatAuthors(COL_FIELD)}}
-							</span>
-						</div>
-					</div>
-				</div>
 			</div>
 		</div>
 	<div>
