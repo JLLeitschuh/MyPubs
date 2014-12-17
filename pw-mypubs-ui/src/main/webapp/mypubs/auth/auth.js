@@ -1,6 +1,6 @@
 (function() {
 	var AUTH_TOKEN_HEADER = 'Authorization';
-	var AUTH_SERVICE_PATH = 'auth/ad/token';
+	var AUTH_SERVICE_PATH = 'auth/token';
 	var LOGOUT_SERVICE_PATH = 'auth/logout';
 
 	angular.module('pw.auth', ['ngRoute', 'ngCookies'])
