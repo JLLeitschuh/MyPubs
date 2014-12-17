@@ -3,7 +3,7 @@ describe("pw.auth module", function() {
 	APP_CONFIG = {
 			endpoint: 'http://servicesUrl.com/pubs-service/'
 	};
-	var AUTH_SERVICE_PATH = 'auth/ad/token';
+	var AUTH_SERVICE_PATH = 'auth/token';
 	var LOGOUT_SERVICE_PATH = 'auth/logout';
 
 	var AD_TOKEN_URL = APP_CONFIG.endpoint + AUTH_SERVICE_PATH;
