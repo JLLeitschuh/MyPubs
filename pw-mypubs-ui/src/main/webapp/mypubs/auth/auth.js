@@ -9,6 +9,9 @@
 		$routeProvider.when('/Login', {
 			templateUrl: 'mypubs/auth/login.html',
 			controller: 'LoginController'
+		}).when('/403', {
+			templateUrl: 'mypubs/auth/403.html',
+			controller: 'LoginController'
 		});
 	}])
 
@@ -115,8 +118,13 @@
 		};
 
 		var handleUnauthorized = function(response) {
-			if(response.status === 401) {
+			switch (response.status) {
+			case 401:
 				$location.path("/Login");
+				break;
+			case 403:
+				$location.path("/403");
+				break;
 			}
 			return $q.reject(response);
 		};
