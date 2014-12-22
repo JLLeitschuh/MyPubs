@@ -40,7 +40,7 @@
 				$scope.pubsLists = value.data;
 			},
 			function(reason) {
-				if (reason.status !== 401) {
+				if (reason.status !== 401 && reason.status !== 403) {
 					Notifier.error('Publication lists could not be loaded');
 				}
 			}
@@ -121,7 +121,7 @@
 						$scope.lists = [];
 					},
 					function(reason) {
-						if (reason.status !== 401) {
+						if (reason.status !== 401 && reason.status !== 403) {
 							Notifier.error('Publication(s) could not be added to the list(s)');
 						}
 					}
@@ -144,7 +144,7 @@
 							$scope.search();
 						},
 						function(reason) {
-							if (reason.status !== 401) {
+							if (reason.status !== 401 && reason.status !== 403) {
 								Notifier.error('Publication(s) could not be removed from the list');
 							}
 						}
