@@ -113,7 +113,7 @@
 	<!-- publications tabs -->
 	<script type="text/javascript" src="mypubs/publication/bibliodata/bibliodata.js"></script>
 	<script type="text/javascript" src="mypubs/publication/catalog/catalog.js"></script>
-	<script type="text/javascript" src="mypubs/publication/contacts/contacts.js"></script>
+	<script type="text/javascript" src="mypubs/publication/spn/spn.js"></script>
 	<script type="text/javascript" src="mypubs/publication/links/links.js"></script>
 	<script type="text/javascript" src="mypubs/publication/geo/geo.js"></script>
 	<script type="text/javascript" src="mypubs/publication/contributors/contributor.js"></script>

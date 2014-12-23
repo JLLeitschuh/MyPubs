@@ -1,7 +1,7 @@
 (function() {
 var PUB_ROOT = '/Publication';
 angular.module('pw.publication', ['ngRoute', 'pw.notify', 'ui.bootstrap.modal',
-	'pw.bibliodata', 'pw.catalog', 'pw.contacts', 'pw.links', 'pw.contributors', 'pw.geo', 'pw.publicationDAO' // pub edit modules
+	'pw.bibliodata', 'pw.catalog', 'pw.spn', 'pw.links', 'pw.contributors', 'pw.geo', 'pw.publicationDAO' // pub edit modules
 ])
 .config(['$routeProvider',
 	function($routeProvider) {
@@ -109,6 +109,10 @@ angular.module('pw.publication', ['ngRoute', 'pw.notify', 'ui.bootstrap.modal',
 				"edition":"",
 				"publicComments":"",
 				"tableOfContents":"",
+				"publishingServiceCenter": {
+					"id": ''
+				},
+				"publishedDateStatement": "",
 				"validationErrors": []
 			};
 			angular.forEach(properties, function(defaultValue, propertyName){
@@ -290,9 +294,9 @@ function($scope, $route, pubData, PublicationUpdater, Notifier, $location, PubsM
 			controller: 'linksCtrl'
 		},
 		{
-			title:"Contacts",
-			templateUrl: 'mypubs/publication/contacts/contacts.html',
-			controller: 'contactCtrl'
+			title:"SPN",
+			templateUrl: 'mypubs/publication/spn/spn.html',
+			controller: 'spnCtrl'
 		},
 		{
 			title:"Cataloging",

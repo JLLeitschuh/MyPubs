@@ -1,10 +1,36 @@
 (function() {
 
 
-angular.module('pw.contacts', [])
-	.controller('contactsCtrl', [
-		'$scope',
-		function($scope) {
+angular.module('pw.spn', ['pw.lookups'])
+	.controller('spnCtrl', [
+		'$scope', '$q', 'LookupFetcher',
+		function($scope, $q, LookupFetcher) {
+			//@mbucknell recommends binding ui-select2 ng-model targets to variables
+			//on the local-most scope and propagating changes back up to pubData via watches
+			$scope.localPscId = $scope.pubData.publishingServiceCenter.id;
+
+			// This method and the watches on the select2 local values gets around an issue where you
+			// have to initialize the select2 with an id value, but then it puts an object on the associated
+			// scope object.
+			var updateObject = function(obj, value) {
+				if (angular.isObject(value)) {
+					return value;
+				}
+				else if (obj.id !== value) {
+					return {id: value, text: ''};
+				}
+				else {
+					return {id: obj.id, text : obj.text};
+				}
+			};
+			$scope.$watch('localPscId', function (value) {
+				$scope.pubData.publishingServiceCenter = updateObject($scope.pubData.publishingServiceCenter, value);
+			});
+
+			LookupFetcher.promise('publishingServiceCenters').then(function (response) {
+				$scope.pscOptions = response.data;
+			});
+
 			$scope.contactsEditorOptions = {
 					menubar: false,
 					plugins : 'code link paste',

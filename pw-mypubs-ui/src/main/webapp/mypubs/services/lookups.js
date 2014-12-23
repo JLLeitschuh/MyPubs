@@ -14,8 +14,9 @@ angular.module('pw.lookups',['pw.notify'])
 
             return $http.get(that._urlBase + lookupType, {
                 params : params
-            }).error(function() {
-                Notifier.error('Lookup service failed');
+            }).error(function(data, status, headers, config) {
+                Notifier.error('Lookup service failed: ' + config.url.substring(config.url.lastIndexOf('/')+1) 
+                		+ ' : ' + status);
             });
         };
 
