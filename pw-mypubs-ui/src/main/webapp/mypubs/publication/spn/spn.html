@@ -1,0 +1,23 @@
+<div id="spn" class="form-horizontal" ng-controller="spnCtrl">
+    <div class="form-group" id="dateStatement-div">
+         <label class="control-label col-sm-3" for="dateStatement-input">Published Date Statement</label>
+         <div class="col-sm-9">
+            <input id="dateStatement-input" type="text" class="form-control" ng-model="pubData.publishedDateStatement" />
+         </div>
+    </div>
+    <div id="psc-div" class="form-group">
+        <label class="control-label col-sm-3" for="psc-input">Publishing Service Center</label>
+        <div class="col-sm-9">
+            <select id="psc-input" class="form-control" placeholder="Select a Publishing Service Center" ng-model="localPscId" ng-change="changePsc()" ui-select2="{ allowClear : true }">
+                <option></option>
+                <option ng-repeat="option in pscOptions | orderBy:'text'" value="{{option.id}}">{{option.text}}</option>            
+            </select>
+        </div>
+    </div>
+    <div class="form-group" id="spn-div">
+        <label class="control-label col-sm-3" for="contacts-input">Contacts</label>
+        <div class="col-sm-9">
+            <textarea id="contacts-input" class="form-control" ui-tinymce="contactsEditorOptions" ng-model="pubData.contact"></textarea>
+        </div>
+    </div>
+</div>
