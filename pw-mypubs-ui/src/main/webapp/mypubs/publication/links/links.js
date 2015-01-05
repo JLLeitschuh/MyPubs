@@ -14,7 +14,8 @@ angular.module('pw.links',['pw.lookups', 'pw.dataList'])
 			text : '',
 			size : '',
 			linkFileType : {},
-			description : ''
+			description : '',
+			linkHelpText: ''
 		    };
 		};
 
