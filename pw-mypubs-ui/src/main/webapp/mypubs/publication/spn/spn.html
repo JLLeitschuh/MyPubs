@@ -5,6 +5,18 @@
             <input id="dateStatement-input" type="text" class="form-control" ng-model="pubData.publishedDateStatement" />
          </div>
     </div>
+    <div class="form-group" id="isPartOf-div">
+         <label class="control-label col-sm-3" for="isPartOf-input">Is Part of</label>
+         <div class="col-sm-9">
+            <input id="isPartOf-input" class="form-control" ng-model="localIsPartOfId" ui-select2="isPartOfOptions" type="hidden" />
+         </div>
+    </div>
+    <div class="form-group" id="supersededBy-div">
+         <label class="control-label col-sm-3" for="supersededBy-input">Superseded by</label>
+         <div class="col-sm-9">
+            <input id="supersededBy-input" class="form-control" ng-model="localSupersededById" ui-select2="supersededByOptions" type="hidden" />
+         </div>
+    </div>
     <div id="psc-div" class="form-group">
         <label class="control-label col-sm-3" for="psc-input">Publishing Service Center</label>
         <div class="col-sm-9">
