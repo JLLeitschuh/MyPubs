@@ -56,7 +56,7 @@ angular.module('pw.spn', ['pw.lookups'])
 		                });
 					},
 					initSelection: function (element, callback) {
-						callback({id: $scope.pubData.isPartOf.id, text : $scope.pubData.isPartOf.text});
+						callback($scope.pubData.isPartOf);
 					},
 					placeholder: 'Select the Is Part of Publication',
 					allowClear: true
