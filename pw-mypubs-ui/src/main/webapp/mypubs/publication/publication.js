@@ -113,8 +113,8 @@ angular.module('pw.publication', ['ngRoute', 'pw.notify', 'ui.bootstrap.modal',
 					"id": ''
 				},
 				"publishedDateStatement": "",
-				"isPartOf": "",
-				"supersededBy": "",
+				"isPartOf": {},
+				"supersededBy": {},
 				"validationErrors": []
 			};
 			angular.forEach(properties, function(defaultValue, propertyName){

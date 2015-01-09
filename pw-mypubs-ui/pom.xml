@@ -18,7 +18,6 @@
 		<cida.maven.url>http://internal.cida.usgs.gov/maven</cida.maven.url>
     	<timestamp>${maven.build.timestamp}</timestamp>
     	<maven.build.timestamp.format>yyyy-MM-dd HH:mm</maven.build.timestamp.format>
-		<slf4j.version>1.7.5</slf4j.version>
 	</properties>
 
 	<issueManagement>
@@ -97,16 +96,6 @@
 			<artifactId>logback-classic</artifactId>
 			<version>1.0.9</version>
 			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<artifactId>slf4j-api</artifactId>
-			<groupId>org.slf4j</groupId>
-			<version>${slf4j.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-simple</artifactId>
-			<version>${slf4j.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>gov.usgs.cida</groupId>
