@@ -20,7 +20,10 @@ angular.module('pw.contributors', ['pw.contributorDAO', 'pw.dataList', 'pw.looku
 
 		var getOptions = function(isCorporation, contributorLookup) {
 			var lookup;
-			var result = {minimumInputLength : 2};
+			var result = {
+				minimumInputLength : 2,
+				dropdownAutoWidth : true
+			};
 			if (isCorporation) {
 				lookup = 'corporations';
 			}
