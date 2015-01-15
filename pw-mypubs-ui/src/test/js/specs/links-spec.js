@@ -76,6 +76,28 @@ describe('Tests for pw.links module', function() {
 	    expect(scope.pubData.links).toEqual([{rank : 1}, {rank : 2}, {rank : 3}, {rank : 4}]);
 	});
 
+	it('Should sort the links in pubData when refreshPubData is broadcast', function() {
+		spyOn(scope, '$on').andCallThrough();
+
+		scope.pubData = {};
+		myCtrl = createController();
+		scope.$digest();
+
+		scope.pubData.links = [{
+		    rank : 2
+		},{
+		    rank : 4
+		},{
+		    rank : 3
+		},{
+		    rank : 1
+		}];
+
+		scope.$broadcast('refreshPubData');
+		expect(scope.$on).toHaveBeenCalled();
+		expect(scope.pubData.links).toEqual([{rank : 1}, {rank : 2}, {rank : 3}, {rank : 4}]);
+	})
+
 	it('Should get linkTypeOptions and fileTypeOptions from the LookupFetcher', function() {
 	    scope.pubData = {};
 	    myCtrl = createController();
