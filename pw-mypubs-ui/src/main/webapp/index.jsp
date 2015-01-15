@@ -44,12 +44,12 @@
 
 
 		<div class="container mainContainer" ng-controller="mainCtrl">	    
-
+			<div id="logout-div" class="row">
+				<button type="button" class="pull-right btn btn-link" ng-click="logout()">Logout</button>
+			</div>
+			
 			<div class="row">
-				<div id="logout-div" class="pull-right">
-					<button type="button" class="btn btn-link" ng-click="logout()">Logout</button>
-				</div>
-
+				
 				<div class="col-lg-12">
 
 					<pw:notify></pw:notify>
