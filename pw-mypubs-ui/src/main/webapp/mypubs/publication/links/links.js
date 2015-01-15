@@ -19,6 +19,10 @@ angular.module('pw.links',['pw.lookups', 'pw.dataList'])
 		    };
 		};
 
+		$scope.$on('refreshPubData', function() {
+			$scope.pubData.links = _.sortBy($scope.pubData.links, 'rank');
+		});
+
 		if (angular.isUndefined($scope.pubData.links)) {
 		    $scope.pubData.links = [];
 		}
