@@ -112,7 +112,8 @@ angular.module('pw.publication', ['ngRoute', 'pw.notify', 'ui.bootstrap.modal',
 				"publishingServiceCenter": {
 					"id": ''
 				},
-				"publishedDateStatement": "",
+				"publishedDate": "",
+				"revisedDate": "",
 				"isPartOf": {},
 				"supersededBy": {},
 				"validationErrors": []
