@@ -85,7 +85,7 @@ angular.module('pw.spn', ['pw.lookups'])
     						italic: {inline: 'i'}
   						},
 					browser_spellcheck : true,
-					toolbar : 'undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | subscript superscript | link | code',
+					toolbar : 'undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | subscript superscript | link | code'
 					
 				};
 		}
