@@ -184,7 +184,7 @@
   						},
 					browser_spellcheck : true,
 					toolbar : 'undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | subscript superscript | link | code',
-					valid_elements : "@[id|class|style|title|dir<ltr?rtl|lang|xml::lang|onclick|ondblclick|"
+					valid_elements : "@[id|class|title|dir<ltr?rtl|lang|xml::lang|onclick|ondblclick|"
 							+ "onmousedown|onmouseup|onmouseover|onmousemove|onmouseout|onkeypress|"
 							+ "onkeydown|onkeyup],a[rel|rev|charset|hreflang|tabindex|accesskey|type|"
 							+ "name|href|target|title|class|onfocus|onblur],strong/b,i/em,strike,u,"
