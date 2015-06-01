@@ -5,7 +5,7 @@
 			<pw-data-list-row on-delete="deleteLink($index)">
 					<select class="link-type" placeholder="Link type" ui-select2 ng-model="link.type.id">
 						<option></option>
-						<option ng-repeat="option in linkTypeOptions" value="{{option.id}}">{{option.text}}</option>	
+						<option ng-repeat="option in linkTypeOptions | orderBy: 'text'" value="{{option.id}}">{{option.text}}</option>	
 					</select>
 					<input class="link-text" type="text" ng-model="link.text" placeholder="Link Text">
 					<input class="link-file-size" type="text" ng-model="link.size" placeholder="File size">
