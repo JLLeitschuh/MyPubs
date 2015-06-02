@@ -24,11 +24,6 @@ describe("Javascript importing", function() {
 		expect(tinymce).toBeDefined();
 	});
 
-
-
-
-
-
 	it("loads Angular library", function() {
 		expect(angular).toBeDefined();
 	});
@@ -39,7 +34,7 @@ describe("Javascript importing", function() {
 
 	it("loads Angular route library", function() {
 		expect( angular.module('ngRoute') ).toBeDefined();
-	}); 
+	});
 
 	it("loads Angular bootstrap library", function() {
 		expect( angular.module('ui.bootstrap') ).toBeDefined();
