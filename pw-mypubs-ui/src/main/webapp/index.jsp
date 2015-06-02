@@ -76,7 +76,6 @@
 	<script type="text/javascript" src="webjars/angularjs/1.2.23/angular.min.js"></script>
 	<script type="text/javascript" src="webjars/ng-grid/2.0.11/ng-grid.min.js"></script>
 	<script type="text/javascript" src="webjars/angularjs/1.2.23/angular-route.min.js"></script>
-	<script type="text/javascript" src="webjars/angularjs/1.2.23/angular-animate.min.js"></script>
 	<script type="text/javascript" src="webjars/angularjs/1.2.23/angular-cookies.min.js"></script>
 	<script type="text/javascript" src="lib/angular/ui-select2.js"></script>
 	<script type="text/javascript" src="lib/angular/ui-bootstrap-tpls-0.11.0.js"></script>
