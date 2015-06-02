@@ -82,9 +82,10 @@
 	<script type="text/javascript" src="lib/angular/ui-bootstrap-tpls-0.11.0.js"></script>
 	<script type="text/javascript" src="lib/angular/ui-tinymce.0.5.x.js"></script>
 	<script type="text/javascript" src="lib/ui-sortable-master/src/sortable.js"></script>
-        <script type="text/javascript" src="webjars/momentjs/2.8.1/min/moment.min.js"></script>
-        <script type="text/javascript" src="webjars/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="webjars/momentjs/2.8.1/min/moment.min.js"></script>
+	<script type="text/javascript" src="webjars/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="lib/angular-bootstrap-datetimepicker/js/datetimepicker.js"></script>
+	<script type="text/javascript" src="lib/geojsonhint-master/geojsonhint.js"></script>
 
 	<!-- mypubs application utils -->
      

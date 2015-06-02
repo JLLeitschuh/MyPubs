@@ -235,8 +235,9 @@
 						<source>src/main/webapp/lib/angular/ui-bootstrap-tpls-0.11.0.js</source>
 						<source>src/main/webapp/lib/angular/ui-tinymce.0.5.x.js</source>
 						<source>src/main/webapp/lib/ui-sortable-master/src/sortable.js</source>
-                                                <source>src/main/webapp/lib/angular-bootstrap-datetimepicker/js/datetimepicker.js</source>
-                                                <source>webjars/moment.js</source>
+						<source>src/main/webapp/lib/angular-bootstrap-datetimepicker/js/datetimepicker.js</source>
+						<source>webjars/moment.js</source>
+						<source>src/main/webapp/lib/geojsonhint-master/geojsonhint.js</source>
             
 						<!-- testing libs -->
 						<source>src/test/js/lib/angular-mocks.1.2.17.js</source>
