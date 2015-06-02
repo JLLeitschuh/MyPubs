@@ -65,7 +65,23 @@ angular.module('pw.publicationDAO', [])
 		 * @returns {Promise}
 		 */
 		var persistPub = function(clientPub){
-			var errorPersistingPubMessage = 'Error persisting Publication';
+			// Perform client side validation. Notify the user if errors occur.
+			if (clientPub.geographicExtents) {
+				var geoErrors = geojsonhint.hint(clientPub.geographicExtents);
+				if (geoErrors.length > 0) {
+					var errors = [];
+					angular.forEach(geoErrors, function(e) {
+						errors.push({
+							field : 'Geospatial Extent',
+							message : e.message
+						});
+					});
+					clientPub.validationErrors = errors;
+					var deferred = $q.defer();
+					deferred.reject({validationErrors: errors});
+					return deferred.promise;
+				}
+			}
 			//we do not want to send validation errors to the server, nor do we
 			//want stale validation errors to continue to be displayed on the
 			//client
