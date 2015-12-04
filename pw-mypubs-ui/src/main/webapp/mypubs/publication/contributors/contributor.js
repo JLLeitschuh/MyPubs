@@ -13,6 +13,7 @@ angular.module('pw.contributors', ['pw.contributorDAO', 'pw.dataList', 'pw.looku
 			rank : '',
 			kind : '',
 			corporation : false,
+			usgs : false,
 			affiliation : {},
 			contributorType: {id: contribTypeId}
 			};
@@ -49,6 +50,7 @@ angular.module('pw.contributors', ['pw.contributorDAO', 'pw.dataList', 'pw.looku
 				this.rank = data.rank;
 				this.corporation = data.corporation;
 				this.affiliation = data.affiliation || {};
+				this.usgs = data.usgs || false;
 				this.select2Options = getOptions(data.corporation, {id : data.contributorId, text : data.text});
 			}
 			else {
@@ -61,6 +63,7 @@ angular.module('pw.contributors', ['pw.contributorDAO', 'pw.dataList', 'pw.looku
 				this.contributorId = '';
 				this.text = '';
 				this.affiliation = {};
+				this.usgs = false;
 				this.corporation = this.kind === KIND.corporation;
 				this.select2Options = getOptions(this.corporation, '');
 			},
@@ -74,6 +77,7 @@ angular.module('pw.contributors', ['pw.contributorDAO', 'pw.dataList', 'pw.looku
 					this.id = data.id;
 					this.rank = data.rank;
 					this.affiliation = data.affiliation || {};
+					this.usgs = data.usgs || false;
 					this.corporation = data.corporation;
 					if (data.corporation) {
 						this.kind = KIND.corporation;
@@ -90,6 +94,7 @@ angular.module('pw.contributors', ['pw.contributorDAO', 'pw.dataList', 'pw.looku
 					this.contributorId = '';
 					this.text = '';
 					this.corporation = false;
+					this.usgs = false;
 					this.affiliation = {};
 				}
 			},
@@ -101,6 +106,7 @@ angular.module('pw.contributors', ['pw.contributorDAO', 'pw.dataList', 'pw.looku
 						this.text = data.text;
 					}
 					this.affiliation = data.affiliation || {};
+					this.usgs = data.usgs || false;
 				}
 			},
 			isPerson : function() {
@@ -133,7 +139,8 @@ angular.module('pw.contributors', ['pw.contributorDAO', 'pw.dataList', 'pw.looku
 					rank : this.rank,
 					corporation : this.corporation,
 					affiliation : this.affiliation || {},
-					contributorType: this.contributorType
+					contributorType: this.contributorType,
+					usgs : this.usgs || false
 				};
 			}
 		};

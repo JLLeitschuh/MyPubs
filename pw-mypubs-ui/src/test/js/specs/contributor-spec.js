@@ -128,10 +128,10 @@ describe ('Tests for pw.contributors', function() {
 		it('Expects getPubData to return an object with the contributor model specific values removed',  inject(function(ContributorModel) {
 			var contrib = new ContributorModel(1,personData);
 
-			expect(contrib.getPubData()).toEqual({id : 1, contributorId : 10, text: '', rank : 1, corporation : false, affiliation : {id : 1, text : 'Wisconsin Water Science Center'}, contributorType: {id: 1}});
+			expect(contrib.getPubData()).toEqual({id : 1, contributorId : 10, text: '', rank : 1, corporation : false, affiliation : {id : 1, text : 'Wisconsin Water Science Center'}, contributorType: {id: 1}, usgs: false});
 
 			contrib = new ContributorModel(2,corporationData);
-			expect(contrib.getPubData()).toEqual({id : 2, contributorId : 20, text : '', rank : 1, corporation : true, affiliation : {}, contributorType: {id: 2}});;
+			expect(contrib.getPubData()).toEqual({id : 2, contributorId : 20, text : '', rank : 1, corporation : true, affiliation : {}, contributorType: {id: 2}, usgs: false});
 		}));
 
 		it('Expects getContributorId to return the contributorId value if it is not an object, otherwise return the id property', inject(function(ContributorModel) {
