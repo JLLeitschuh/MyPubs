@@ -58,12 +58,12 @@
 		<div class="dropdown col-sm-9">
 			<a class="dropdown-toggle" id="temporal-start-dropdown" role="button" data-target="#" href="#">
 				<div class="input-group">
-					<input type="text" class="form-control" value="{{ pubData.temporalStart | date : 'yyyy-MM-dd' }}">
+					<input type="text" class="form-control" value="{{ localTemporalStart | date : 'yyyy-MM-dd' }}">
 					<span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
 				</div>
 			</a>
 			<ul class="dropdown-menu" role="menu" aria-labelledby="temporal-start-label">
-				<datetimepicker data-ng-model="pubData.temporalStart" 
+				<datetimepicker data-ng-model="localTemporalStart" 
 					data-datetimepicker-config="{ minView: 'day', startView: 'month', dropdownSelector: '#temporal-start-dropdown' }">
 				</datetimepicker>
 			</ul>
@@ -74,12 +74,12 @@
 		<div class="dropdown col-sm-9">
 			<a class="dropdown-toggle" id="temporalEndDropdown" role="button" data-target="#" href="#">
 				<div class="input-group">
-					<input type="text" class="form-control" value="{{ pubData.temporalEnd | date : 'yyyy-MM-dd' }}">
+					<input type="text" class="form-control" value="{{ localTemporalEnd | date : 'yyyy-MM-dd' }}">
 					<span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
 				</div>
 			</a>
 			<ul class="dropdown-menu" role="menu" aria-labelledby="temporal-end-label">
-				<datetimepicker data-ng-model="pubData.temporalEnd" 
+				<datetimepicker data-ng-model="localTemporalEnd" 
 					data-datetimepicker-config="{ minView: 'day', startView: 'month', dropdownSelector: '#temporalEndDropdown' }">
 				</datetimepicker>
 			</ul>

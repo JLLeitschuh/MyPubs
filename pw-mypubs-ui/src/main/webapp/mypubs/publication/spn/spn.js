@@ -10,6 +10,8 @@ angular.module('pw.spn', ['pw.lookups'])
 			$scope.localPscId = $scope.pubData.publishingServiceCenter.id;
 			$scope.localIsPartOfId = $scope.pubData.isPartOf.id;
 			$scope.localSupersededById = $scope.pubData.supersededBy.id;
+			$scope.localPublishedDate = $scope.pubData.publishedDate;
+			$scope.localRevisedDate = $scope.pubData.revisedDate;
 
 			// This method and the watches on the select2 local values gets around an issue where you
 			// have to initialize the select2 with an id value, but then it puts an object on the associated
@@ -45,7 +47,7 @@ angular.module('pw.spn', ['pw.lookups'])
 			LookupFetcher.promise('publishingServiceCenters').then(function (response) {
 				$scope.pscOptions = response.data;
 			});
-			
+
 			$scope.isPartOfOptions = {
 					query: function (options) {
 						if (!options.term && $scope.pubData && $scope.pubData.isPartOf && $scope.pubData.isPartOf.indexId) {
@@ -61,7 +63,7 @@ angular.module('pw.spn', ['pw.lookups'])
 					placeholder: 'Select the Is Part of Publication',
 					allowClear: true
 				};
-			
+
 			$scope.supersededByOptions = {
 					query: function (options) {
 						if (!options.term && $scope.pubData && $scope.pubData.supersededBy && $scope.pubData.supersededBy.indexId) {
@@ -77,7 +79,7 @@ angular.module('pw.spn', ['pw.lookups'])
 					placeholder: 'Select the Superseded By Publication',
 					allowClear: true
 				};
-			
+
 			$scope.contactsEditorOptions = {
 					menubar: false,
 					plugins : 'code link paste',
@@ -86,8 +88,16 @@ angular.module('pw.spn', ['pw.lookups'])
   						},
 					browser_spellcheck : true,
 					toolbar : 'undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | subscript superscript | link | code'
-					
+
 				};
+
+			$scope.$watch('localPublishedDate', function (value) {
+				$scope.pubData.publishedDate = moment(value).format('YYYY-MM-DD');
+			});
+
+			$scope.$watch('localRevisedDate', function (value) {
+				$scope.pubData.revisedDate = moment(value).format('YYYY-MM-DD');
+			});
 		}
 	]);
 }) ();

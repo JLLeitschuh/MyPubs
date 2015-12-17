@@ -4,12 +4,12 @@
 		<div class="dropdown col-sm-9">
 			<a class="dropdown-toggle" id="publishedDateStatement-dropdown" role="button" data-target="#" href="#">
 				<div class="input-group">
-					<input type="text" class="form-control" value="{{ pubData.publishedDate | date : 'yyyy-MM-dd' }}">
+					<input type="text" class="form-control" value="{{ localPublishedDate | date : 'yyyy-MM-dd' }}">
 					<span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
 				</div>
 			</a>
 			<ul class="dropdown-menu" role="menu" aria-labelledby="publishedDateStatement-label">
-				<datetimepicker data-ng-model="pubData.publishedDate" 
+				<datetimepicker data-ng-model="localPublishedDate" 
 					data-datetimepicker-config="{ minView: 'day', startView: 'month', dropdownSelector: '#publishedDateStatement-dropdown' }">
 				</datetimepicker>
 			</ul>
@@ -20,12 +20,12 @@
 		<div class="dropdown col-sm-9">
 			<a class="dropdown-toggle" id="revisedDateStatement-dropdown" role="button" data-target="#" href="#">
 				<div class="input-group">
-					<input type="text" class="form-control" value="{{ pubData.revisedDate | date : 'yyyy-MM-dd' }}">
+					<input type="text" class="form-control" value="{{ localRevisedDate | date : 'yyyy-MM-dd' }}">
 					<span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
 				</div>
 			</a>
 			<ul class="dropdown-menu" role="menu" aria-labelledby="revisedDateStatement-label">
-				<datetimepicker data-ng-model="pubData.revisedDate" 
+				<datetimepicker data-ng-model="localRevisedDate" 
 					data-datetimepicker-config="{ minView: 'day', startView: 'month', dropdownSelector: '#revisedDateStatement-dropdown' }">
 				</datetimepicker>
 			</ul>
