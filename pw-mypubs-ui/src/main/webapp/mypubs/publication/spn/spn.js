@@ -92,11 +92,23 @@ angular.module('pw.spn', ['pw.lookups'])
 				};
 
 			$scope.$watch('localPublishedDate', function (value) {
-				$scope.pubData.publishedDate = moment(value).format('YYYY-MM-DD');
+				var newDate = moment(value).format('YYYY-MM-DD');
+				if (newDate === 'Invalid date') {
+					$scope.pubData.publishedDate = '';
+				}
+				else {
+					$scope.pubData.publishedDate = moment(value).format('YYYY-MM-DD');
+				}
 			});
 
 			$scope.$watch('localRevisedDate', function (value) {
-				$scope.pubData.revisedDate = moment(value).format('YYYY-MM-DD');
+			var newDate = moment(value).format('YYYY-MM-DD');
+				if (newDate === 'Invalid date') {
+					$scope.pubData.revisedDate = '';
+				}
+				else {
+					$scope.pubData.revisedDate = moment(value).format('YYYY-MM-DD');
+				}
 			});
 		}
 	]);
