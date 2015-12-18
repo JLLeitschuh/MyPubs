@@ -8,10 +8,22 @@
 				$scope.localTemporalEnd = $scope.pubData.temporalEnd;
 
 				$scope.$watch('localTemporalStart', function (value) {
-					$scope.pubData.temporalStart = moment(value).format('YYYY-MM-DD');
+					var newDate = moment(value).format('YYYY-MM-DD');
+					if (newDate === 'Invalid date') {
+						$scope.pubData.temporalStart = '';
+					}
+					else {
+						$scope.pubData.temporalStart = newDate;
+					}
 				});
 				$scope.$watch('localTemporalEnd', function (value) {
-					$scope.pubData.temporalEnd = moment(value).format('YYYY-MM-DD');
+					var newDate = moment(value).format('YYYY-MM-DD');
+					if (newDate === 'Invalid date') {
+						$scope.pubData.temporalEnd = '';
+					}
+					else {
+						$scope.pubData.temporalEnd - newDate;
+					}
 				});
 
 			}]);
