@@ -53,7 +53,7 @@
 		<repository>
 			<id>cida-public</id>
 			<name>CIDA Public Nexus</name>
-			<url>http://cida.usgs.gov/maven/cida-public/</url>
+			<url>https://cida.usgs.gov/maven/cida-public/</url>
 		</repository>
 		<repository>
 			<id>cida-nexus</id>
